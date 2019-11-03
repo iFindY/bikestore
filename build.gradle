@@ -29,11 +29,15 @@ sourceSets {
         }
         resources {
             srcDir "src/resources"
-
         }
     }
 }
 
+
+task angular(type: Exec) {
+    workingDir 'src/bike-ui'
+    commandLine 'ng', 'build', '--outputPath=../../build/resources/main/ui'
+}
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
@@ -57,3 +61,5 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+tasks.classes.dependsOn angular
