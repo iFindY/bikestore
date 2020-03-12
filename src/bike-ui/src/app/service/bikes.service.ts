@@ -14,7 +14,7 @@ export class BikesService {
   }
 
   getBikes() {
-    console.log("hi arkadi")
+    console.log("hi arkadi");
     return this.http.get('api/bikes')
   }
 }

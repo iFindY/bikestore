@@ -36,7 +36,7 @@ sourceSets {
 
 task angular(type: Exec) {
     workingDir 'src/bike-ui'
-    commandLine 'ng', 'build', '--outputPath=../../build/resources/main/ui'
+    commandLine 'ng', 'build', '--outputPath=../../build/resources/main/static'
 }
 
 dependencies {

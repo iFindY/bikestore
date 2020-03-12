@@ -25,9 +25,7 @@ public class ShopApplication {
 
     @Bean
     ErrorViewResolver angularRedirect() {
-        return (request, status, model) -> status == HttpStatus.NOT_FOUND
-                ? new ModelAndView("/", Collections.emptyMap(), HttpStatus.OK)
-                : null;
+        return (request, status, model) -> status == HttpStatus.NOT_FOUND ? new ModelAndView("/", Collections.emptyMap(), HttpStatus.OK) : null;
     }
 
 }

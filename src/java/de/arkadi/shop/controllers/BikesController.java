@@ -16,9 +16,11 @@ import java.util.List;
 @RequestMapping("/api/bikes")
 public class BikesController {
 
-    @Autowired
-    BikeRepository bikeRepository;
+    final BikeRepository bikeRepository;
 
+    public BikesController(BikeRepository bikeRepository) {
+        this.bikeRepository = bikeRepository;
+    }
 
     @GetMapping
     public List<Bike> list() {
