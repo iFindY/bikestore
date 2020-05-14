@@ -1,0 +1,29 @@
+  <p-megaMenu style="right: -13px" [model]="items">
+    <button
+      style="
+      border: none;
+      margin-top:8px;
+      font-size: 16px;
+      background: none"
+      icon="pi pi-sign-in"
+      widtht="45"
+      class="ui-button-secondary"
+      pButton
+      type="text"
+      label="Login"
+      (click)="op.toggle($event)"></button>
+  </p-megaMenu>
+
+  <div style="margin:0 -8px 0 -8px;height: 20px;background-color: rgb(48,49,50)"></div>
+
+  <p-overlayPanel #op [appendTo]="'body'" [dismissable]="true">
+    <ng-template pTemplate>
+      <div>
+        <button>login</button>
+      </div>
+      <div>
+        <button>register</button>
+      </div>
+    </ng-template>
+  </p-overlayPanel>
+

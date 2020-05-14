@@ -1,23 +1,41 @@
-import {BrowserModule} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
-import {HttpClientModule} from "@angular/common/http";
-import {AppRoutingModule} from './app-routing.module';
-import {AppComponent} from './app.component';
-import {BikesService} from "./service/bikes.service";
-import { AdminComponent } from './components/admin/admin.component';
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
 
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { ToolbarComponent } from './toolbar/toolbar.component';
+import { LogobarComponent } from './logobar/logobar.component';
+import { CurrentPathComponent } from './current-path/current-path.component';
+import { SearchComponent } from './search/search.component';
+import { ProductComponent } from './product/product.component';
+import { FooterComponent } from './footer/footer.component';
+import {MegaMenuModule} from 'primeng/megamenu';
+import { ButtonModule } from 'primeng/button';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { LoginComponent } from './toolbar/login/login.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { SharedModule } from 'primeng';
 @NgModule({
   declarations: [
     AppComponent,
-    AdminComponent
+    ToolbarComponent,
+    LogobarComponent,
+    CurrentPathComponent,
+    SearchComponent,
+    ProductComponent,
+    FooterComponent,
+    LoginComponent
   ],
   imports: [
+    BrowserAnimationsModule,
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    MegaMenuModule,
+    ButtonModule,
+    OverlayPanelModule,
+    SharedModule
   ],
-  providers: [BikesService],
+  providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule {
-}
+export class AppModule { }

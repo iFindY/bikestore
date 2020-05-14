@@ -1,0 +1,34 @@
+::ng-deep .ui-megamenu {
+  margin-left: -8px;
+  margin-right: -8px;
+  min-height: 50px;
+
+  .ui-menu-list {
+    font-size: 20px;
+
+  }
+
+
+  .ui-menuitem-icon {
+    font-size: 2em
+  }
+}
+
+::ng-deep .ui-menuitem-custom {
+  float: right;
+
+  button {
+    margin-right: 100px;
+    margin-top: 15px;
+  }
+}
+
+::ng-deep .ui-megamenu-root-list {
+  right: -20px;
+  padding: revert;
+
+}
+
+
+
+
