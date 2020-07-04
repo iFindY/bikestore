@@ -1,18 +1,16 @@
 package de.arkadi.shop;
 
-import org.springframework.boot.CommandLineRunner;
+import org.apache.catalina.Context;
+import org.apache.catalina.connector.Connector;
+import org.apache.tomcat.util.descriptor.web.SecurityCollection;
+import org.apache.tomcat.util.descriptor.web.SecurityConstraint;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
-import org.springframework.boot.autoconfigure.web.servlet.error.ErrorViewResolver;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
+import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.servlet.ModelAndView;
 
-
-import java.util.Collections;
-
-@SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
+@SpringBootApplication()
 public class ShopApplication {
 
     public static void main(String[] args) {
@@ -20,9 +18,41 @@ public class ShopApplication {
     }
 
 
+    /**
+     * This stuff must be here because they must be initialised first
+     *
+     * adjust factory to redirect tomcat container from http to https
+     * set security constrain to confidential for all requests '/*'
+     * Spring boot will use ths been by creating the amended tomcat server
+     */
     @Bean
-    ErrorViewResolver angularRedirect() {
-        return (request, status, model) -> status == HttpStatus.NOT_FOUND ? new ModelAndView("/", Collections.emptyMap(), HttpStatus.OK) : null;
+    public ServletWebServerFactory servletContainer() {
+        TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory() {
+            @Override
+            protected void postProcessContext(Context context) {
+                SecurityConstraint securityConstraint = new SecurityConstraint();
+
+                securityConstraint.setUserConstraint("CONFIDENTIAL");
+                SecurityCollection collection = new SecurityCollection();
+                collection.addPattern("/*");
+
+                securityConstraint.addCollection(collection);
+                context.addConstraint(securityConstraint);
+            }
+        };
+        tomcat.addAdditionalTomcatConnectors(redirectConnector());
+        return tomcat;
     }
 
+    /**
+     * this is a tomcat connector to redirect http on port 80 to  port 8443
+     * where other connector created by spring is listening
+     */
+    private Connector redirectConnector() {
+        Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
+        connector.setScheme("http");
+        connector.setPort(8080);
+        connector.setRedirectPort(8443);
+        return connector;
+    }
 }

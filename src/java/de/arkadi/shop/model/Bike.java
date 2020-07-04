@@ -12,6 +12,7 @@ import java.util.Date;
 @Entity
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@Table(schema = "PRODUCTS", name = "BIKES")
 public class Bike {
 
     @Id

@@ -1,3 +1,5 @@
+
+// mega menu
 ::ng-deep .ui-megamenu {
   margin-left: -8px;
   margin-right: -8px;
@@ -8,12 +10,12 @@
 
   }
 
-
   .ui-menuitem-icon {
     font-size: 2em
   }
 }
 
+// custom menu element
 ::ng-deep .ui-menuitem-custom {
   float: right;
 
@@ -23,11 +25,44 @@
   }
 }
 
+// list
 ::ng-deep .ui-megamenu-root-list {
   right: -20px;
   padding: revert;
+}
+
+// login dialog
+p-dialog {
+    img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    ::ng-deep .ui-dialog-content {
+        border-radius: 20px;
+        text-align: center;
+
+        input {
+            text-align: center;
+            width: 235px;
+
+        }
+
+        ::ng-deep label {
+            position: absolute;
+            left: 42%
+        }
+
+    }
+
+
+
 
 }
+
+
+
 
 
 

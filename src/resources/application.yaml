@@ -1,0 +1,33 @@
+server:
+  port: 8443
+  ssl:
+    key-store-password: Novo2407
+    key-store: classpath:keystore.p12
+    key-store-type: PKCS12
+    key-alias: tomcat
+
+spring:
+  jpa:
+    database: POSTGRESQL
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+  datasource:
+    platform: postgres
+    url: jdbc:postgresql://localhost:5432/postgres
+    driver-class-name: org.postgresql.Driver
+    username: arkadi
+    password: 1234
+  flyway:
+    enabled: false
+  main:
+    allow-bean-definition-overriding: true
+
+# web,root
+logging:
+  level:
+    root: INFO
+    com.memorynotfound: INFO
+    org.springframework.web: INFO
+    org.springframework.security: DEBUG
+

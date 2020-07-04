@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MegaMenuItem } from 'primeng';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { filter, tap } from 'rxjs/operators';
+import { AuthenticationService } from '../services/authentication.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -8,13 +12,31 @@ import { MegaMenuItem } from 'primeng';
   styleUrls: ['./toolbar.component.scss']
 })
 export class ToolbarComponent implements OnInit {
-
-  constructor() {
-  }
-
+  displayModal: boolean = false;
+  loginForm: FormGroup;
   items: MegaMenuItem[];
+  passwordPattern = /^(?=.*[A-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[\&\+\,\:\;\=\?\#\$\!\=\*\'\@])\S{6,12}$/;
+
+
+  constructor(fb: FormBuilder,
+              private authService:AuthenticationService,
+              private router:Router) {
+
+    this.loginForm = fb.group(
+        {
+          email: [, [Validators.minLength(4)]],
+          password: [, [Validators.required, Validators.pattern(this.passwordPattern)]]
+        })
+  };
+
 
   ngOnInit() {
+    this.loginForm.statusChanges
+        .pipe(
+            filter(status => status === 'VALID'),
+            tap(status => console.log(status, JSON.stringify(this.loginForm.value))))
+        .subscribe();
+
     this.items = [
       {
         label: 'Products',
@@ -127,5 +149,23 @@ export class ToolbarComponent implements OnInit {
         ]
       }
     ];
+  }
+
+  showModalDialog() {
+    this.displayModal = true;
+  }
+
+  onSubmit(){
+    const email = this.loginForm.get('email').value,
+        password = this.loginForm.get('password').value;
+
+    this.authService.login(email, password)
+        .subscribe(
+        () => {
+          console.log('user is logged in');
+          this.router.navigateByUrl('/');
+        }
+    );
+
   }
 }

@@ -1,6 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ToolbarComponent } from './toolbar/toolbar.component';
@@ -12,9 +11,13 @@ import { FooterComponent } from './footer/footer.component';
 import {MegaMenuModule} from 'primeng/megamenu';
 import { ButtonModule } from 'primeng/button';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
-import { LoginComponent } from './toolbar/login/login.component';
+import { LoginTooolBarComponent } from './toolbar/login/login-toool-bar.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { SharedModule } from 'primeng';
+import { DialogModule, SharedModule } from 'primeng';
+import {InputTextModule} from 'primeng/inputtext';
+import { LoginComponent } from './login/login.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 @NgModule({
   declarations: [
     AppComponent,
@@ -24,6 +27,7 @@ import { SharedModule } from 'primeng';
     SearchComponent,
     ProductComponent,
     FooterComponent,
+    LoginTooolBarComponent,
     LoginComponent
   ],
   imports: [
@@ -33,7 +37,12 @@ import { SharedModule } from 'primeng';
     MegaMenuModule,
     ButtonModule,
     OverlayPanelModule,
-    SharedModule
+    SharedModule,
+    ReactiveFormsModule,
+    DialogModule,
+    ReactiveFormsModule,
+    InputTextModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
