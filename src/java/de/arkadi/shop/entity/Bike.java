@@ -1,4 +1,4 @@
-package de.arkadi.shop.model;
+package de.arkadi.shop.entity;
 
 import com.fasterxml.jackson.annotation.*;
 import lombok.Data;

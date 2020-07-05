@@ -1,4 +1,4 @@
-package de.arkadi.shop.model;
+package de.arkadi.shop.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

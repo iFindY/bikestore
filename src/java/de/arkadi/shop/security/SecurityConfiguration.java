@@ -48,10 +48,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
      * set url pattern for any url pattern which will be completely ignored by spring security.
      **
      * Here are routes defined which wil not be secured at all.
+     *
+     * Spring Boot will automatically add static web resources located within any of the following directories:
+     *
+     * /META-INF/resources/
+     * /resources/
+     * /static/
+     * /public/
      */
     @Override
     public void configure(WebSecurity web) {
-        web.ignoring().antMatchers("**/static/**");
+        web.ignoring().antMatchers("/ui/**/");
     }
 
 
@@ -91,7 +98,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
             .authorizeRequests()
                 // the request equals "/" as allowed for all
-                .antMatchers("/").permitAll()
+                .antMatchers("/","api/auth/register").permitAll()
                 // any request which has not ben intercepted previously, has to be authenticated
                 .anyRequest().authenticated().and()
 

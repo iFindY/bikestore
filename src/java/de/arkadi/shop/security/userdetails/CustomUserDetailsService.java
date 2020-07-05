@@ -14,7 +14,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import de.arkadi.shop.model.StoreUser;
+import de.arkadi.shop.entity.StoreUser;
 import de.arkadi.shop.security.authentication.AuthenticationService;
 
 /**

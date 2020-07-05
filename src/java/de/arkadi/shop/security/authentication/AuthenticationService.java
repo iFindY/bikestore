@@ -2,7 +2,7 @@ package de.arkadi.shop.security.authentication;
 
 import org.springframework.stereotype.Service;
 
-import de.arkadi.shop.model.StoreUser;
+import de.arkadi.shop.entity.StoreUser;
 import de.arkadi.shop.repository.AuthoritiesRepository;
 import de.arkadi.shop.repository.UserRepository;
 
@@ -21,7 +21,7 @@ public class AuthenticationService {
     }
 
     public StoreUser loadUserByUsername(String name){
-        return this.userRepository.getUserByUsername(name);
+        return this.userRepository.findStoreUserByUsername(name);
     }
 
 

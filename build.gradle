@@ -36,7 +36,7 @@ sourceSets {
 
 task angular(type: Exec) {
     workingDir 'src/bike-ui'
-    commandLine 'ng', 'build', '--outputPath=../../build/resources/main/static'
+    commandLine 'ng', 'build','--prod', '--aot'
 }
 
 dependencies {
@@ -48,6 +48,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     // Spring Security Access Control List is a Spring component which supports Domain Object Security.spring
     implementation 'org.springframework.security:spring-security-acl'
+
+    implementation 'org.passay:passay:1.6.0'
+    implementation 'org.json:json:20200518'
 
     // mvc
     implementation 'org.springframework.boot:spring-boot-starter-web'

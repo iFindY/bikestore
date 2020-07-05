@@ -1,6 +1,6 @@
 package de.arkadi.shop.repository;
 
-import de.arkadi.shop.model.Bike;
+import de.arkadi.shop.entity.Bike;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
