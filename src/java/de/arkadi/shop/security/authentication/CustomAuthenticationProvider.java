@@ -30,7 +30,10 @@ public class CustomAuthenticationProvider extends DaoAuthenticationProvider {
             ofNullable(authentication.getCredentials()).orElseThrow(() -> e);
             attemptsLeft = this.authenticationService.decreaseRemainingLoginAttempts(authentication.getName());
 
-            if (attemptsLeft == 0) throw new LockedException("Account Locked after three false attempts");
+            if (attemptsLeft == 0) {
+                this.authenticationService.lockUser(authentication.getName());
+                throw new LockedException("Account Locked after three false attempts");
+            }
 
         }
     }
