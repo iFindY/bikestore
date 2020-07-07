@@ -18,10 +18,10 @@ public class CustomUserDetailsChecker implements UserDetailsChecker {
     @Override
     public void check(UserDetails userDetails) { // check if login should process further
 
-        Boolean disabled = this.authenticationService.performAuthenticationChecks(userDetails.getUsername());
+        boolean enabled = this.authenticationService.performAuthenticationChecks(userDetails.getUsername());
         Integer attemptsLeft = this.authenticationService.decreaseRemainingLoginAttempts(userDetails.getUsername());
 
-        if (disabled) {
+        if (!enabled) {
             throw new DisabledException("Account is inactive");
         } else if (attemptsLeft == 0) {
             throw new LockedException("Account Locked after three false attempts");

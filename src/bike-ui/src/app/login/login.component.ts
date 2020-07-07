@@ -41,7 +41,6 @@ export class LoginComponent implements OnInit {
   get f() { return this.loginForm.controls; }
 
   onSubmit() {
-    console.error("sdgcy<vcvfsdf");
     //this.authentication.login()
     //this.submitted = true;
 

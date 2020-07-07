@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsChecker;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -84,7 +85,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .addFilterBefore(authenticationFilter(), UsernamePasswordAuthenticationFilter.class)
             .formLogin()
                 .authenticationDetailsSource(new CustomWebAuthenticationDetailsSource())
-                .loginProcessingUrl("/api/auth/login")
+                .loginProcessingUrl("/api/auth/login") 
                 .successHandler(getAuthenticationSuccessHandler())
                 .failureHandler(getAuthenticationFailureHandler()).and()
 

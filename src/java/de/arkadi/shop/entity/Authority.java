@@ -13,7 +13,7 @@ import lombok.Data;
 @Entity
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-@Table(schema = "SECURITY", name = "USERS")
+@Table(schema = "SECURITY", name = "AUTHORITIES")
 public class Authority {
 
     @Id

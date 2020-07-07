@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { filter, map, shareReplay, tap } from 'rxjs/operators';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from './authentication.model';
 
@@ -64,10 +64,14 @@ export class AuthenticationService {
   }
 
   // any is for accessing unknown properties
-  login(email: string, password: string): Observable<any> {
-    return this.http.post<User>('/api/login', { email, password }).pipe(
-        shareReplay(),
-        tap(user => this.subject.next(user)));
+  login(mail: string, password: string): Observable<any> {
+
+    const headers = new HttpHeaders({ 'authentication': btoa(JSON.stringify({ mail, password }))});
+
+    return this.http.post<User>('api/auth/login', null, { headers: headers })
+        .pipe(
+            //shareReplay(),
+            tap(user => this.subject.next(user)));
   }
 
 

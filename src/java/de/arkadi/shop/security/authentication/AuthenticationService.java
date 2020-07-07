@@ -38,6 +38,6 @@ public class AuthenticationService {
     }
 
     public String getAuthority(String name){
-        return this.authoritiesRepository.getAuthorityByUsername(name).getAuthority();
+        return this.authoritiesRepository.findAuthorityByUsername(name).getAuthority();
     }
 }

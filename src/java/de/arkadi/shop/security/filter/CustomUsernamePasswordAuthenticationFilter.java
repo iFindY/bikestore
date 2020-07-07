@@ -33,23 +33,23 @@ public class CustomUsernamePasswordAuthenticationFilter extends UsernamePassword
     @Override
     public String obtainUsername(HttpServletRequest request) {
 
-        return ofNullable(request.getHeader("Authentication"))
+        return ofNullable(request.getHeader("authentication"))
                 .map(auth-> getDecoder().decode(auth))
                 .map(String::new)
                 .map(val -> { try { return new JSONObject(val); } catch (JSONException e) { return new JSONObject(); }})
-                .map(json-> { try { return json.getString("username"); } catch (JSONException e) { return ""; } })
-                .orElse(request.getParameter("username"));
+                .map(json-> { try { return json.getString("mail"); } catch (JSONException e) { return ""; } })
+                .orElse(request.getParameter("mail")); // if login data is not in header
     }
 
     @Override
     public String obtainPassword(HttpServletRequest request) {
 
-        return ofNullable(request.getHeader("Authentication"))
+        return ofNullable(request.getHeader("authentication"))
                 .map(auth-> getDecoder().decode(auth))
                 .map(String::new)
                 .map(val -> { try { return new JSONObject(val); } catch (Exception e) { return new JSONObject(); }})
                 .map(json-> { try { return json.getString("password"); } catch (Exception e) { return ""; } })
-                .orElse(request.getParameter("password"));
+                .orElse(request.getParameter("password")); // if login data is not in header
     }
 
 }
