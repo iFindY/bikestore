@@ -8,16 +8,15 @@ import { CurrentPathComponent } from './current-path/current-path.component';
 import { SearchComponent } from './search/search.component';
 import { ProductComponent } from './product/product.component';
 import { FooterComponent } from './footer/footer.component';
-import {MegaMenuModule} from 'primeng/megamenu';
-import { ButtonModule } from 'primeng/button';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
-import { LoginTooolBarComponent } from './toolbar/login/login-toool-bar.component';
+import { LoginToolBarComponent } from './toolbar/login/login-tool-bar.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DialogModule, SharedModule } from 'primeng';
-import {InputTextModule} from 'primeng/inputtext';
 import { LoginComponent } from './login/login.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import {  HttpClientModule } from '@angular/common/http';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
 @NgModule({
   declarations: [
     AppComponent,
@@ -27,23 +26,21 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
     SearchComponent,
     ProductComponent,
     FooterComponent,
-    LoginTooolBarComponent,
+    LoginToolBarComponent,
     LoginComponent
   ],
-  imports: [
-    BrowserAnimationsModule,
-    BrowserModule,
-    AppRoutingModule,
-    MegaMenuModule,
-    ButtonModule,
-    OverlayPanelModule,
-    SharedModule,
-    ReactiveFormsModule,
-    DialogModule,
-    ReactiveFormsModule,
-    InputTextModule,
-    HttpClientModule
-  ],
+    imports: [
+        BrowserAnimationsModule,
+        BrowserModule,
+        AppRoutingModule,
+        ReactiveFormsModule,
+        ReactiveFormsModule,
+        HttpClientModule,
+        MatDialogModule,
+        MatButtonModule,
+        MatInputModule,
+        MatIconModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

@@ -1,53 +1,5 @@
-  <p-megaMenu style="right: -13px" [model]="items">
-    <button
-      style="
-      border: none;
-      margin-top:8px;
-      font-size: 16px;
-      background: none"
-      icon="pi pi-sign-in"
-      widtht="45"
-      class="ui-button-secondary"
-      pButton
-      type="text"
-      label="Login"
-      (click)="showModalDialog()"></button>
-  </p-megaMenu>
+<!--mega menu here and button inside -->
+<button mat-button (click)="showLoginDialog()">Login</button>
 
-  <div style="margin:0 -8px 0 -8px;height: 20px;background-color: rgb(48,49,50)"></div>
-
-  <p-dialog class="rcorners1" [(visible)]="displayModal"
-            [modal]="true"
-            [style]="{width: '30vw', 'border-radius':'25px'}"
-            [baseZIndex]="10000"
-            [draggable]="false"
-            [resizable]="false"
-            [showHeader]="false"
-            [closeOnEscape]="true">
-
-    <img width="67" alt="Logo" src="../../ui/assets/logos/truck.svg"/>
-
-    <form [formGroup]="loginForm"
-          (ngSubmit)="onSubmit()"
-          autocomplete="off"
-          novalidate>
-
-      <div class="form-field" style="margin: 28px;">
-        <span class="ui-float-label" >
-            <input pInputText formControlName="email" type="email" size="30"
-                   id="float-email" style="border-radius: 10px">
-            <label for="float-email">Email</label></span></div>
-
-      <div class="form-field" style="margin: 30px;">
-        <span class="ui-float-label">
-            <input pInputText formControlName="password" type="password" size="30"
-                   id="float-password" style="border-radius: 10px">
-            <label for="float-password">Password</label></span></div>
-
-      <div class="form-field" style="margin: 30px;">
-          <button pButton label="Login" type="submit" [disabled]="loginForm.invalid"
-                  style="border-radius: 10px;width: 235px;height: 45px"></button></div>
-
-    </form>
-  </p-dialog>
-
+<!--this is the black under line -->
+<div style="margin:0 -8px 0 -8px;height: 20px;background-color: rgb(48,49,50)"></div>

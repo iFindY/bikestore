@@ -1,51 +1,52 @@
-<h1 mat-dialog-title>Dialog with elements</h1>
-<div mat-dialog-content>
+<h1 mat-dialog-title style="font-weight: bold">Sign In</h1>
+<h1 mat-dialog-title style="margin-bottom: 90px;">Sign Up</h1>
+
+<div mat-dialog-content style="text-align: center;">
+<!--    <img width="67" alt="Logo" src="../../ui/assets/logos/truck.svg" />-->
+
     <form [formGroup]="loginForm"
           (ngSubmit)="onSubmit()"
-          autocomplete="off"
-          novalidate>
+          autocomplete="off">
 
-        <div class="form-field" style="margin: 28px;">
-        <span style="display:block;position:relative">
-            <input formControlName="email"
-                   pInputText="text"
-                   type="email"
-                   size="30"
-                   id="email"
-                   style="border-radius: 10px"
-                   (click)="setClickedIn()">
-            <label for="email" [@moveUp]="clicked">Email</label></span></div>
+        <div><!--username-->
+            <mat-form-field  appearance="standard"  style="text-align: center">
+                <mat-icon matSuffix>account_circle</mat-icon>
+                <mat-label>Email</mat-label>
+                <mat-hint *ngIf="emailFocus && loginForm.controls.email.invalid">Ex. peter@gmail.com</mat-hint>
+                <input  (focus)="setEmailFocused(true)" (blur)="setEmailFocused(false)"
+                        formControlName="email"
+                       matInput></mat-form-field></div>
 
-        <div class="form-field" style="margin: 30px 30px 5px 30px;">
-        <span class="ui-float-label">
-            <input formControlName="password"
-                   pInputText
-                   type="password"
-                   size="30"
-                   id="password"
-                   style="border-radius: 10px">
-            <label for="password">Password</label></span></div>
 
-        <div class="form-field">
-            <button pButton style="left: 75px; outline: none;outline:red;"
-                    label="Forgot Password"
-                    class="unstyled-button"></button>
+        <div><!--password-->
+            <mat-form-field appearance="standard"  style="text-align: center">
+                <mat-icon matSuffix>lock</mat-icon>
+                <mat-label>Password</mat-label>
+                <mat-hint *ngIf="passwordFocus && loginForm.controls.password.invalid">Ex. Pa$$word!195</mat-hint>
+                <mat-error  style="margin-right: 111px;" *ngIf="loginFailed">wrong credentials</mat-error>
+                <input (focus)="setPasswordFocused(true)" (blur)="setPasswordFocused(false)"
+                        formControlName="password" matInput type="password"></mat-form-field></div>
+
+
+
+        <div style="margin-left:119px;">
+            <button class="no-hover-effect" id="smallButton" [disableRipple]="true" mat-button>forgot password?</button>
         </div>
 
-        <div class="form-field"
-             style="margin: 5px 30px 15px 30px;">
-            <button pButton
-                    label="Login"
+
+        <div style="margin: 22px 30px 15px 30px;">
+            <button mat-raised-button
+                    color="primary"
                     type="submit" [disabled]="loginForm.invalid"
-                    style="border-radius: 10px;width: 235px;height: 45px"></button>
+                    style="border-radius: 10px;width: 210px;height: 35px">Sign In</button></div>
+
+        <div style="margin: 5px 30px 55px 30px;">
+            <button class="no-hover-effect" id="register" [disableRipple]="true" mat-button>Register</button>
         </div>
 
-        <div class="form-field">
-            <button pButton label="Register" class="unstyled-button"></button>
-        </div>
     </form>
 
 </div>
-<div mat-dialog-actions>
-    <button mat-button mat-dialog-close>Close</button>
-</div>
+<!--<div mat-dialog-actions>-->
+<!--    <button mat-button mat-dialog-close>Close</button>-->
+<!--</div>-->

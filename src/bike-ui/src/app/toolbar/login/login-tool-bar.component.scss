@@ -1,0 +1,41 @@
+
+
+::ng-deep {
+    .mat-dialog-container{
+        border-radius: 30px;
+    }
+
+    #smallButton {
+        line-height: 12px;
+        font-size: 11px;
+        padding: 0;
+        transition: color 0.5s ease-in;
+
+        .mat-button-focus-overlay {
+            background-color: transparent;
+        }
+    }
+
+    #smallButton:hover {
+        color: dodgerblue;
+             transition: color 0.5s ease;
+    }
+
+    #register {
+        padding: 0;
+        line-height: 16px;
+        background-color: transparent;
+        transition: color 0.5s ease-in;
+
+        .mat-button-focus-overlay {
+            background-color:transparent;
+        }
+
+    }
+
+    #register:hover {
+        color: dodgerblue;
+        transition: color 0.5s ease;
+        }
+
+}

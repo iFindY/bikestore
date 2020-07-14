@@ -1,0 +1,10 @@
+{
+    "/ui/*": {
+        "target": "http://localhost:4200",
+        "logLevel": "debug",
+        "secure": false,
+        "pathRewrite": {
+            "^/ui/": "/"
+        }
+    }
+}

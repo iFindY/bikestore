@@ -33,10 +33,39 @@
 
 // login dialog
 p-dialog {
+
+    max-height: 380px;
+    min-height: 380px;
+
+
+    .unstyled-button {
+        border: none;
+        padding: 0;
+        background: none;
+        color: #174f89;
+        margin-bottom: 10px;
+        font-size: 11px;
+
+        outline: none !important;
+        box-shadow: none !important;
+        border-color: transparent !important;
+
+    }
+
+    .unstyled-button:hover{
+        color: #719cbd
+    }
+
     img {
         display: block;
         margin-left: auto;
         margin-right: auto;
+    }
+
+    ::ng-deep .ui-dialog {
+        max-width: 330px;
+        min-width: 330px;
+        overflow: hidden;
     }
 
     ::ng-deep .ui-dialog-content {
@@ -49,18 +78,25 @@ p-dialog {
 
         }
 
-        ::ng-deep label {
-            position: absolute;
-            left: 42%
+        .ui-inputtext{
+
         }
-
+        ::ng-deep label {
+            color: lightslategray;
+            vertical-align: middle;
+            left:42%
+        }
+        #email{
+            top:42px;
+        }
     }
-
-
-
-
 }
 
+@keyframes moveLeft {
+    0% {transform: translateX(0px)}
+    30% {transform: translateY(-18px) scale(0.7)}
+    100% {transform: translate(-95px,-18px) scale(0.7)}
+}
 
 
 
