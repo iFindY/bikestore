@@ -1,0 +1,51 @@
+<h1 mat-dialog-title>Dialog with elements</h1>
+<div mat-dialog-content>
+    <form [formGroup]="loginForm"
+          (ngSubmit)="onSubmit()"
+          autocomplete="off"
+          novalidate>
+
+        <div class="form-field" style="margin: 28px;">
+        <span style="display:block;position:relative">
+            <input formControlName="email"
+                   pInputText="text"
+                   type="email"
+                   size="30"
+                   id="email"
+                   style="border-radius: 10px"
+                   (click)="setClickedIn()">
+            <label for="email" [@moveUp]="clicked">Email</label></span></div>
+
+        <div class="form-field" style="margin: 30px 30px 5px 30px;">
+        <span class="ui-float-label">
+            <input formControlName="password"
+                   pInputText
+                   type="password"
+                   size="30"
+                   id="password"
+                   style="border-radius: 10px">
+            <label for="password">Password</label></span></div>
+
+        <div class="form-field">
+            <button pButton style="left: 75px; outline: none;outline:red;"
+                    label="Forgot Password"
+                    class="unstyled-button"></button>
+        </div>
+
+        <div class="form-field"
+             style="margin: 5px 30px 15px 30px;">
+            <button pButton
+                    label="Login"
+                    type="submit" [disabled]="loginForm.invalid"
+                    style="border-radius: 10px;width: 235px;height: 45px"></button>
+        </div>
+
+        <div class="form-field">
+            <button pButton label="Register" class="unstyled-button"></button>
+        </div>
+    </form>
+
+</div>
+<div mat-dialog-actions>
+    <button mat-button mat-dialog-close>Close</button>
+</div>
