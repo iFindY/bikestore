@@ -1,52 +1,141 @@
-<h1 mat-dialog-title style="font-weight: bold">Sign In</h1>
-<h1 mat-dialog-title style="margin-bottom: 90px;">Sign Up</h1>
+<div class="panes" [@slide]="activePane">
+    <div>
+        <h1 mat-dialog-title style="font-weight: bold">Sign In</h1>
+        <h1 mat-dialog-title style="margin-bottom: 90px;">Sign Up</h1>
+        <div mat-dialog-content style="text-align: center;">
+            <!--    <img width="67" alt="Logo" src="../../ui/assets/logos/truck.svg" />-->
 
-<div mat-dialog-content style="text-align: center;">
-<!--    <img width="67" alt="Logo" src="../../ui/assets/logos/truck.svg" />-->
+            <form [formGroup]="loginForm"
+                  (ngSubmit)="onSubmit()"
+                  autocomplete="on">
 
-    <form [formGroup]="loginForm"
-          (ngSubmit)="onSubmit()"
-          autocomplete="off">
+                <div><!--username-->
+                    <mat-form-field appearance="standard" style="text-align: center">
+                        <mat-label>Email</mat-label>
+                        <mat-icon matSuffix>account_circle</mat-icon>
+                        <mat-hint *ngIf="emailFocus && loginForm.controls.email.invalid">Ex. peter@gmail.com</mat-hint>
 
-        <div><!--username-->
-            <mat-form-field  appearance="standard"  style="text-align: center">
-                <mat-icon matSuffix>account_circle</mat-icon>
-                <mat-label>Email</mat-label>
-                <mat-hint *ngIf="emailFocus && loginForm.controls.email.invalid">Ex. peter@gmail.com</mat-hint>
-                <input  (focus)="setEmailFocused(true)" (blur)="setEmailFocused(false)"
-                        formControlName="email"
-                       matInput></mat-form-field></div>
-
-
-        <div><!--password-->
-            <mat-form-field appearance="standard"  style="text-align: center">
-                <mat-icon matSuffix>lock</mat-icon>
-                <mat-label>Password</mat-label>
-                <mat-hint *ngIf="passwordFocus && loginForm.controls.password.invalid">Ex. Pa$$word!195</mat-hint>
-                <mat-error  style="margin-right: 111px;" *ngIf="loginFailed">wrong credentials</mat-error>
-                <input (focus)="setPasswordFocused(true)" (blur)="setPasswordFocused(false)"
-                        formControlName="password" matInput type="password"></mat-form-field></div>
+                        <input matInput
+                               formControlName="email"
+                               type="email"
+                               (focus)="setEmailFocused(true)"
+                               (blur)="setEmailFocused(false)"></mat-form-field>
+                </div>
 
 
+                <div><!--password-->
+                    <mat-form-field appearance="standard" style="text-align: center">
+                        <mat-label>Password</mat-label>
+                        <mat-icon matSuffix>lock</mat-icon>
+                        <mat-hint *ngIf="passwordFocus && loginForm.controls.password.invalid">Ex. Pa$$word!195</mat-hint>
+                        <mat-error style="margin-right: 111px;" *ngIf="loginFailed">wrong credentials</mat-error>
 
-        <div style="margin-left:119px;">
-            <button class="no-hover-effect" id="smallButton" [disableRipple]="true" mat-button>forgot password?</button>
+                        <input matInput
+                               formControlName="password"
+                               type="password"
+                               (focus)="setPasswordFocused(true)"
+                               (blur)="setPasswordFocused(false)"></mat-form-field>
+                </div>
+
+
+                <div style="margin-left:119px;"> <!--reset-->
+                    <button mat-button
+                            id="smallButton"
+                            class="no-hover-effect"
+                            [disableRipple]="true">forgot password?
+                    </button>
+                </div>
+
+
+                <div style="margin: 22px 30px 15px 30px;"> <!--login-->
+                    <button mat-raised-button
+                            color="primary"
+                            type="submit" [disabled]="loginForm.invalid"
+                            style="border-radius: 10px;width: 210px;height: 35px">Sign In
+                    </button>
+                </div>
+
+                <div style="margin: 5px 30px 55px 30px;">
+                    <button mat-button
+                            class="no-hover-effect register"
+                            [disableRipple]="true"
+                            (click)="activePane = 'right'">Sign Up
+                    </button>
+                </div>
+            </form>
         </div>
+    </div>
+    <div>
+        <h1 mat-dialog-title>Sign In</h1>
+        <h1 mat-dialog-title style="margin-bottom: 90px;font-weight: bold">Sign Up</h1>
+        <div mat-dialog-content style="text-align: center;">
+            <!--    <img width="67" alt="Logo" src="../../ui/assets/logos/truck.svg" />-->
+
+            <form [formGroup]="loginForm"
+                  (ngSubmit)="onSubmit()"
+                  autocomplete="on">
+
+                <div><!--username-->
+                    <mat-form-field appearance="standard" style="text-align: center">
+                        <mat-label>Email</mat-label>
+                        <mat-icon matSuffix>account_circle</mat-icon>
+                        <mat-hint *ngIf="emailFocus && loginForm.controls.email.invalid">Ex. peter@gmail.com</mat-hint>
+
+                        <input matInput
+                               formControlName="email"
+                               type="email"
+                               (focus)="setEmailFocused(true)"
+                               (blur)="setEmailFocused(false)"></mat-form-field>
+                </div>
 
 
-        <div style="margin: 22px 30px 15px 30px;">
-            <button mat-raised-button
-                    color="primary"
-                    type="submit" [disabled]="loginForm.invalid"
-                    style="border-radius: 10px;width: 210px;height: 35px">Sign In</button></div>
+                <div><!--password-->
+                    <mat-form-field appearance="standard" style="text-align: center">
+                        <mat-label>Password</mat-label>
+                        <mat-icon matSuffix>lock</mat-icon>
+                        <mat-hint *ngIf="passwordFocus && loginForm.controls.password.invalid">Ex. Pa$$word!195</mat-hint>
+                        <mat-error style="margin-right: 111px;" *ngIf="loginFailed">wrong credentials</mat-error>
 
-        <div style="margin: 5px 30px 55px 30px;">
-            <button class="no-hover-effect" id="register" [disableRipple]="true" mat-button>Register</button>
+                        <input matInput
+                               formControlName="password"
+                               type="password"
+                               (focus)="setPasswordFocused(true)"
+                               (blur)="setPasswordFocused(false)"></mat-form-field>
+                </div>
+
+
+                <div><!--password-->
+                    <mat-form-field appearance="standard" style="text-align: center">
+                        <mat-label>Confirm Password</mat-label>
+                        <mat-icon matSuffix>lock</mat-icon>
+                        <mat-hint *ngIf="passwordFocus && loginForm.controls.password.invalid">Ex. Pa$$word!195</mat-hint>
+                        <mat-error style="margin-right: 111px;" *ngIf="loginFailed">wrong credentials</mat-error>
+
+                        <input matInput
+                               formControlName="password"
+                               type="password"
+                               (focus)="setPasswordFocused(true)"
+                               (blur)="setPasswordFocused(false)"></mat-form-field>
+                </div>
+
+
+
+                <div style="margin: 22px 30px 15px 30px;"> <!--login-->
+                    <button mat-raised-button
+                            color="primary"
+                            type="submit" [disabled]="loginForm.invalid"
+                            style="border-radius: 10px;width: 210px;height: 35px">Sign Up
+                    </button>
+                </div>
+
+                <div style="margin: 5px 30px 55px 30px;">
+                    <button mat-button
+                            class="no-hover-effect register"
+                            [disableRipple]="true"
+                            (click)="activePane = 'left'">Sign In
+                    </button>
+                </div>
+            </form>
         </div>
-
-    </form>
-
+    </div>
 </div>
-<!--<div mat-dialog-actions>-->
-<!--    <button mat-button mat-dialog-close>Close</button>-->
-<!--</div>-->

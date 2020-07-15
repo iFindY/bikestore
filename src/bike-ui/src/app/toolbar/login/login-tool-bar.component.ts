@@ -1,12 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthenticationService } from '../../services/authentication.service';
 import { filter, tap } from 'rxjs/operators';
+import { animate, state, style, transition, trigger } from '@angular/animations';
+type PaneType = 'left' | 'right';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login-tool-bar.component.html',
-  styleUrls: ['./login-tool-bar.component.scss']
+    selector: 'app-login',
+    templateUrl: './login-tool-bar.component.html',
+    styleUrls: ['./login-tool-bar.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    animations: [
+        trigger('slide', [
+            state('left', style({ transform: 'translateX(0)' })),
+            state('right', style({ transform: 'translateX(-50%)' })),
+            transition('* => *', animate(300))
+        ])]
+
 })
 export class LoginToolBarComponent implements OnInit {
 
@@ -17,9 +27,10 @@ export class LoginToolBarComponent implements OnInit {
     passwordFocus: boolean;
     loginFailed: boolean = false;
 
+     activePane: PaneType = 'left'; // default
 
 
-  constructor(private fb: FormBuilder,
+    constructor(private fb: FormBuilder,
               private authService:AuthenticationService) {
 
       this.loginForm = fb.group(
