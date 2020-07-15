@@ -1,7 +1,7 @@
 <div >
     <div>
-        <h1 mat-dialog-title [ngClass]="{'bold': passPane==='top'}" style="margin-bottom: 11px" >Sign In</h1>
-        <h1 mat-dialog-title style="margin-bottom: 90px;" [ngClass]="{'bold': passPane==='bottom'}">Sign Up</h1>
+        <h1 mat-dialog-title [ngClass]="{'bold': passPane==='login'}" style="margin-bottom: 11px" >Sign In</h1>
+        <h1 mat-dialog-title style="margin-bottom: 90px;" [ngClass]="{'bold': passPane==='register'}">Sign Up</h1>
         <div mat-dialog-content style="text-align: center;">
 
             <form [formGroup]="loginForm"
@@ -38,7 +38,7 @@
 
                     <!--confirm password-->
                     <mat-form-field appearance="standard" style="text-align: center">
-                        <mat-label>Confirm Password</mat-label>
+                        <mat-label>Verify Password</mat-label>
                         <mat-icon matSuffix>lock</mat-icon>
                         <mat-hint *ngIf="passwordFocus || loginForm.controls.password.invalid">Ex. Pa$$word!195</mat-hint>
                         <mat-error style="margin-right: 111px;" *ngIf="loginFailed">wrong credentials</mat-error>
@@ -50,7 +50,7 @@
                                (blur)="setPasswordFocused(false)"></mat-form-field>
                 </div>
 
-                <!--forgot password-->
+                <!--forgot password--> <!--INWORK hide disable smoothly-->
                 <div style="margin-left:119px;">
                     <button mat-button
                             id="smallButton"

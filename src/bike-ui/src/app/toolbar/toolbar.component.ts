@@ -31,7 +31,7 @@ export class ToolbarComponent  {
 
 
   showLoginDialog() {
-    this.dialog.open(LoginToolBarComponent);
+    this.dialog.open(LoginToolBarComponent,{ autoFocus: false });
   }
 
 

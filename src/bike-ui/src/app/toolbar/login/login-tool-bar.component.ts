@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, FormGroupDirective, Validators } from '@angular
 import { AuthenticationService } from '../../services/authentication.service';
 import { filter, tap } from 'rxjs/operators';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-type PassType = 'top' | 'bottom';
+type PassType = 'login' | 'register';
 
 @Component({
     selector: 'app-login',
@@ -18,8 +18,8 @@ type PassType = 'top' | 'bottom';
             )
         ]),
         trigger('move',
-            [state('top', style({ height: '70px' })),
-                state('bottom', style({ height: '136px' })),
+            [state('login', style({ height: '70px' })),
+                state('register', style({ height: '136px' })),
                 transition('* => *', animate('300ms ease-out'))],
             )
     ]
@@ -34,7 +34,7 @@ export class LoginToolBarComponent implements OnInit {
     emailFocus: boolean;
     passwordFocus: boolean;
     loginFailed: boolean = false;
-    passPane: PassType = 'top';
+    passPane: PassType = 'login';
 
 
     constructor(private fb: FormBuilder,
@@ -63,8 +63,8 @@ export class LoginToolBarComponent implements OnInit {
     const email = this.loginForm.get('email').value,
         password = this.loginForm.get('password').value;
 
-    // this.authService.login(email, password)
-    //     .subscribe(() => console.log('user is logged in'));
+    this.authService.login(email, password)
+        .subscribe(() => console.log('user is logged in'));
   }
 
     setEmailFocused(stat:boolean) {
@@ -76,16 +76,19 @@ export class LoginToolBarComponent implements OnInit {
     };
 
     switchScreen() {
-        this.passPane = this.passPane==='bottom'?'top':'bottom';
+        this.passPane = this.passPane==='register'?'login':'register';
     }
 
     get invalid():boolean {
-        return this.loginForm ?
-            !this.loginForm.valid ||
-            !!!this.loginForm.get('email').value ||
-            !!!this.loginForm.get('password').value
-            : false;
+        if(!!!this.loginForm ) return false;
 
+        let login =
+            !!this.loginForm.get('email').value &&
+            !!this.loginForm.get('password').value &&
+            this.loginForm.valid;
+
+        return this.passPane !== 'register' ? !login:
+            !(login && !!this.loginForm.get('confirmPassword').value);
 
     }
 }
