@@ -1,20 +1,14 @@
 
-:host {
-    display: block;
-    overflow: hidden; /* Hide everything that doesn't fit component */
-}
 
-.panes {
-    height: 100%;
-    width: 200%;      /* Make the parent element to take up twice of the component's width */
-    display: flex;    /* Align all children in a row */
-    div { flex: 1; }  /* Evenly divide width between children */
-}
+ .bold{
+     font-weight: bold;
+ }
 
 ::ng-deep {
     .mat-dialog-container{
         border-radius: 30px;
         max-width: 340px;
+        min-height: 590px;
     }
 
     #smallButton {

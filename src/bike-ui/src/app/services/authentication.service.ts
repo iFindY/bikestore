@@ -17,7 +17,7 @@ export class AuthenticationService {
 
   // need an initial value
   private subject = new BehaviorSubject<User>(undefined);
-  // when ever we subscribe we get always the last value, filter only valid users
+  // when ever we subscribe we get always the last value, filter only invalid users
   user$: Observable<User> = this.subject.asObservable().pipe(filter(user=>!!user));
   // derive from user observable, '!!' operator convert to boolean
   isLoggedIn$: Observable<boolean> = this.user$.pipe(map(user => !!user.id));

@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
 import { AuthenticationService } from '../../services/authentication.service';
 import { filter, tap } from 'rxjs/operators';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-type PaneType = 'left' | 'right';
+type PassType = 'top' | 'bottom';
 
 @Component({
     selector: 'app-login',
@@ -14,11 +14,19 @@ type PaneType = 'left' | 'right';
         trigger('slide', [
             state('left', style({ transform: 'translateX(0)' })),
             state('right', style({ transform: 'translateX(-50%)' })),
-            transition('* => *', animate(300))
-        ])]
+            transition('* => *', animate('250ms ease-out')
+            )
+        ]),
+        trigger('move',
+            [state('top', style({ height: '70px' })),
+                state('bottom', style({ height: '136px' })),
+                transition('* => *', animate('300ms ease-out'))],
+            )
+    ]
 
 })
 export class LoginToolBarComponent implements OnInit {
+
 
     loginForm: FormGroup;
     passwordPattern = /^(?=.*[A-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[\&\+\,\:\;\=\?\#\$\!\=\*\'\@])\S{6,12}$/;
@@ -26,8 +34,7 @@ export class LoginToolBarComponent implements OnInit {
     emailFocus: boolean;
     passwordFocus: boolean;
     loginFailed: boolean = false;
-
-     activePane: PaneType = 'left'; // default
+    passPane: PassType = 'top';
 
 
     constructor(private fb: FormBuilder,
@@ -35,14 +42,16 @@ export class LoginToolBarComponent implements OnInit {
 
       this.loginForm = fb.group(
           {
-            email: [, [Validators.required,Validators.pattern(this.mailPattern)]],
-            password: [, [Validators.required, Validators.pattern(this.passwordPattern)]]
+              email: [, [Validators.pattern(this.mailPattern)]],
+              password: [, [ Validators.pattern(this.passwordPattern)]],
+              confirmPassword: [, [ Validators.pattern(this.passwordPattern)]]
+
           })
   }
 
   ngOnInit(): void {
 
-    //INWORK  just for logging
+    //INWORK just for logging
     this.loginForm.statusChanges
         .pipe(
             filter(status => status === 'VALID'),
@@ -54,8 +63,8 @@ export class LoginToolBarComponent implements OnInit {
     const email = this.loginForm.get('email').value,
         password = this.loginForm.get('password').value;
 
-    this.authService.login(email, password)
-        .subscribe(() => console.log('user is logged in'));
+    // this.authService.login(email, password)
+    //     .subscribe(() => console.log('user is logged in'));
   }
 
     setEmailFocused(stat:boolean) {
@@ -66,7 +75,18 @@ export class LoginToolBarComponent implements OnInit {
         this.passwordFocus = stat;
     };
 
+    switchScreen() {
+        this.passPane = this.passPane==='bottom'?'top':'bottom';
+    }
+
+    get invalid():boolean {
+        return this.loginForm ?
+            !this.loginForm.valid ||
+            !!!this.loginForm.get('email').value ||
+            !!!this.loginForm.get('password').value
+            : false;
 
 
+    }
 }
 
