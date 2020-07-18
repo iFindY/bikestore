@@ -26,11 +26,16 @@ type Button = 'Sign In' | 'Sign Up';
         trigger('slide', [
             state('login', style({ transform: 'translateX(0)' })),
             state('reset', style({ transform: 'translateX(-50%)' })),
-            transition('* => reset', [
+            transition('login => reset', [
                 animate("600ms", keyframes([
                     style({ transform: 'translateX(0)', offset: 0}),
-                    style({ transform: 'translateX(-49%)', offset: 0.25}),
-                    style({ transform: 'translateX(-50%)',  offset: 1}),]))]),]),
+                    style({ transform: 'translateX(-49.5%)', offset: 0.2}),
+                    style({ transform: 'translateX(-50%)',  offset: 1}),]))]),
+            transition('reset => login', [
+                animate("600ms", keyframes([
+                    style({ transform: 'translateX(-50)', offset: 0}),
+                    style({ transform: 'translateX(-0.5%)', offset: 0.2}),
+                    style({ transform: 'translateX(-0%)',  offset: 1}),]))])])
 
         // TODO is not important right know, include new fonts with a lot of range bolt sizes
         // trigger('bold',[
