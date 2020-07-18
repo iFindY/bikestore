@@ -1,9 +1,11 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, FormGroupDirective, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthenticationService } from '../../services/authentication.service';
 import { filter, tap } from 'rxjs/operators';
-import { animate, state, style, transition, trigger } from '@angular/animations';
+import { animate, keyframes, state, style, transition, trigger } from '@angular/animations';
 type PassType = 'login' | 'register';
+type screenType = 'login' | 'reset';
+type Button = 'Sign In' | 'Sign Up';
 
 @Component({
     selector: 'app-login',
@@ -11,17 +13,36 @@ type PassType = 'login' | 'register';
     styleUrls: ['./login-tool-bar.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     animations: [
+        trigger('move', [
+            state('login', style({ height: '70px' })),
+            state('register', style({ height: '136px' })),
+            transition('login <=> register', animate('300ms ease-out'))]),
+
+        trigger('moveText', [
+            state('login', style({ 'margin-top': '5px' })),
+            state('register', style({  'margin-top': '33px' })),
+            transition('login <=> register', animate('300ms ease-out'))]),
+
         trigger('slide', [
-            state('left', style({ transform: 'translateX(0)' })),
-            state('right', style({ transform: 'translateX(-50%)' })),
-            transition('* => *', animate('250ms ease-out')
-            )
+            state('login', style({ transform: 'translateX(0)' })),
+            state('reset', style({ transform: 'translateX(-50%)' })),
+            transition('* => reset', [
+                animate("500ms", keyframes([
+                    style({ transform: 'translateX(0)', offset: 0}),
+                    style({ transform: 'translateX(-46%)', offset: 0.25}),
+                    style({ transform: 'translateX(-50%)',  offset: 1}),
+                ]))
+            ]),
         ]),
-        trigger('move',
-            [state('login', style({ height: '70px' })),
-                state('register', style({ height: '136px' })),
-                transition('* => *', animate('300ms ease-out'))],
-            )
+
+
+        // trigger('bold',[
+        //     transition('reset',
+        //         animate('100ms 2s',
+        //             style({ 'font-weight': 'bold' })
+        //         )
+        //     )
+        // ])
     ]
 
 })
@@ -33,14 +54,22 @@ export class LoginToolBarComponent implements OnInit {
     mailPattern = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
     emailFocus: boolean;
     passwordFocus: boolean;
+    confirmPasswordFocus: boolean;
     loginFailed: boolean = false;
     passPane: PassType = 'login';
+    screen: screenType = 'login';
+
+    secondButton: Button = 'Sign Up'
+    mainButton: Button = 'Sign In';
+    help: string = 'Dont have an account?';
+
+    activePane: screenType = 'login';
 
 
     constructor(private fb: FormBuilder,
               private authService:AuthenticationService) {
 
-      this.loginForm = fb.group(
+        this.loginForm = fb.group(
           {
               email: [, [Validators.pattern(this.mailPattern)]],
               password: [, [ Validators.pattern(this.passwordPattern)]],
@@ -71,12 +100,27 @@ export class LoginToolBarComponent implements OnInit {
         this.emailFocus = stat;
     };
 
+    setConfirmPasswordFocused(stat:boolean) {
+        this.confirmPasswordFocus = stat;
+    };
     setPasswordFocused(stat:boolean) {
         this.passwordFocus = stat;
     };
 
+
     switchScreen() {
-        this.passPane = this.passPane==='register'?'login':'register';
+        if (this.passPane === 'register') {
+            this.passPane = 'login';
+            this.mainButton = 'Sign In'
+            this.secondButton = 'Sign Up';
+            this.help='Dont have an account?';
+        } else {
+            this.passPane = 'register';
+            this.mainButton = 'Sign Up'
+            this.secondButton = 'Sign In';
+            this.help='Already registered?';
+
+        }
     }
 
     get invalid():boolean {
