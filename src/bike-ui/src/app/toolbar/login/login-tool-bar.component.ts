@@ -27,19 +27,17 @@ type Button = 'Sign In' | 'Sign Up';
             state('login', style({ transform: 'translateX(0)' })),
             state('reset', style({ transform: 'translateX(-50%)' })),
             transition('* => reset', [
-                animate("500ms", keyframes([
+                animate("600ms", keyframes([
                     style({ transform: 'translateX(0)', offset: 0}),
-                    style({ transform: 'translateX(-46%)', offset: 0.25}),
-                    style({ transform: 'translateX(-50%)',  offset: 1}),
-                ]))
-            ]),
-        ]),
+                    style({ transform: 'translateX(-49%)', offset: 0.25}),
+                    style({ transform: 'translateX(-50%)',  offset: 1}),]))]),]),
 
-
+        // TODO is not important right know, include new fonts with a lot of range bolt sizes
         // trigger('bold',[
-        //     transition('reset',
-        //         animate('100ms 2s',
-        //             style({ 'font-weight': 'bold' })
+        //     state('reset', style({ 'font-weight': '900' })),
+        //     transition('*=> reset',
+        //         animate('1000ms 4s',
+        //             style({ 'font-weight': '900' })
         //         )
         //     )
         // ])
@@ -64,6 +62,7 @@ export class LoginToolBarComponent implements OnInit {
     help: string = 'Dont have an account?';
 
     activePane: screenType = 'login';
+    textBold: screenType;
 
 
     constructor(private fb: FormBuilder,
