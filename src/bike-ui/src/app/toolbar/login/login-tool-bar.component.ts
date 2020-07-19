@@ -71,9 +71,19 @@ export class LoginToolBarComponent implements OnInit {
           {
               email: [, [Validators.pattern(this.mailPattern)]],
               password: [, [ Validators.pattern(this.passwordPattern)]],
-              confirmPassword: [, [ Validators.pattern(this.passwordPattern)]]
 
-          })
+              confirmPassword: [, [ Validators.pattern(this.passwordPattern)]],
+
+              resetEmail: [, [Validators.pattern(this.mailPattern)]],
+              resetCode: this.fb.group({
+                  one: [, [Validators.pattern(/[0-9A-Z]/)]],
+                  two: [, [Validators.pattern(/[0-9A-Z]/)]],
+                  three: [, [Validators.pattern(/[0-9A-Z]/)]],
+                  four: [, [Validators.pattern(/[0-9A-Z]/)]],  }),
+              resetPassword: [, [ Validators.pattern(this.passwordPattern)]],
+              resetNewPassword: [, [ Validators.pattern(this.passwordPattern)]]
+          }, { validator: MustMatch('password', 'confirmPassword') })
+
   }
 
   ngOnInit(): void {
@@ -132,6 +142,30 @@ export class LoginToolBarComponent implements OnInit {
         return this.passPane !== 'register' ? !login:
             !(login && !!this.loginForm.get('confirmPassword').value);
 
+    }
+
+    get f() { return this.loginForm.controls; }
+
+}
+
+
+// custom validator to check that two fields match
+export function MustMatch(controlName: string, matchingControlName: string) {
+    return (formGroup: FormGroup) => {
+        const control = formGroup.controls[controlName];
+        const matchingControl = formGroup.controls[matchingControlName];
+
+        if (matchingControl.errors && !matchingControl.errors.mustMatch) {
+            // return if another validator has already found an error on the matchingControl
+            return;
+        }
+
+        // set error on matchingControl if validation fails
+        if (control.value !== matchingControl.value) {
+            matchingControl.setErrors({ mustMatch: true });
+        } else {
+            matchingControl.setErrors(null);
+        }
     }
 }
 
