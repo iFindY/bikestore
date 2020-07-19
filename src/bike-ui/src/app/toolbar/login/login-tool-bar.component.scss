@@ -21,7 +21,13 @@
         max-width: 340px;
         min-height: 590px;
         max-height: 590px;
+
+        .mat-form-field-appearance-outline .mat-form-field-outline {
+            top: 0.6em;
+        }
+
     }
+
 
     #smallButton {
         line-height: 12px;

@@ -111,18 +111,32 @@
 
                 <!--verification code-->
                 <div>
-                    <mat-form-field appearance="standard" style="text-align: center">
-                        <mat-label>Verification Code</mat-label>
-                        <mat-icon matSuffix>lock</mat-icon>
-                        <mat-hint *ngIf="passwordFocus || loginForm.controls.email.invalid">
-                            Enter code received with email
-                        </mat-hint>
-
+                    <mat-form-field appearance="outline" style="width:30px;margin-right: 20px;margin-left: 20px">
+                    <input matInput
+                               maxlength="1"
+                               formControlName="verificationCode"
+                               type="text"
+                        ></mat-form-field>
+                    <mat-form-field appearance="outline" style="width:30px;margin-right: 20px">
                         <input matInput
-                               formControlName="email"
-                               type="email"
-                               (focus)="setPasswordFocused(true)"
-                               (blur)="setPasswordFocused(false)"></mat-form-field></div>
+                               maxlength="1"
+                               formControlName="verificationCode"
+                               type="text"
+                        ></mat-form-field>
+                    <mat-form-field appearance="outline" style="width:30px;margin-right: 20px">
+                        <input matInput
+                               maxlength="1"
+                               formControlName="verificationCode"
+                               type="text"
+                        ></mat-form-field>
+                    <mat-form-field appearance="outline" style="width:30px;margin-right: 20px">
+                        <input matInput
+                               maxlength="1"
+                               formControlName="verificationCode"
+                               type="text"
+                        ></mat-form-field>
+                </div>
+
 
                 <!--main action-->
                 <div style="margin: 40px 30px 15px 30px;">

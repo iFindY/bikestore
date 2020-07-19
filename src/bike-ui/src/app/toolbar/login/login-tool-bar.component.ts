@@ -29,12 +29,12 @@ type Button = 'Sign In' | 'Sign Up';
             transition('login => reset', [
                 animate("600ms", keyframes([
                     style({ transform: 'translateX(0)', offset: 0}),
-                    style({ transform: 'translateX(-49.5%)', offset: 0.2}),
+                    style({ transform: 'translateX(-49.7%)', offset: 0.2}),
                     style({ transform: 'translateX(-50%)',  offset: 1}),]))]),
             transition('reset => login', [
                 animate("600ms", keyframes([
                     style({ transform: 'translateX(-50)', offset: 0}),
-                    style({ transform: 'translateX(-0.5%)', offset: 0.2}),
+                    style({ transform: 'translateX(-0.3%)', offset: 0.2}),
                     style({ transform: 'translateX(0%)',  offset: 1}),]))])])
     ]
 
