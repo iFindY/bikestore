@@ -35,17 +35,7 @@ type Button = 'Sign In' | 'Sign Up';
                 animate("600ms", keyframes([
                     style({ transform: 'translateX(-50)', offset: 0}),
                     style({ transform: 'translateX(-0.5%)', offset: 0.2}),
-                    style({ transform: 'translateX(-0%)',  offset: 1}),]))])])
-
-        // TODO is not important right know, include new fonts with a lot of range bolt sizes
-        // trigger('bold',[
-        //     state('reset', style({ 'font-weight': '900' })),
-        //     transition('*=> reset',
-        //         animate('1000ms 4s',
-        //             style({ 'font-weight': '900' })
-        //         )
-        //     )
-        // ])
+                    style({ transform: 'translateX(0%)',  offset: 1}),]))])])
     ]
 
 })

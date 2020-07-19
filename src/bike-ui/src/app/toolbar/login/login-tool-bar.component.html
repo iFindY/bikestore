@@ -94,7 +94,8 @@
                   (ngSubmit)="onSubmit()"
                   autocomplete="on">
 
-                <div style="margin-top: 50px"><!--email-->
+                <!--email-->
+                <div>
                     <mat-form-field appearance="standard" style="text-align: center">
                         <mat-label>Email</mat-label>
                         <mat-icon matSuffix>account_circle</mat-icon>
@@ -107,6 +108,21 @@
                                type="email"
                                (focus)="setEmailFocused(true)"
                                (blur)="setEmailFocused(false)"></mat-form-field></div>
+
+                <!--verification code-->
+                <div>
+                    <mat-form-field appearance="standard" style="text-align: center">
+                        <mat-label>Verification Code</mat-label>
+                        <mat-icon matSuffix>lock</mat-icon>
+                        <mat-hint *ngIf="passwordFocus || loginForm.controls.email.invalid">
+                            Enter code received with email
+                        </mat-hint>
+
+                        <input matInput
+                               formControlName="email"
+                               type="email"
+                               (focus)="setPasswordFocused(true)"
+                               (blur)="setPasswordFocused(false)"></mat-form-field></div>
 
                 <!--main action-->
                 <div style="margin: 40px 30px 15px 30px;">
