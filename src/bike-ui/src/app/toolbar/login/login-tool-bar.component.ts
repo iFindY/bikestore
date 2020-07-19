@@ -18,6 +18,12 @@ type Button = 'Sign In' | 'Sign Up';
             state('register', style({ height: '136px' })),
             transition('login <=> register', animate('300ms ease-out'))]),
 
+        trigger('moveResetDigits', [
+            state('sendMail', style({ height: '20px' })),
+            state('enterDigits', style({ height: '70px' })),
+            transition('sendMail <=> enterDigits', animate('300ms ease-out'))]),
+
+
         trigger('moveText', [
             state('login', style({ 'margin-top': '5px' })),
             state('register', style({  'margin-top': '33px' })),
@@ -50,8 +56,6 @@ export class LoginToolBarComponent implements OnInit {
     confirmPasswordFocus: boolean;
     loginFailed: boolean = false;
     passPane: PassType = 'login';
-    screen: screenType = 'login';
-
     secondButton: Button = 'Sign Up'
     mainButton: Button = 'Sign In';
     help: string = 'Dont have an account?';
