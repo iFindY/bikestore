@@ -48,12 +48,12 @@ export class LoginComponent implements OnInit {
      // this.alertService.clear();
 
     // stop here if form is invalid
-    // if (this.loginForm.invalid) {
+    // if (this.login.invalid) {
     //   return;
     // }
 
     // this.loading = true;
-    // this.authenticationService.login(this.f.username.value, this.f.password.value)
+    // this.authenticationService.login(this.loginForm.username.value, this.loginForm.password.value)
     //     .pipe(first())
     //     .subscribe(
     //         data => {

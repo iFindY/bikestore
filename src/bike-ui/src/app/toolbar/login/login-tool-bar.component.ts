@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
 import { AuthenticationService } from '../../services/authentication.service';
 import { filter, tap } from 'rxjs/operators';
 import { animate, keyframes, state, style, transition, trigger } from '@angular/animations';
-type PassType = 'login' | 'register';
-type screenType = 'login' | 'reset';
+import { BehaviorSubject } from 'rxjs';
+type screenType = 'login' | 'reset' | 'register';
 type Button = 'Sign In' | 'Sign Up';
 
 @Component({
@@ -14,8 +14,13 @@ type Button = 'Sign In' | 'Sign Up';
     changeDetection: ChangeDetectionStrategy.OnPush,
     animations: [
         trigger('move', [
-            state('login', style({ height: '70px' })),
-            state('register', style({ height: '136px' })),
+            state('login', style({ height: '80px' })),
+            state('register', style({ height: '150px' })),
+            transition('login <=> register', animate('300ms ease-out'))]),
+
+        trigger('moveText', [
+            state('login', style({ 'margin-top': '5px' })),
+            state('register', style({  'margin-top': '33px' })),
             transition('login <=> register', animate('300ms ease-out'))]),
 
         trigger('moveResetDigits', [
@@ -24,127 +29,149 @@ type Button = 'Sign In' | 'Sign Up';
             transition('sendMail <=> enterDigits', animate('300ms ease-out'))]),
 
 
-        trigger('moveText', [
-            state('login', style({ 'margin-top': '5px' })),
-            state('register', style({  'margin-top': '33px' })),
-            transition('login <=> register', animate('300ms ease-out'))]),
-
         trigger('slide', [
             state('login', style({ transform: 'translateX(0)' })),
             state('reset', style({ transform: 'translateX(-50%)' })),
-            transition('login => reset', [
+            transition('* => reset', [
                 animate("600ms", keyframes([
                     style({ transform: 'translateX(0)', offset: 0}),
                     style({ transform: 'translateX(-49.7%)', offset: 0.2}),
                     style({ transform: 'translateX(-50%)',  offset: 1}),]))]),
-            transition('reset => login', [
+            transition('reset => *', [
                 animate("600ms", keyframes([
                     style({ transform: 'translateX(-50)', offset: 0}),
                     style({ transform: 'translateX(-0.3%)', offset: 0.2}),
-                    style({ transform: 'translateX(0%)',  offset: 1}),]))])])
-    ]
+                    style({ transform: 'translateX(0%)',  offset: 1})]))])]),
 
-})
+        trigger('hintDrop', [
+            transition(':enter',
+                [
+                    style({ transform: 'translateY(-100%)' }),
+                    animate('300ms 100ms ease-out',
+                        style({ transform: 'translateY(0)'}))]),])
+    ]})
+
+
+
 export class LoginToolBarComponent implements OnInit {
 
 
-    loginForm: FormGroup;
+    login: FormGroup;
+    reset: FormGroup;
     passwordPattern = /^(?=.*[A-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[\&\+\,\:\;\=\?\#\$\!\=\*\'\@])\S{6,12}$/;
-    mailPattern = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
-    emailFocus: boolean;
-    passwordFocus: boolean;
-    confirmPasswordFocus: boolean;
-    loginFailed: boolean = false;
-    passPane: PassType = 'login';
+    mailPattern = /^[a-zA-Z0-9._%+\-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
     secondButton: Button = 'Sign Up'
     mainButton: Button = 'Sign In';
     help: string = 'Dont have an account?';
 
+    screen: BehaviorSubject<screenType> = new BehaviorSubject('login');
     activePane: screenType = 'login';
     textBold: screenType;
+    hidePassword: boolean = true;
+    hideVerifyPassword: boolean = true;
+    focused: boolean;
 
+    get loginForm() { return this.login.controls; }
+    get resetForm() { return this.reset.controls; }
 
-    constructor(private fb: FormBuilder,
-              private authService:AuthenticationService) {
+    overPass: boolean;
+    overMail:boolean;
 
-        this.loginForm = fb.group(
+    constructor(private fb: FormBuilder, private authService:AuthenticationService) {
+
+        this.login = fb.group(
           {
-              email: [, [Validators.pattern(this.mailPattern)]],
-              password: [, [ Validators.pattern(this.passwordPattern)]],
+              email:    [, [Validators.required,Validators.pattern(this.mailPattern)]],
+              password: [, [Validators.required, this.conditionalValidator(Validators.pattern(this.passwordPattern)).bind(this)]],
 
-              confirmPassword: [, [ Validators.pattern(this.passwordPattern)]],
+              confirmPassword: [, [Validators.pattern(this.passwordPattern)]],
+          }, { validator: MustMatch('password', 'confirmPassword') }); // Adding cross-validation
 
-              resetEmail: [, [Validators.pattern(this.mailPattern)]],
-              resetCode: this.fb.group({
-                  one: [, [Validators.pattern(/[0-9A-Z]/)]],
-                  two: [, [Validators.pattern(/[0-9A-Z]/)]],
-                  three: [, [Validators.pattern(/[0-9A-Z]/)]],
-                  four: [, [Validators.pattern(/[0-9A-Z]/)]],  }),
-              resetPassword: [, [ Validators.pattern(this.passwordPattern)]],
-              resetNewPassword: [, [ Validators.pattern(this.passwordPattern)]]
-          }, { validator: MustMatch('password', 'confirmPassword') })
+
+        this.reset = fb.group(
+            {
+                resetEmail: [, [Validators.pattern(this.mailPattern)]],
+
+                resetCode: this.fb.group({
+                    one:    [, [Validators.pattern(/[0-9A-Z]/)]],
+                    two:    [, [Validators.pattern(/[0-9A-Z]/)]],
+                    three:  [, [Validators.pattern(/[0-9A-Z]/)]],
+                    four:   [, [Validators.pattern(/[0-9A-Z]/)]],
+                }),
+
+                resetPassword:      [, [Validators.pattern(this.passwordPattern)]],
+                confirmResetPassword:   [, [Validators.pattern(this.passwordPattern)]]
+            }, { validator: MustMatch('resetPassword', 'confirmResetPassword') }) // Adding cross-validation
 
   }
 
   ngOnInit(): void {
-
-    //INWORK just for logging
-    this.loginForm.statusChanges
-        .pipe(
-            filter(status => status === 'VALID'),
-            tap(status => console.log(status, JSON.stringify(this.loginForm.value))))
-        .subscribe();
+      this.screen.asObservable().subscribe(screen => this.switchScreen(screen))
   }
 
   onSubmit() {
-    const email = this.loginForm.get('email').value,
-        password = this.loginForm.get('password').value;
+      const email = this.login.get('email').value,
+          password = this.login.get('password').value;
 
-    this.authService.login(email, password)
-        .subscribe(() => console.log('user is logged in'));
+      this.authService.login(email, password)
+          .subscribe(() => console.log('user is logged in'));
   }
 
-    setEmailFocused(stat:boolean) {
-        this.emailFocus = stat;
-    };
+    switchState(reset?: screenType) {
+        if (reset) {
+            this.screen.next(reset);}
+        else {
+            switch (this.screen.value) {
+                case 'login':
+                    this.screen.next('register');
+                    break;
+                case 'register':
+                    this.screen.next('login');
+                    break;}}
+    }
 
-    setConfirmPasswordFocused(stat:boolean) {
-        this.confirmPasswordFocus = stat;
-    };
-    setPasswordFocused(stat:boolean) {
-        this.passwordFocus = stat;
-    };
+
+    // ===== helper
 
 
-    switchScreen() {
-        if (this.passPane === 'register') {
-            this.passPane = 'login';
+    setFocus(f:boolean){
+        this.focused = f;
+    }
+    private switchScreen(screen: screenType) {
+        if (screen === 'login') {
             this.mainButton = 'Sign In'
             this.secondButton = 'Sign Up';
-            this.help='Dont have an account?';
-        } else {
-            this.passPane = 'register';
+            this.help = 'Dont have an account?';
+            this.activePane='login';
+            this.loginForm.confirmPassword.disable();
+
+        } else if (screen === 'register') {
             this.mainButton = 'Sign Up'
             this.secondButton = 'Sign In';
-            this.help='Already registered?';
+            this.help = 'Already registered?';
+            this.activePane='register';
+            this.loginForm.confirmPassword.enable();
 
         }
     }
 
-    get invalid():boolean {
-        if(!!!this.loginForm ) return false;
 
-        let login =
-            !!this.loginForm.get('email').value &&
-            !!this.loginForm.get('password').value &&
-            this.loginForm.valid;
+    private conditionalValidator(validators: ValidatorFn | ValidatorFn[]): ValidatorFn {
+        return (control) => {
 
-        return this.passPane !== 'register' ? !login:
-            !(login && !!this.loginForm.get('confirmPassword').value);
+            if (this.activePane!=='register') return null;
 
+            else if (!Array.isArray(validators)) return validators(control);
+
+            else return validators
+                    .map(v => v(control))
+                    .reduce((errors, result) =>
+                        result === null ? errors : (Object.assign(errors || {}, result)));
+
+        };
     }
 
-    get f() { return this.loginForm.controls; }
+
 
 }
 
@@ -152,20 +179,21 @@ export class LoginToolBarComponent implements OnInit {
 // custom validator to check that two fields match
 export function MustMatch(controlName: string, matchingControlName: string) {
     return (formGroup: FormGroup) => {
-        const control = formGroup.controls[controlName];
-        const matchingControl = formGroup.controls[matchingControlName];
 
-        if (matchingControl.errors && !matchingControl.errors.mustMatch) {
-            // return if another validator has already found an error on the matchingControl
-            return;
-        }
+        const control = formGroup.controls[controlName],
+            matchingControl = formGroup.controls[matchingControlName];
+
+        // fierds must be enabled, skip validation
+        if (control.disabled && matchingControl.disabled) return;
+
+        // return if another validator has already found an error on the matchingControl
+        if (matchingControl.errors && !matchingControl.errors.mustMatch) return;
 
         // set error on matchingControl if validation fails
-        if (control.value !== matchingControl.value) {
-            matchingControl.setErrors({ mustMatch: true });
-        } else {
+        control.value !== matchingControl.value?
+            matchingControl.setErrors({ mustMatch: true }):
             matchingControl.setErrors(null);
-        }
     }
 }
+
 
