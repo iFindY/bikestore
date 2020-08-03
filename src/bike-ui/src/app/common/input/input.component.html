@@ -5,8 +5,6 @@
                 (focus)="focus=true"
                 (focusout)="focus=false">
 
-    <mat-label>{{label}}</mat-label>
-
 
     <mat-hint *ngIf="(focus || hover) && this.hintVisible"
               [@hintDrop]>Ex. Pa$$word!195</mat-hint>
@@ -16,30 +14,18 @@
 
     <button mat-icon-button matSuffix
             (click)="hidden = !hidden"
-            [attr.aria-label]="'Hide password'"
+            [attr.aria-label]="'Hide'"
             [disableRipple]="true">
-
-<!--         should depend on input -->
-        <mat-icon matSuffix>{{hidden ? 'visibility_off' : 'visibility'}}</mat-icon>
-
-    </button>
+        <mat-icon matSuffix>{{icon}}</mat-icon> </button>
 
 
+    <mat-label>{{label}}</mat-label>
 
     <input matInput
-           [type]="hidden ? type : 'text'"
-           (blur)="onTouched()"
            (input)="onChange($event.target.value)"
-           [disabled]="disabled" >
+           [type]="hidden ? controlType : 'text'"
+           [disabled]="disabled"
+           (blur)="onTouched()">
+
 
 </mat-form-field>
-
-
-
-
-[type]="type"
-#input
-(input)="onChange($event.target.value)"
-(blur)="onTouched()"
-[disabled]="disabled"
-[placeholder]="placeholder"

@@ -4,6 +4,7 @@ import { AuthenticationService } from '../../services/authentication.service';
 import { filter, tap } from 'rxjs/operators';
 import { animate, keyframes, state, style, transition, trigger } from '@angular/animations';
 import { BehaviorSubject } from 'rxjs';
+import { log } from 'util';
 type screenType = 'login' | 'reset' | 'register';
 type Button = 'Sign In' | 'Sign Up';
 
@@ -11,7 +12,6 @@ type Button = 'Sign In' | 'Sign Up';
     selector: 'app-login',
     templateUrl: './login-tool-bar.component.html',
     styleUrls: ['./login-tool-bar.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     animations: [
         trigger('move', [
             state('login', style({ height: '80px' })),
@@ -58,8 +58,8 @@ export class LoginToolBarComponent implements OnInit {
 
     login: FormGroup;
     reset: FormGroup;
-    passwordPattern = /^(?=.*[A-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[\&\+\,\:\;\=\?\#\$\!\=\*\'\@])\S{6,12}$/;
-    mailPattern = /^[a-zA-Z0-9._%+\-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
+    PASSWORD_PATTERN = /^(?=.*[A-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[\&\+\,\:\;\=\?\#\$\!\=\*\'\@])\S{6,12}$/;
+    MAIL_PATTERN = /^[a-zA-Z0-9._%+\-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
     secondButton: Button = 'Sign Up'
     mainButton: Button = 'Sign In';
     help: string = 'Dont have an account?';
@@ -77,20 +77,20 @@ export class LoginToolBarComponent implements OnInit {
     overPass: boolean;
     overMail:boolean;
 
-    constructor(private fb: FormBuilder, private authService:AuthenticationService) {
+    constructor(private fb: FormBuilder, private authService: AuthenticationService) {
 
         this.login = fb.group(
           {
-              email:    [, [Validators.required,Validators.pattern(this.mailPattern)]],
-              password: [, [Validators.required, this.conditionalValidator(Validators.pattern(this.passwordPattern)).bind(this)]],
+              email: [, [Validators.required, Validators.pattern(this.MAIL_PATTERN)]],
+              password: [, [Validators.required, this.conditionalValidator(Validators.pattern(this.PASSWORD_PATTERN)).bind(this)]],
 
-              confirmPassword: [, [Validators.pattern(this.passwordPattern)]],
+              confirmPassword: [, [Validators.pattern(this.PASSWORD_PATTERN)]],
           }, { validator: MustMatch('password', 'confirmPassword') }); // Adding cross-validation
 
 
         this.reset = fb.group(
             {
-                resetEmail: [, [Validators.pattern(this.mailPattern)]],
+                resetEmail: [, [Validators.pattern(this.MAIL_PATTERN)]],
 
                 resetCode: this.fb.group({
                     one:    [, [Validators.pattern(/[0-9A-Z]/)]],
@@ -99,10 +99,12 @@ export class LoginToolBarComponent implements OnInit {
                     four:   [, [Validators.pattern(/[0-9A-Z]/)]],
                 }),
 
-                resetPassword:      [, [Validators.pattern(this.passwordPattern)]],
-                confirmResetPassword:   [, [Validators.pattern(this.passwordPattern)]]
+                resetPassword:      [, [Validators.pattern(this.PASSWORD_PATTERN)]],
+                confirmResetPassword:   [, [Validators.pattern(this.PASSWORD_PATTERN)]]
             }, { validator: MustMatch('resetPassword', 'confirmResetPassword') }) // Adding cross-validation
 
+
+        this.login.valueChanges.subscribe(x => log(x));
   }
 
   ngOnInit(): void {

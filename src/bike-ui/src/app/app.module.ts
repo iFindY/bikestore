@@ -11,7 +11,7 @@ import { FooterComponent } from './footer/footer.component';
 import { LoginToolBarComponent } from './toolbar/login/login-tool-bar.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginComponent } from './login/login.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {  HttpClientModule } from '@angular/common/http';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
@@ -41,7 +41,8 @@ import { InputComponent } from './common/input/input.component';
         MatDialogModule,
         MatButtonModule,
         MatInputModule,
-        MatIconModule
+        MatIconModule,
+        FormsModule
     ],
   providers: [],
   bootstrap: [AppComponent]
