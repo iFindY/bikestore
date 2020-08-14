@@ -49,7 +49,8 @@ type Button = 'Sign In' | 'Sign Up';
                     style({ transform: 'translateY(-100%)' }),
                     animate('300ms 100ms ease-out',
                         style({ transform: 'translateY(0)'}))]),])
-    ]})
+    ]
+})
 
 
 

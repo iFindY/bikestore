@@ -1,10 +1,30 @@
-import { Component, ElementRef, HostBinding, Input, Optional, Self, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, NG_VALIDATORS, NgControl, } from '@angular/forms';
+import {
+    AfterContentChecked,
+    AfterContentInit,
+    AfterViewInit,
+    Component,
+    ElementRef,
+    HostBinding,
+    HostListener, Injector,
+    Input, OnInit,
+    Optional,
+    Self
+} from '@angular/core';
+import { ControlValueAccessor, FormBuilder, FormControl, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { Subject } from 'rxjs';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { animate, style, transition, trigger } from '@angular/animations';
+import { ErrorStateMatcher } from '@angular/material/core';
 
+export class CustomFieldErrorMatcher implements ErrorStateMatcher {
+    constructor(private customControl: FormControl) { }
+
+    isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+        return this.customControl && this.customControl.touched &&(this.customControl.invalid);
+    }
+}
 @Component({
     selector: 'custom-input',
     templateUrl: './input.component.html',
@@ -14,28 +34,43 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
             provide: MatFormFieldControl,
             useExisting: InputComponent
         }],
-
+    animations: [
+        trigger('hintDrop', [
+            transition(':enter', [
+                style({ transform: 'translateY(-100%)' }),
+                animate('300ms 100ms ease-out',
+                    style({ transform: 'translateY(0)' }))])
+        ])
+    ]
 })
-export class InputComponent implements MatFormFieldControl<String> {
+export class InputComponent implements MatFormFieldControl<String>,ControlValueAccessor,AfterViewInit {
 
-
-    @Input() pattern: RegExp = null;
     @Input() label: string = null;
-    @Input() errorMsg: string;
-
     @Input() icon: string;
     @Input() hidden: boolean;
     @Input() hintVisible: boolean;
+    control: FormControl
 
+    ngAfterViewInit(): void {
+        this.control = this.ngControl.control as FormControl;
+    }
+    
+
+    errorMatcher() {
+        console.log("newe Custom")
+        return new CustomFieldErrorMatcher(this.control)
+    }
+
+    readonly errorStateMatcher: ErrorStateMatcher = {
+        isErrorState: (ctrl: FormControl) => (ctrl && ctrl.invalid)
+    };
     /**
      * This property allows someone to set or get the value of our control
      */
     _value: string;
-
     set value(value: string | null) {
         this._value = value;
         this.stateChanges.next();
-        console.log(this._value)
     }
 
     get value() {
@@ -57,6 +92,20 @@ export class InputComponent implements MatFormFieldControl<String> {
     }
 
     /**
+     *  This property allows us to tell the <mat-form-field> what to use as a error message.
+     */
+    private _errorMsg: string;
+
+    @Input() get errorMsg() {
+        return this._errorMsg;
+    }
+
+    set errorMsg(plh) {
+        this._errorMsg = plh;
+        this.stateChanges.next();
+    }
+
+    /**
      * Because the <mat-form-field> uses the OnPush change detection strategy,
      * we need to let it know when something happens in the form field control
      * that may require the form field to run change detection.
@@ -72,7 +121,6 @@ export class InputComponent implements MatFormFieldControl<String> {
     static nextId = 0;
     @HostBinding() id = `my-input-${InputComponent.nextId++}`;
 
-
     /**
      * This property allows the form field control to specify the @angular/forms control that is bound to this component.
      */
@@ -82,12 +130,15 @@ export class InputComponent implements MatFormFieldControl<String> {
      * This property indicates whether or not the form field control should be considered to be in a focused state.
      * For the purposes of our component, we want to consider it focused if any of the part inputs are focused.
      */
-    focused: boolean = false;
+    focused: boolean;
+    hover: boolean;
 
     /**
      * This property indicates whether the form field control is empty. For our control, we'll consider it empty if all of the parts are empty.
      */
-    get empty() {return this.value === null || this.value.length > 0;}
+    get empty() {
+        return this.value === null || this.value.length > 0;
+    }
 
     /**
      * This property is used to indicate whether the label should be in the floating position.
@@ -96,7 +147,9 @@ export class InputComponent implements MatFormFieldControl<String> {
      * we should hide the – characters when it's not floating.
      */
     @HostBinding('class.floating')
-    get shouldLabelFloat() {return this.focused || !this.empty;}
+    get shouldLabelFloat() {
+        return this.focused || !this.empty;
+    }
 
     /**
      * This property is used to indicate whether the input is required.
@@ -106,10 +159,13 @@ export class InputComponent implements MatFormFieldControl<String> {
     private _required = false;
 
     @Input()
-    get required() {return this._required;}
+    get required() {
+        return this._required;
+    }
+
     set required(req) {
         this._required = coerceBooleanProperty(req);
-        this.stateChanges.next( );
+        this.stateChanges.next();
     }
 
     /**
@@ -120,7 +176,10 @@ export class InputComponent implements MatFormFieldControl<String> {
     private _disabled = false;
 
     @Input()
-    get disabled(): boolean {return this._disabled;}
+    get disabled(): boolean {
+        return this._disabled;
+    }
+
     set disabled(value: boolean) {
         this._disabled = coerceBooleanProperty(value);
         this.stateChanges.next();
@@ -131,7 +190,7 @@ export class InputComponent implements MatFormFieldControl<String> {
      * Since we're not using an NgControl in this example,
      * we don't need to do anything other than just set it to false.
      */
-    errorState: boolean = false;
+    errorState: boolean;
 
     /**
      * This property allows us to specify a unique string for the type of control in form field.
@@ -142,14 +201,15 @@ export class InputComponent implements MatFormFieldControl<String> {
      */
     @Input() controlType = 'text';
 
-
     /**
      * This method is used by the <mat-form-field> to specify the IDs that should be used for the aria-describedby attribute of your component.
      * The method has one parameter, the list of IDs, we just need to apply the given IDs to our host element.
      */
     @HostBinding('attr.aria-describedby') describedBy = '';
 
-    setDescribedByIds(ids: string[]) {this.describedBy = ids.join(' ');}
+    setDescribedByIds(ids: string[]) {
+        this.describedBy = ids.join(' ');
+    }
 
     /**
      * This method will be called when the form field is clicked on. It allows your component to hook in and handle that click however it wants.
@@ -162,8 +222,11 @@ export class InputComponent implements MatFormFieldControl<String> {
         }
     }
 
-    hover: boolean = false;
-    focus: boolean = false;
+    onContainerMouseIn(event: MouseEvent) {
+        if ((event.target as Element).tagName.toLowerCase() != 'input') {
+            this.elRef.nativeElement.querySelector('input').onmouseenter;
+        }
+    }
 
     autofilled?: boolean;
 
@@ -172,7 +235,10 @@ export class InputComponent implements MatFormFieldControl<String> {
                 private fm: FocusMonitor,
                 private elRef: ElementRef<HTMLElement>) {
 
+        // Setting the value accessor directly
         this.ngControl = ngControl;
+        this.ngControl.valueAccessor = this;
+
 
         // For the purposes of our component, we want to consider it focused if any of the part inputs are focused.
         // We can use the FocusMonitor from @angular/cdk to easily check this.
@@ -181,40 +247,32 @@ export class InputComponent implements MatFormFieldControl<String> {
             this.stateChanges.next();
         });
 
-        if (this.ngControl != null) {
-            // Setting the value accessor directly (instead of using
-            // the providers) to avoid running into a circular import.
-            this.ngControl.valueAccessor = this;
-        }
     }
 
-
-
-
+    ngOnInit(): void {
+        this.ngControl.control.statusChanges.subscribe(status => {
+            this.errorState = status !== 'VALID';
+            console.log( this.errorState);
+        });
+    }
 
     ngOnDestroy() {
         this.stateChanges.complete();
     }
 
-
-
-    ngOnInit() {
-
+    // Function to call when value change
+    onChange(event) {
     }
 
-
-    // Function to call when value change
-    onChange(event) {}
-
     // Function to call when the input is touched
-    onTouched() {}
+    onTouched() {
+    }
 
 //======= has to implement this 4 methods
 
     // Allows Angular to update the model (value).
     // Update the model and changes needed for the view here.
     writeValue(value: any) {
-
         this.value = value;
     }
 
@@ -231,15 +289,23 @@ export class InputComponent implements MatFormFieldControl<String> {
     }
 
     // Allows Angular to disable the input.
-    setDisabledState?(isDisabled: boolean): void {this.disabled = isDisabled;}
-//======= end
-
-
-    validate({ value }: FormControl) {
-        const isNotValid = this.answer !== Number(value);
-        return isNotValid && {
-            invalid: true
-        }
+    setDisabledState?(isDisabled: boolean): void {
+        this.disabled = isDisabled;
     }
 
+//======= end
+
+    @HostListener('mouseenter') onMouseEnter() {
+        this.hover = true;
+        this.stateChanges.next();
+    }
+
+    @HostListener('mouseleave') onMouseLeave() {
+        this.hover = false;
+        this.stateChanges.next();
+    }
+
+    loggg(error: any) {
+        console.log("dsfds",error)
+    }
 }

@@ -1,27 +1,28 @@
-<mat-form-field appearance="standard"
-                style="text-align: center; width: 215px"
-                (mouseover)="hover=true"
-                (mouseout)="hover=false"
-                (focus)="focus=true"
-                (focusout)="focus=false">
+<mat-form-field appearance="standard" style="text-align: center; width: 215px">
 
 
-    <mat-hint *ngIf="(focus || hover) && this.hintVisible"
-              [@hintDrop]>Ex. Pa$$word!195</mat-hint>
+    <mat-hint *ngIf="(focused || hover) && this.hintVisible" [@hintDrop]>
+        {{placeholder}}</mat-hint>
 
-    <mat-error *ngIf="this.hintVisible && !focus"
-               style="text-align: left;">to simple</mat-error>
+
+<!--    validation is missing-->
+    <mat-error *ngIf="true" style="text-align: left;">
+        {{errorMsg}}</mat-error>
 
     <button mat-icon-button matSuffix
             (click)="hidden = !hidden"
             [attr.aria-label]="'Hide'"
             [disableRipple]="true">
-        <mat-icon matSuffix>{{icon}}</mat-icon> </button>
+        <mat-icon matSuffix>{{icon}}</mat-icon>
+    </button>
 
 
     <mat-label>{{label}}</mat-label>
 
     <input matInput
+
+           [errorStateMatcher]="errorMatcher()"
+           (error)="loggg($event)"
            (input)="onChange($event.target.value)"
            [type]="hidden ? controlType : 'text'"
            [disabled]="disabled"
