@@ -115,7 +115,7 @@
 
                     </div>
 
-                    <!--verification code-->
+                    <!--verification code--> <!--remove cursor-->
                     <div style="margin-top: 15px" formGroupName="resetCode">
                         <mat-form-field appearance="outline" style="width:30px;margin-right: 20px;margin-left: 20px">
                             <input matInput
@@ -146,9 +146,8 @@
                                    oninput="this.value = this.value.toUpperCase()"
                             ></mat-form-field></div></div>
 
-                <!--main & secondary action-->
                 <div >
-                    <!--main action-->
+                    <!--main action--> <!--after one click change button to resend email,if all code  inputs filled change to OK -->
                     <div style="margin: 20px 30px 15px 30px;">
                         <button mat-raised-button
                                 (click)="onResetSubmit()"
@@ -160,7 +159,7 @@
                         </button>
                     </div>
 
-                    switch screen action
+                    <!-- switch screen action-->
                     <div style="margin: 5px 30px 10px 30px;">
                         <span>Back to</span>
                         <button mat-button

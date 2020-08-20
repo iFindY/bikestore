@@ -54,12 +54,12 @@ type Button = 'Sign In' | 'Sign Up';
 
         trigger('moveResetDigits', [
             state('reset', style({ height: '80px'})),
-            state('code', style({ height: '160px'})),
+            state('code', style({ height: '150px'})),
             transition('reset => code',
-                animate("500ms",keyframes([
+                animate("400ms",keyframes([
                     style({ height: '80px', offset: 0}),
-                    style({ height: '156px', offset: 0.2}),
-                    style({ height: '160px',  offset: 1})])))])
+                    style({ height: '140px', offset: 0.3}),
+                    style({ height: '150px',  offset: 1})])))])
 
     ]
 })
