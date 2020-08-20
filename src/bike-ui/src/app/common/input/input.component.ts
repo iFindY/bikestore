@@ -37,6 +37,7 @@ export class InputComponent implements ControlValueAccessor {
     private _disabled = false;
     private _required = false;
 
+
     autofilled?: boolean;
     control:NgControl;
     stateChanges = new Subject<void>();
@@ -45,23 +46,12 @@ export class InputComponent implements ControlValueAccessor {
     errorMatcher: ErrorStateMatcher;
 
 
-    // == == == == == == error string
-    msg1:  string;
-    msg2:  string;
-    bold1: string;
-    bold2: string;
-    bold3: string;
-    comboWord: string[] = [this.bold1, this.msg1, this.bold2, this.msg2, this.bold3];
-    // == == == == == ==
-
-    @Input() label: string = null;
+    @Input() hidden: boolean = true;
+    @Input() hintVisible: boolean = true;
+    @Input() errorVisible: boolean = true;
+    @Input() label: string;
     @Input() icon: string;
-    @Input() hidden: boolean;
-    @Input() hintVisible: boolean;
     @Input() controlType = 'text';
-
-
-
     @Input() set required(req) {
         this._required = coerceBooleanProperty(req);
         this.stateChanges.next();
@@ -71,17 +61,14 @@ export class InputComponent implements ControlValueAccessor {
         this._placeholder = plh;
         this.stateChanges.next();
     }
-
     @Input() set errorMsg(plh) {
         this._errorMsg = plh;
         this.stateChanges.next();
     }
-
     @Input() set disabled(value: boolean) {
         this._disabled = coerceBooleanProperty(value);
         this.stateChanges.next();
     }
-
     set value(value: string | null) {
         this._value = value;
         this.stateChanges.next();
@@ -96,6 +83,7 @@ export class InputComponent implements ControlValueAccessor {
     get placeholder() {return this._placeholder;}
 
 
+//== == == == init
 
     constructor(private injector: Injector, fm: FocusMonitor, elRef: ElementRef<HTMLElement>,private chRef:ChangeDetectorRef) {
 
@@ -110,12 +98,12 @@ export class InputComponent implements ControlValueAccessor {
     }
 
 
-//======= has to implement this 4 methods
+//== == == == has to implement this 4 methods
 
     writeValue(value: any) {
         this.value = value;
         console.log(this.value,"ohoho");
-        this.chRef.detectChanges();
+        this.chRef.detectChanges(); // testing
     }
 
     onChange: any = () => { };
@@ -126,10 +114,8 @@ export class InputComponent implements ControlValueAccessor {
 
     setDisabledState?(isDisabled: boolean): void {this.disabled = isDisabled;}
 
-//======= end
 
-//======= HostBinding
-
+//== == == == HostBinding
 
     @HostBinding('attr.aria-describedby') describedBy = '';
     @HostBinding() id = `my-input-${InputComponent.nextId++}`;
@@ -149,7 +135,7 @@ export class InputComponent implements ControlValueAccessor {
         this.stateChanges.next();
     }
 
-    //======= end
+//== == == == helper
 
 
     setDescribedByIds(ids: string[]) {
@@ -161,14 +147,17 @@ export class InputComponent implements ControlValueAccessor {
     }
 
     click(event) {
-        if (this.controlType !== 'password') {
+        if (!this.label.toLowerCase().includes('password')) {
             event.stopPropagation();
         } else {
             this.hidden = !this.hidden;
+            this.controlType = this.hidden ? 'password' : 'text';
+            this.stateChanges.next();
         }
     }
 
 }
+
 
 class CustomFieldErrorMatcher implements ErrorStateMatcher {
     constructor(private control: NgControl) {

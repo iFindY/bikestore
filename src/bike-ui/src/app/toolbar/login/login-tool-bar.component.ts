@@ -2,10 +2,11 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
 import { AuthenticationService } from '../../services/authentication.service';
 import { filter, tap } from 'rxjs/operators';
-import { animate, keyframes, state, style, transition, trigger } from '@angular/animations';
+import { animate, keyframes, state, style, transition, trigger, query, animateChild } from '@angular/animations';
 import { BehaviorSubject } from 'rxjs';
 import { log } from 'util';
-type screenType = 'login' | 'reset' | 'register';
+
+type screenType = 'login' | 'reset' | 'register' | 'code';
 type Button = 'Sign In' | 'Sign Up';
 
 @Component({
@@ -23,35 +24,45 @@ type Button = 'Sign In' | 'Sign Up';
             state('register', style({  'margin-top': '33px' })),
             transition('login <=> register', animate('300ms ease-out'))]),
 
-        trigger('moveResetDigits', [
-            state('sendMail', style({ height: '20px' })),
-            state('enterDigits', style({ height: '70px' })),
-            transition('sendMail <=> enterDigits', animate('300ms ease-out'))]),
-
-
         trigger('slide', [
             state('login', style({ transform: 'translateX(0)' })),
             state('reset', style({ transform: 'translateX(-50%)' })),
+            state('code', style({ transform: 'translateX(-50%)' })),
+
+            transition('reset => code',[
+                query('@moveResetDigits', animateChild())]),
+
             transition('* => reset', [
                 animate("600ms", keyframes([
                     style({ transform: 'translateX(0)', offset: 0}),
                     style({ transform: 'translateX(-49.7%)', offset: 0.2}),
-                    style({ transform: 'translateX(-50%)',  offset: 1}),]))]),
+                    style({ transform: 'translateX(-50%)',  offset: 1})]))]),
+
             transition('reset => *', [
                 animate("600ms", keyframes([
                     style({ transform: 'translateX(-50)', offset: 0}),
                     style({ transform: 'translateX(-0.3%)', offset: 0.2}),
-                    style({ transform: 'translateX(0%)',  offset: 1})]))])]),
+                    style({ transform: 'translateX(0%)',  offset: 1})]))]),
 
-        trigger('hintDrop', [
-            transition(':enter',
-                [
-                    style({ transform: 'translateY(-100%)' }),
-                    animate('300ms 100ms ease-out',
-                        style({ transform: 'translateY(0)'}))]),])
+            transition('code => *', [
+                animate("600ms", keyframes([
+                    style({ transform: 'translateX(-50)', offset: 0}),
+                    style({ transform: 'translateX(-0.3%)', offset: 0.2}),
+                    style({ transform: 'translateX(0%)',  offset: 1})]))]),
+          ]),
+
+
+        trigger('moveResetDigits', [
+            state('reset', style({ height: '80px'})),
+            state('code', style({ height: '160px'})),
+            transition('reset => code',
+                animate("500ms",keyframes([
+                    style({ height: '80px', offset: 0}),
+                    style({ height: '156px', offset: 0.2}),
+                    style({ height: '160px',  offset: 1})])))])
+
     ]
 })
-
 
 
 export class LoginToolBarComponent implements OnInit {
@@ -68,51 +79,52 @@ export class LoginToolBarComponent implements OnInit {
     screen: BehaviorSubject<screenType> = new BehaviorSubject('login');
     activePane: screenType = 'login';
     textBold: screenType;
-    hidePassword: boolean = true;
-    hideVerifyPassword: boolean = true;
-    focused: boolean;
 
     get loginForm() { return this.login.controls; }
     get resetForm() { return this.reset.controls; }
-
-    overPass: boolean;
-    overMail:boolean;
 
     constructor(private fb: FormBuilder, private authService: AuthenticationService) {
 
         this.login = fb.group(
           {
-              email: [, [Validators.required, Validators.pattern(this.MAIL_PATTERN)]],
-              password: [, [Validators.required, this.conditionalValidator(Validators.pattern(this.PASSWORD_PATTERN)).bind(this)]],
-
-              confirmPassword: [, [Validators.pattern(this.PASSWORD_PATTERN)]],
-          }, { validator: MustMatch('password', 'confirmPassword') }); // Adding cross-validation
+              email:            [, [Validators.required, Validators.pattern(this.MAIL_PATTERN)]],
+              password:         [, [Validators.required, this.conditionalValidator(Validators.pattern(this.PASSWORD_PATTERN)).bind(this)]],
+              confirmPassword:  [, [Validators.pattern(this.PASSWORD_PATTERN)]]
+          },
+          {
+              validator: MustMatch('password', 'confirmPassword')  // Adding cross-validation
+          });
 
 
         this.reset = fb.group(
             {
-                resetEmail: [, [Validators.pattern(this.MAIL_PATTERN)]],
+                resetEmail: ["de@de.de", [Validators.pattern(this.MAIL_PATTERN)]],
 
                 resetCode: this.fb.group({
                     one:    [, [Validators.pattern(/[0-9A-Z]/)]],
                     two:    [, [Validators.pattern(/[0-9A-Z]/)]],
                     three:  [, [Validators.pattern(/[0-9A-Z]/)]],
-                    four:   [, [Validators.pattern(/[0-9A-Z]/)]],
-                }),
+                    four:   [, [Validators.pattern(/[0-9A-Z]/)]] }),
 
-                resetPassword:      [, [Validators.pattern(this.PASSWORD_PATTERN)]],
+                resetPassword:         [, [Validators.pattern(this.PASSWORD_PATTERN)]],
                 confirmResetPassword:   [, [Validators.pattern(this.PASSWORD_PATTERN)]]
-            }, { validator: MustMatch('resetPassword', 'confirmResetPassword') }) // Adding cross-validation
+            },
+            {
+                validator: MustMatch('resetPassword', 'confirmResetPassword') // Adding cross-validation
+            });
 
-
-        this.login.valueChanges.subscribe(x => log(x));
   }
 
   ngOnInit(): void {
-      this.screen.asObservable().subscribe(screen => this.switchScreen(screen))
+      this.screen.asObservable().subscribe(screen => this.switchScreen(screen));
+
+      this.resetForm['resetCode'].disable();
+      this.resetForm['resetPassword'].disable();
+      this.resetForm['confirmResetPassword'].disable();
+
   }
 
-  onSubmit() {
+  onLoginSubmit() {
       const email = this.login.get('email').value,
           password = this.login.get('password').value;
 
@@ -120,40 +132,64 @@ export class LoginToolBarComponent implements OnInit {
           .subscribe(() => console.log('user is logged in'));
   }
 
+    onResetSubmit() {
+
+        const email = this.reset.get('resetEmail').value;
+
+        // do some service stuff  ...
+
+        this.switchState('code');
+
+    }
+
     switchState(reset?: screenType) {
+        console.log("called",reset)
         if (reset) {
-            this.screen.next(reset);}
-        else {
+            this.screen.next(reset);
+        } else {
             switch (this.screen.value) {
                 case 'login':
                     this.screen.next('register');
                     break;
                 case 'register':
                     this.screen.next('login');
-                    break;}}
+                    break;
+            }
+        }
     }
 
 
     // ===== helper
 
-
-    setFocus(f:boolean){
-        this.focused = f;
-    }
     private switchScreen(screen: screenType) {
         if (screen === 'login') {
+            this.activePane='login';
+
             this.mainButton = 'Sign In'
             this.secondButton = 'Sign Up';
             this.help = 'Dont have an account?';
-            this.activePane='login';
             this.loginForm.confirmPassword.disable();
 
         } else if (screen === 'register') {
+            this.activePane='register';
+
             this.mainButton = 'Sign Up'
             this.secondButton = 'Sign In';
             this.help = 'Already registered?';
-            this.activePane='register';
             this.loginForm.confirmPassword.enable();
+
+        } else if (screen === 'reset') {
+            this.activePane = 'reset';
+
+            this.resetForm.resetCode.disable();
+            this.resetForm.resetPassword.disable();
+            this.resetForm.confirmResetPassword.disable();
+
+        } else if (screen === 'code') {
+            this.activePane = 'code';
+            this.resetForm.resetCode.enable();
+            this.resetForm.resetPassword.enable();
+            this.resetForm.confirmResetPassword.enable();
 
         }
     }
@@ -173,7 +209,6 @@ export class LoginToolBarComponent implements OnInit {
 
         };
     }
-
 
 
 }

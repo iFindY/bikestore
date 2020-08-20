@@ -1,80 +1,91 @@
-<div class="panes" [@slide]="activePane"
-                    (@slide.done)="textBold='reset'">
+<div class="panes" [@slide]="activePane">
 
-    <div>
+<div>
         <h1 mat-dialog-title [ngClass]="{'bold': activePane==='login'}" style="margin-bottom: 11px" >Sign In</h1>
         <h1 mat-dialog-title style="margin-bottom: 90px;" [ngClass]="{'bold': activePane==='register'}">Sign Up</h1>
         <div mat-dialog-content style="text-align: center;position: relative;">
 
-            <form [formGroup]="login" (ngSubmit)="onSubmit()" autocomplete="off" novalidate>
+            <form [formGroup]="login" (ngSubmit)="onLoginSubmit()" autocomplete="off" novalidate>
 
-                <!--email-->
-                <div >
+
+                <div>
+                    <!--email-->
                     <custom-input type="email"
                                   label="Email"
                                   icon="account_circle"
                                   errorMsg="not a valid email"
                                   placeholder="Ex. peter@gmail.com"
                                   [required]="true"
-                                  [hintVisible]="true"
                                   formControlName="email">
                     </custom-input>
                 </div>
 
-                <!--password & confirm password-->
                 <div style="overflow:hidden;height: 70px;" [@move]="activePane">
 
                     <!--password-->
-                    <mat-form-field appearance="standard" style="text-align: center; width: 215px" #pass (mouseover)="overPass=true" (mouseout)="overPass=false">
-                        <mat-label>Password</mat-label>
-                        <mat-hint  *ngIf="(pass._control.focused || overPass) && this.activePane==='register'" [@hintDrop]>Ex. Pa$$word!195</mat-hint>
-                        <mat-error *ngIf="activePane==='register' && loginForm.password.errors?.pattern && loginForm.password.touched && !pass._control.focused"
-                                   style="text-align: left;">to simple</mat-error>
-
-                        <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword" [disableRipple]="true" style="">
-                            <mat-icon matSuffix>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon></button>
-
-                        <input formControlName="password" [type]="hidePassword ? 'password' : 'text'" matInput ></mat-form-field>
+                    <custom-input controlType="password"
+                                  label="Password"
+                                  icon="visibility"
+                                  errorMsg="to simple"
+                                  placeholder="Ex. Pa$$word!195"
+                                  [hintVisible]="activePane==='register'"
+                                  [errorVisible]="activePane==='register'"
+                                  [required]="true"
+                                  formControlName="password">
+                    </custom-input>
 
                     <!--confirm password-->
-                    <mat-form-field appearance="standard" style="text-align: center;width: 215px" #vPass>
-                        <mat-label>Verify Password</mat-label>
-                        <mat-hint *ngIf="vPass._control.focused && loginForm.confirmPassword.valid">matching</mat-hint>
-                        <mat-error *ngIf="loginForm.confirmPassword.errors?.mustMatch ||
-                                          loginForm.confirmPassword.errors?.pattern" style="text-align: left;"><strong>not</strong> matching</mat-error>
+                    <custom-input controlType="password"
+                                  label="Verify Password"
+                                  icon="visibility"
+                                  errorMsg="not matching"
+                                  placeholder="matching"
+                                  [hintVisible]="activePane==='register' && loginForm['confirmPassword'].valid"
+                                  [errorVisible]="activePane==='register'"
+                                  [required]="true"
+                                  formControlName="confirmPassword">
+                    </custom-input>
 
-                        <button mat-icon-button matSuffix (click)="hideVerifyPassword = !hideVerifyPassword" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hideVerifyPassword"  [disableRipple]="true">
-                            <mat-icon matSuffix>{{hideVerifyPassword ? 'visibility_off' : 'visibility'}}</mat-icon></button>
+                </div>
 
-                        <input formControlName="confirmPassword" [type]="hideVerifyPassword ? 'password' : 'text'" matInput></mat-form-field></div>
-
-                <!--forgot password--> <!--INWORK hidePassword disable smoothly-->
                 <div style="text-align: right;margin-right: 40px;margin-top: -22px;">
-                <button mat-button
+
+                    <!--forgot password button -->
+                    <button mat-button
                             type="button"
                             id="smallButton"
                             class="no-hover-effect"
-                            (click)="activePane='reset'"
+                            (click)="switchState('reset')"
                             [disableRipple]="true">
-                        forgot password?</button></div>
+                        forgot password ?
+                    </button>
+                </div>
 
-                <!--main action-->
                 <div style="margin: 22px 30px 15px 30px;">
+
+                    <!--main action button-->
                     <button mat-raised-button
                             color="primary"
-                            type="submit" [disabled]="loginForm.email.invalid || loginForm.password.invalid"
+                            type="submit"
+                            [disabled]="login.invalid"
                             style="border-radius: 10px;width: 210px;height: 35px">
-                        {{mainButton}}</button></div>
+                        {{mainButton}}
+                    </button>
+                </div>
 
-                <!--switch screen action -->
                 <div style="margin: 5px 30px 10px 30px;" [@moveText]="activePane">
+
                     <div>{{help}}</div>
+
+                    <!--switch screen button -->
                     <button mat-button
                             type="button"
                             class="no-hover-effect register"
                             [disableRipple]="true"
                             (click)="switchState()">
-                        {{secondButton}}</button></div>
+                        {{secondButton}}
+                    </button>
+                </div>
 
             </form>
         </div>
@@ -86,29 +97,27 @@
         <h1 mat-dialog-title style="margin-bottom: 90px;font-weight: bold">Password</h1>
         <div mat-dialog-content style="text-align: center;position: relative;">
 
-            <form [formGroup]="reset"
-                  (ngSubmit)="onSubmit()"
-                  autocomplete="on">
+            <form [formGroup]="reset" autocomplete="on">
 
                 <!--email & verification code-->
-                <div style="overflow:hidden;height: 80px;">
+                <div style="overflow:hidden;height: 80px;" [@moveResetDigits]="activePane">
 
-                    <!--email-->
+                <!--reset email-->
                     <div>
-                        <mat-form-field appearance="standard" style="text-align: center">
-                            <mat-label>Email</mat-label>
-                            <mat-icon matSuffix>account_circle</mat-icon>
-                            <mat-hint *ngIf="login.controls.email.invalid">
-                                Enter your email address to receive an reset link
-                            </mat-hint>
+                        <custom-input type="email"
+                                      label="Reset Email"
+                                      icon="account_circle"
+                                      errorMsg="not a valid email"
+                                      placeholder="Enter your email address to receive an reset link"
+                                      [required]="true"
+                                      formControlName="resetEmail">
+                        </custom-input>
 
-                            <input matInput
-                                   formControlName="resetEmail"
-                                   type="email"></mat-form-field></div>
+                    </div>
 
                     <!--verification code-->
                     <div style="margin-top: 15px" formGroupName="resetCode">
-                    <mat-form-field appearance="outline" style="width:30px;margin-right: 20px;margin-left: 20px">
+                        <mat-form-field appearance="outline" style="width:30px;margin-right: 20px;margin-left: 20px">
                             <input matInput
                                    maxlength="1"
                                    formControlName="one"
@@ -138,16 +147,20 @@
                             ></mat-form-field></div></div>
 
                 <!--main & secondary action-->
-                <div>
+                <div >
                     <!--main action-->
                     <div style="margin: 20px 30px 15px 30px;">
                         <button mat-raised-button
+                                (click)="onResetSubmit()"
                                 color="primary"
-                                type="submit" [disabled]="false"
+                                type="submit"
+                                [disabled]="reset.controls['resetEmail'].invalid"
                                 style="border-radius: 10px;width: 210px;height: 35px">
-                            Send Email</button></div>
+                            Send Email
+                        </button>
+                    </div>
 
-                    <!--switch screen action -->
+                    switch screen action
                     <div style="margin: 5px 30px 10px 30px;">
                         <span>Back to</span>
                         <button mat-button
@@ -155,8 +168,13 @@
                                 class="no-hover-effect register"
                                 style="margin-left: -5px;"
                                 [disableRipple]="true"
-                                (click)="switchState('login')">>
-                            Sign In</button></div></div>
+                                (click)="switchState('login')">
+                            Sign In
+                        </button>
+                    </div>
+
+                </div>
+
 
             </form>
 
