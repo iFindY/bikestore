@@ -18,6 +18,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { InputComponent } from './common/input/input.component';
+import { CodeInputComponent } from './common/code-input/code-input.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -29,7 +30,8 @@ import { InputComponent } from './common/input/input.component';
     FooterComponent,
     LoginToolBarComponent,
     LoginComponent,
-    InputComponent
+    InputComponent,
+    CodeInputComponent
   ],
     imports: [
         BrowserAnimationsModule,

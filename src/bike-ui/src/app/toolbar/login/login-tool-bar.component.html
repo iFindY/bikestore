@@ -102,7 +102,7 @@
                 <!--email & verification code-->
                 <div style="overflow:hidden;height: 80px;" [@moveResetDigits]="activePane">
 
-                <!--reset email-->
+                    <!--reset email-->
                     <div>
                         <custom-input type="email"
                                       label="Reset Email"
@@ -116,35 +116,10 @@
                     </div>
 
                     <!--verification code--> <!--remove cursor-->
-                    <div style="margin-top: 15px" formGroupName="resetCode">
-                        <mat-form-field appearance="outline" style="width:30px;margin-right: 20px;margin-left: 20px">
-                            <input matInput
-                                   maxlength="1"
-                                   formControlName="one"
-                                   type="text"
-                                   oninput="this.value = this.value.toUpperCase()"
-                            ></mat-form-field>
-                        <mat-form-field appearance="outline" style="width:30px;margin-right: 20px">
-                            <input matInput
-                                   maxlength="1"
-                                   formControlName="two"
-                                   type="text"
-                                   oninput="this.value = this.value.toUpperCase()"
-                            ></mat-form-field>
-                        <mat-form-field appearance="outline" style="width:30px;margin-right: 20px">
-                            <input matInput
-                                   maxlength="1"
-                                   formControlName="three"
-                                   type="text"
-                                   oninput="this.value = this.value.toUpperCase()"
-                            ></mat-form-field>
-                        <mat-form-field appearance="outline" style="width:30px;margin-right: 20px">
-                            <input matInput
-                                   maxlength="1"
-                                   formControlName="four"
-                                   type="text"
-                                   oninput="this.value = this.value.toUpperCase()"
-                            ></mat-form-field></div></div>
+                    <div style="margin-top: 15px" >
+                        <code-input formGroupName="resetCode"></code-input>
+                    </div>
+                </div>
 
                 <div >
                     <!--main action--> <!--after one click change button to resend email,if all code  inputs filled change to OK -->

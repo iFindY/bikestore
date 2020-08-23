@@ -1,0 +1,32 @@
+<ng-container [formGroup]="form">
+
+    <mat-form-field appearance="outline" style="width:30px;margin-right: 20px;margin-left: 20px">
+        <input matInput
+               maxlength="1"
+               formControlName="one"
+               type="text"
+               oninput="this.value = this.value.toUpperCase()"
+        ></mat-form-field>
+    <mat-form-field appearance="outline" style="width:30px;margin-right: 20px">
+        <input matInput
+               maxlength="1"
+               formControlName="two"
+               type="text"
+               oninput="this.value = this.value.toUpperCase()"
+        ></mat-form-field>
+    <mat-form-field appearance="outline" style="width:30px;margin-right: 20px">
+        <input matInput
+               maxlength="1"
+               formControlName="three"
+               type="text"
+               oninput="this.value = this.value.toUpperCase()"
+        ></mat-form-field>
+    <mat-form-field appearance="outline" style="width:30px;margin-right: 20px">
+        <input matInput
+               maxlength="1"
+               formControlName="four"
+               type="text"
+               oninput="this.value = this.value.toUpperCase()"
+        ></mat-form-field>
+
+</ng-container>

@@ -99,13 +99,7 @@ export class LoginToolBarComponent implements OnInit {
         this.reset = fb.group(
             {
                 resetEmail: ["de@de.de", [Validators.pattern(this.MAIL_PATTERN)]],
-
-                resetCode: this.fb.group({
-                    one:    [, [Validators.pattern(/[0-9A-Z]/)]],
-                    two:    [, [Validators.pattern(/[0-9A-Z]/)]],
-                    three:  [, [Validators.pattern(/[0-9A-Z]/)]],
-                    four:   [, [Validators.pattern(/[0-9A-Z]/)]] }),
-
+                resetCode:'',
                 resetPassword:         [, [Validators.pattern(this.PASSWORD_PATTERN)]],
                 confirmResetPassword:   [, [Validators.pattern(this.PASSWORD_PATTERN)]]
             },
@@ -127,7 +121,7 @@ export class LoginToolBarComponent implements OnInit {
   onLoginSubmit() {
       const email = this.login.get('email').value,
           password = this.login.get('password').value;
-
+      console.log("called login");
       this.authService.login(email, password)
           .subscribe(() => console.log('user is logged in'));
   }
