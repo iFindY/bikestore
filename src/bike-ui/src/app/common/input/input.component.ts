@@ -90,6 +90,7 @@ export class InputComponent implements ControlValueAccessor {
         fm.monitor(elRef.nativeElement, true).subscribe(origin => {
             this.focused = !!origin;
             this.stateChanges.next();});
+
     }
 
     ngOnInit(): void {
@@ -102,7 +103,6 @@ export class InputComponent implements ControlValueAccessor {
 
     writeValue(value: any) {
         this.value = value;
-        console.log(this.value,"ohoho");
         this.chRef.detectChanges(); // testing
     }
 

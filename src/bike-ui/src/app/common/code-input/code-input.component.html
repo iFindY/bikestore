@@ -1,32 +1,49 @@
 <ng-container [formGroup]="form">
 
     <mat-form-field appearance="outline" style="width:30px;margin-right: 20px;margin-left: 20px">
-        <input matInput
+        <input matInput id="0" #x
+               (focus)="index=0"
+               (blur)="index=-1"
+               [tabIndex]="1"
+               [placeholder]="index==0?cursor:'_'"
                maxlength="1"
                formControlName="one"
                type="text"
-               oninput="this.value = this.value.toUpperCase()"
+               [ngModel]="input[0].val"
         ></mat-form-field>
     <mat-form-field appearance="outline" style="width:30px;margin-right: 20px">
-        <input matInput
+        <input matInput id="1"
+               (focus)="index=1"
+               (blur)="index=-1"
+               [tabIndex]="2"
+               [placeholder]="index==1?cursor:'_'"
                maxlength="1"
                formControlName="two"
                type="text"
-               oninput="this.value = this.value.toUpperCase()"
+               [(ngModel)]="input[1].val"
         ></mat-form-field>
     <mat-form-field appearance="outline" style="width:30px;margin-right: 20px">
-        <input matInput
+        <input matInput id="2"
+               (focus)="index=2"
+               (blur)="index=-1"
+               [tabIndex]="3"
+               [placeholder]="index==2?cursor:'_'"
                maxlength="1"
                formControlName="three"
                type="text"
-               oninput="this.value = this.value.toUpperCase()"
+               [(ngModel)]="input[2].val"
         ></mat-form-field>
     <mat-form-field appearance="outline" style="width:30px;margin-right: 20px">
-        <input matInput
+        <input matInput id="3"
+               (focus)="index=3"
+               (blur)="index=-1"
+               [tabIndex]="4"
+               [placeholder]="index==3?cursor:'_'"
+               (blur)="form.updateValueAndValidity()"
                maxlength="1"
                formControlName="four"
                type="text"
-               oninput="this.value = this.value.toUpperCase()"
+               [(ngModel)]="input[3].val"
         ></mat-form-field>
 
 </ng-container>

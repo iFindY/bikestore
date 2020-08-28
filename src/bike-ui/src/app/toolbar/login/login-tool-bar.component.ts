@@ -79,6 +79,7 @@ export class LoginToolBarComponent implements OnInit {
     screen: BehaviorSubject<screenType> = new BehaviorSubject('login');
     activePane: screenType = 'login';
     textBold: screenType;
+    emailSend: boolean;
 
     get loginForm() { return this.login.controls; }
     get resetForm() { return this.reset.controls; }
@@ -121,13 +122,12 @@ export class LoginToolBarComponent implements OnInit {
   onLoginSubmit() {
       const email = this.login.get('email').value,
           password = this.login.get('password').value;
-      console.log("called login");
       this.authService.login(email, password)
           .subscribe(() => console.log('user is logged in'));
   }
 
     onResetSubmit() {
-
+        this.emailSend = true;
         const email = this.reset.get('resetEmail').value;
 
         // do some service stuff  ...
@@ -137,7 +137,6 @@ export class LoginToolBarComponent implements OnInit {
     }
 
     switchState(reset?: screenType) {
-        console.log("called",reset)
         if (reset) {
             this.screen.next(reset);
         } else {
@@ -154,6 +153,9 @@ export class LoginToolBarComponent implements OnInit {
 
 
     // ===== helper
+    get sendResend():string{
+        return this.emailSend ? 'Resend Email' : 'Send Email';
+    }
 
     private switchScreen(screen: screenType) {
         if (screen === 'login') {

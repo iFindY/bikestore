@@ -3,7 +3,7 @@
 <div>
         <h1 mat-dialog-title [ngClass]="{'bold': activePane==='login'}" style="margin-bottom: 11px" >Sign In</h1>
         <h1 mat-dialog-title style="margin-bottom: 90px;" [ngClass]="{'bold': activePane==='register'}">Sign Up</h1>
-        <div mat-dialog-content style="text-align: center;position: relative;">
+        <div mat-dialog-content style="text-align: center;position: relative;overflow: hidden;">
 
             <form [formGroup]="login" (ngSubmit)="onLoginSubmit()" autocomplete="off" novalidate>
 
@@ -130,7 +130,7 @@
                                 type="submit"
                                 [disabled]="reset.controls['resetEmail'].invalid"
                                 style="border-radius: 10px;width: 210px;height: 35px">
-                            Send Email
+                            {{sendResend}}
                         </button>
                     </div>
 
