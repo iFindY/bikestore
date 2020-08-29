@@ -67,58 +67,53 @@ export class CodeInputComponent implements ControlValueAccessor, AfterViewInit, 
 
     @HostListener('keydown', ['$event', '$event.key', '$event.target.id'])
     blockChar(event: KeyboardEvent, key: string, id: string) {
+        event.preventDefault();
         let index = Number(id);
 
+        // on code input
         if (RegExp(/^[a-zA-Z0-9]$/).test(key)) {
+            // set field value
             this.input[index].val = key.toUpperCase();
+            // go next field
+            this.focusRight(index);
 
+        // on delete code input
         } else if (key === 'Delete' || key === 'Backspace') {
-            event.preventDefault();
+            // go left if empty field
+            if (!this.input[index].val) index = this.focusLeft(index);
+            // delete current field value
+            this.input[index].val = '';
 
-            if (this.input[index].val === '') {
-                this.focusLeft(index);
-                this.input[--index].val = '';
-            } else {
-                this.input[index].val = '';
-            }
-
-        } else {
-            event.preventDefault();
-        }
-
-    }
-
-    @HostListener('keyup', ['$event', '$event.key', '$event.target.id'])
-    nextChar(event: KeyboardEvent, key: string, id: string) {
-        let index = Number(id);
-
-        if (/^[a-zA-Z0-9]$/.test(key) || key === 'ArrowRight') {
+        // field navigation
+        } else if (key === 'ArrowRight') {
             this.focusRight(index);
 
         } else if (key === 'ArrowLeft') {
             this.focusLeft(index);
-
         }
+
     }
+
 
     ngOnDestroy(): void {
         this.subscriptions.unsubscribe();
     }
 
-    private focusLeft(currentIndex: number) {
+    private focusLeft(currentIndex: number):number {
         if (currentIndex != 0) this.elRef.nativeElement.querySelectorAll('input').item(--currentIndex).focus();
 
+        return currentIndex;
     }
 
     private focusRight(currentIndex: number) {
+        const codeInputs = this.elRef.nativeElement.querySelectorAll('input');
 
         if (currentIndex == 3) {
-            this.elRef.nativeElement.querySelectorAll('input').item(currentIndex).blur();
+             codeInputs.item(currentIndex).blur();
             this.blur.emit();
 
         } else {
-            this.elRef.nativeElement.querySelectorAll('input').item(++currentIndex).focus();
-
+            codeInputs.item(++currentIndex).focus();
         }
     }
 }
