@@ -1,6 +1,13 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, forwardRef, HostListener, OnDestroy } from '@angular/core';
-import { AbstractControl, ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { interval, Subscription } from 'rxjs';
+import { Component, ElementRef, EventEmitter, forwardRef, HostListener, OnDestroy, Output } from '@angular/core';
+import {
+    AbstractControl,
+    ControlValueAccessor, DefaultValueAccessor,
+    FormBuilder,
+    FormControl,
+    FormGroup,
+    NG_VALUE_ACCESSOR
+} from '@angular/forms';
+import { interval, Subject, Subscription } from 'rxjs';
 
 @Component({
     // animate interval
@@ -15,10 +22,12 @@ import { interval, Subscription } from 'rxjs';
         }
     ]
 })
-export class CodeInputComponent implements ControlValueAccessor, AfterViewInit, OnDestroy {
+export class CodeInputComponent implements ControlValueAccessor, OnDestroy {
 
     form: FormGroup;
     cursor: string = '_';
+
+    @Output()
     blur: EventEmitter<any> = new EventEmitter<any>();
     subscriptions: Subscription;
     index: number;
@@ -34,34 +43,17 @@ export class CodeInputComponent implements ControlValueAccessor, AfterViewInit, 
     constructor(fb: FormBuilder, private elRef: ElementRef<HTMLElement>) {
 
         this.form = fb.group({ one: '', two: '', three: '', four: '' }, { validator: populated() });
-    }
-
-    ngAfterViewInit(): void {
-
         this.subscriptions = interval(1100).pipe().subscribe(() => this.cursor = this.cursor === '_' ? '' : '_');
-
     }
 
 //== == == == has to implement this 4/5 methods
 
-    public onTouched: () => void = () => {
-    };
-
-    writeValue(val: any): void {
-        val && this.form.setValue(val, { emitEvent: false });
-    }
-
-    registerOnChange(fn: any): void {
-        this.form.valueChanges.subscribe(fn);
-    }
-
-    registerOnTouched(fn: any): void {
-        this.onTouched = fn;
-    }
-
-    setDisabledState?(isDisabled: boolean): void {
-        isDisabled ? this.form.disable() : this.form.enable();
-    }
+    onTouched: () => void = () => {};
+    onChange: any = () => { };
+    writeValue(val: any): void {val && this.form.setValue(val, { emitEvent: false });}
+    registerOnChange(fn: any): void {this.form.valueChanges.subscribe(fn);}
+    registerOnTouched(fn: any): void {this.onTouched = fn;}
+    setDisabledState?(isDisabled: boolean): void {isDisabled ? this.form.disable() : this.form.enable();}
 
 //== == == == block invalid chars
 
@@ -70,7 +62,7 @@ export class CodeInputComponent implements ControlValueAccessor, AfterViewInit, 
         event.preventDefault();
         let index = Number(id);
 
-        // on code input
+        // on enter code input
         if (RegExp(/^[a-zA-Z0-9]$/).test(key)) {
             // set field value
             this.input[index].val = key.toUpperCase();
@@ -84,20 +76,19 @@ export class CodeInputComponent implements ControlValueAccessor, AfterViewInit, 
             // delete current field value
             this.input[index].val = '';
 
-        // field navigation
+        // on input navigation
         } else if (key === 'ArrowRight') {
             this.focusRight(index);
 
         } else if (key === 'ArrowLeft') {
             this.focusLeft(index);
         }
-
     }
 
 
-    ngOnDestroy(): void {
-        this.subscriptions.unsubscribe();
-    }
+
+//== == == == helper
+
 
     private focusLeft(currentIndex: number):number {
         if (currentIndex != 0) this.elRef.nativeElement.querySelectorAll('input').item(--currentIndex).focus();
@@ -109,12 +100,19 @@ export class CodeInputComponent implements ControlValueAccessor, AfterViewInit, 
         const codeInputs = this.elRef.nativeElement.querySelectorAll('input');
 
         if (currentIndex == 3) {
-             codeInputs.item(currentIndex).blur();
-            this.blur.emit();
+            codeInputs.item(currentIndex).blur();
+            this.blur.emit(this.form);
 
         } else {
             codeInputs.item(++currentIndex).focus();
         }
+    }
+
+
+//== == == == on destroy
+
+    ngOnDestroy(): void {
+        this.subscriptions.unsubscribe();
     }
 }
 

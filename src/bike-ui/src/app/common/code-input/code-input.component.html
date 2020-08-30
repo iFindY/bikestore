@@ -1,7 +1,7 @@
 <ng-container [formGroup]="form">
 
     <mat-form-field appearance="outline" style="width:30px;margin-right: 20px;margin-left: 20px">
-        <input matInput id="0" #x
+        <input matInput id="0"
                (focus)="index=0"
                (blur)="index=-1"
                [tabIndex]="1"
@@ -9,7 +9,7 @@
                maxlength="1"
                formControlName="one"
                type="text"
-               [ngModel]="input[0].val"
+               [(ngModel)]="input[0].val"
         ></mat-form-field>
     <mat-form-field appearance="outline" style="width:30px;margin-right: 20px">
         <input matInput id="1"

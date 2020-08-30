@@ -1,7 +1,7 @@
 <div class="panes" [@slide]="activePane">
 
-<div>
-        <h1 mat-dialog-title [ngClass]="{'bold': activePane==='login'}" style="margin-bottom: 11px" >Sign In</h1>
+    <div>
+        <h1 mat-dialog-title [ngClass]="{'bold': activePane==='login'}" style="margin-bottom: 11px">Sign In</h1>
         <h1 mat-dialog-title style="margin-bottom: 90px;" [ngClass]="{'bold': activePane==='register'}">Sign Up</h1>
         <div mat-dialog-content style="text-align: center;position: relative;overflow: hidden;">
 
@@ -100,7 +100,7 @@
             <form [formGroup]="reset" autocomplete="on">
 
                 <!--email & verification code-->
-                <div style="overflow:hidden;height: 80px;" [@moveResetDigits]="activePane">
+                <div style="overflow:hidden;height: 80px;" [@moveResetDigits]="activePane" [@moveNewPassword]="activePane">
 
                     <!--reset email-->
                     <div>
@@ -112,23 +112,22 @@
                                       [required]="true"
                                       formControlName="resetEmail">
                         </custom-input>
-
                     </div>
 
                     <!--verification code--> <!--remove cursor-->
                     <div style="margin-top: 15px" >
-                        <code-input formGroupName="resetCode"></code-input>
+                        <code-input formControlName="resetCode" (blur)="loggggg()"></code-input>
                     </div>
                 </div>
-
-                <div >
-                    <!--main action--> <!--after one click change button to resend email,if all code  inputs filled change to OK -->
+                <!-- button actions-->
+                <div>
+                    <!--main action-->
                     <div style="margin: 20px 30px 15px 30px;">
                         <button mat-raised-button
-                                (click)="onResetSubmit()"
+                                (click)="onResetConfirmSubmit()"
                                 color="primary"
                                 type="submit"
-                                [disabled]="reset.controls['resetEmail'].invalid"
+                                [disabled]="resetForm.resetEmail.invalid"
                                 style="border-radius: 10px;width: 210px;height: 35px">
                             {{sendResend}}
                         </button>

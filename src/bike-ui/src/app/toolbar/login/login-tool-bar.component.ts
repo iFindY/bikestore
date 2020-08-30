@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidatorFn, FormControl } from '@angular/forms';
 import { AuthenticationService } from '../../services/authentication.service';
 import { filter, tap } from 'rxjs/operators';
 import { animate, keyframes, state, style, transition, trigger, query, animateChild } from '@angular/animations';
 import { BehaviorSubject } from 'rxjs';
 import { log } from 'util';
 
-type screenType = 'login' | 'reset' | 'register' | 'code';
+type screenType = 'login' | 'reset' | 'register' | 'code' | 'password';
 type Button = 'Sign In' | 'Sign Up';
 
 @Component({
@@ -15,22 +15,27 @@ type Button = 'Sign In' | 'Sign Up';
     styleUrls: ['./login-tool-bar.component.scss'],
     animations: [
         trigger('move', [
-            state('login', style({ height: '80px' })),
-            state('register', style({ height: '150px' })),
+            state('login',      style({ height: '80px' })),
+            state('register',   style({ height: '150px' })),
             transition('login <=> register', animate('300ms ease-out'))]),
 
         trigger('moveText', [
-            state('login', style({ 'margin-top': '5px' })),
-            state('register', style({  'margin-top': '33px' })),
+            state('login',      style({ 'margin-top': '5px' })),
+            state('register',   style({  'margin-top': '33px' })),
             transition('login <=> register', animate('300ms ease-out'))]),
 
         trigger('slide', [
-            state('login', style({ transform: 'translateX(0)' })),
-            state('reset', style({ transform: 'translateX(-50%)' })),
-            state('code', style({ transform: 'translateX(-50%)' })),
+            state('login',      style({ transform: 'translateX(0)' })),
+            state('reset',      style({ transform: 'translateX(-50%)' })),
+            state('code',       style({ transform: 'translateX(-50%)' })),
+            state('password',   style({ transform: 'translateX(-50%)' })),
 
+            // order matter
             transition('reset => code',[
                 query('@moveResetDigits', animateChild())]),
+
+            transition('code => password',[
+                query('@moveNewPassword', animateChild())]),
 
             transition('* => reset', [
                 animate("600ms", keyframes([
@@ -53,8 +58,18 @@ type Button = 'Sign In' | 'Sign Up';
 
 
         trigger('moveResetDigits', [
-            state('reset', style({ height: '80px'})),
-            state('code', style({ height: '150px'})),
+            state('reset',  style({ height: '80px'})),
+            state('code',   style({ height: '150px'})),
+            transition('reset => code',
+                animate("400ms",keyframes([
+                    style({ height: '80px', offset: 0}),
+                    style({ height: '140px', offset: 0.3}),
+                    style({ height: '150px',  offset: 1})])))]),
+
+
+        trigger('moveNewPassword', [
+            state('code',       style({ height: '150px'})),
+            state('password',   style({ height: '0px'})),
             transition('reset => code',
                 animate("400ms",keyframes([
                     style({ height: '80px', offset: 0}),
@@ -117,6 +132,7 @@ export class LoginToolBarComponent implements OnInit {
       this.resetForm['resetPassword'].disable();
       this.resetForm['confirmResetPassword'].disable();
 
+      this.reset.valueChanges.subscribe(x=>console.log(JSON.stringify(x)));
   }
 
   onLoginSubmit() {
@@ -126,10 +142,9 @@ export class LoginToolBarComponent implements OnInit {
           .subscribe(() => console.log('user is logged in'));
   }
 
-    onResetSubmit() {
+    onResetConfirmSubmit() {
         this.emailSend = true;
         const email = this.reset.get('resetEmail').value;
-
         // do some service stuff  ...
 
         this.switchState('code');
@@ -151,6 +166,10 @@ export class LoginToolBarComponent implements OnInit {
         }
     }
 
+    loggggg(){
+
+        console.log("triggerd", this.reset.get('resetCode'));
+    }
 
     // ===== helper
     get sendResend():string{
@@ -206,11 +225,10 @@ export class LoginToolBarComponent implements OnInit {
         };
     }
 
-
 }
 
 
-// custom validator to check that two fields match
+// custom validator to blur that two fields match
 export function MustMatch(controlName: string, matchingControlName: string) {
     return (formGroup: FormGroup) => {
 

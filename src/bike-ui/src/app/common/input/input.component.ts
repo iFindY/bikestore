@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, ElementRef, forwardRef, HostBinding, HostListener, Injector, Input, } from '@angular/core';
-import { ControlValueAccessor, FormControl, FormGroupDirective, NG_VALUE_ACCESSOR, NgControl, NgForm } from '@angular/forms';
+import { ControlValueAccessor, FormControl, FormGroupDirective, NG_VALIDATORS, NG_VALUE_ACCESSOR, NgControl, NgForm } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
@@ -101,16 +101,15 @@ export class InputComponent implements ControlValueAccessor {
 
 //== == == == has to implement this 4 methods
 
-    writeValue(value: any) {
-        this.value = value;
-        this.chRef.detectChanges(); // testing
-    }
+    // takes a value and writes it to the form control element (model/code -> view)
+    writeValue(value: any) {this.value = value;} // this.chRef.detectChanges();
 
-    onChange: any = () => { };
+    // takes a function that should be called with the value if the value changes in the form control element itself (view -> model)
     registerOnChange(fn: any): void {this.onChange = fn;}
+    onChange: any = () => { };
 
-    onTouched: any = () => { };
     registerOnTouched(fn) {this.onTouched = fn;}
+    onTouched: any = () => { };
 
     setDisabledState?(isDisabled: boolean): void {this.disabled = isDisabled;}
 
