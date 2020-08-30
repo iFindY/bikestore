@@ -34,8 +34,6 @@ type Button = 'Sign In' | 'Sign Up';
             transition('reset => code',[
                 query('@moveResetDigits', animateChild())]),
 
-            transition('code => password',[
-                query('@moveNewPassword', animateChild())]),
 
             transition('* => reset', [
                 animate("600ms", keyframes([
@@ -49,34 +47,44 @@ type Button = 'Sign In' | 'Sign Up';
                     style({ transform: 'translateX(-0.3%)', offset: 0.2}),
                     style({ transform: 'translateX(0%)',  offset: 1})]))]),
 
-            transition('code => *', [
+            transition('code => login', [
                 animate("600ms", keyframes([
                     style({ transform: 'translateX(-50)', offset: 0}),
                     style({ transform: 'translateX(-0.3%)', offset: 0.2}),
                     style({ transform: 'translateX(0%)',  offset: 1})]))]),
           ]),
 
-
         trigger('moveResetDigits', [
-            state('reset',  style({ height: '80px'})),
-            state('code',   style({ height: '150px'})),
-            transition('reset => code',
-                animate("400ms",keyframes([
-                    style({ height: '80px', offset: 0}),
-                    style({ height: '140px', offset: 0.3}),
-                    style({ height: '150px',  offset: 1})])))]),
+            state('reset',      style({ height: '80px' })),
+            state('code',       style({ height: '150px' })),
+            state('password',   style({ height: '150px' })),
 
-
-        trigger('moveNewPassword', [
-            state('code',       style({ height: '150px'})),
-            state('password',   style({ height: '0px'})),
             transition('reset => code',
-                animate("400ms",keyframes([
-                    style({ height: '80px', offset: 0}),
-                    style({ height: '140px', offset: 0.3}),
-                    style({ height: '150px',  offset: 1})])))])
+                animate("400ms", keyframes([
+                    style({ height: '80px', offset: 0 }),
+                    style({ height: '140px', offset: 0.3 }),
+                    style({ height: '150px', offset: 1 })]))),
+
+            transition('code => password',[
+                query('@showPassword', animateChild())]),
+
+        ]),
+
+        trigger('showPassword', [
+            state('code',       style({transform: 'translateY(0%)' })),
+            state('password',   style({ transform: 'translateY(-{{top}}%)' }), { params: { top: 120 } }),
+
+            transition('code => password', [
+                animate("1600ms", keyframes([
+                    style({ opacity:"100%", transform: 'translateY(0)', offset: 0}),
+                    style({ opacity:"0%",   transform: 'translateY(0)', offset: 0.3}),
+                    style({ opacity:"0%",   transform: 'translateY(-{{top}}%)', offset: 0.35}),
+                    style({ opacity:"100%",   transform: 'translateY(-{{top}}%)', offset: 1})]))])
+        ]),
+
 
     ]
+    // keyframe password invisibale on bottom, make whole thing invisible move up fast make all visible. AAAnd do overflow hidden
 })
 
 
@@ -167,8 +175,7 @@ export class LoginToolBarComponent implements OnInit {
     }
 
     loggggg(){
-
-        console.log("triggerd", this.reset.get('resetCode'));
+        this.activePane = 'password';
     }
 
     // ===== helper

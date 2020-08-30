@@ -1,13 +1,12 @@
 import { Component, ElementRef, EventEmitter, forwardRef, HostListener, OnDestroy, Output } from '@angular/core';
 import {
     AbstractControl,
-    ControlValueAccessor, DefaultValueAccessor,
+    ControlValueAccessor,
     FormBuilder,
-    FormControl,
     FormGroup,
     NG_VALUE_ACCESSOR
 } from '@angular/forms';
-import { interval, Subject, Subscription } from 'rxjs';
+import { interval, Subscription } from 'rxjs';
 
 @Component({
     // animate interval
