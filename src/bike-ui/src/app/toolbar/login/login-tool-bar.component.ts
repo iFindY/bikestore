@@ -41,13 +41,7 @@ type Button = 'Sign In' | 'Sign Up';
                     style({ transform: 'translateX(-49.7%)', offset: 0.2}),
                     style({ transform: 'translateX(-50%)',  offset: 1})]))]),
 
-            transition('reset => *', [
-                animate("600ms", keyframes([
-                    style({ transform: 'translateX(-50)', offset: 0}),
-                    style({ transform: 'translateX(-0.3%)', offset: 0.2}),
-                    style({ transform: 'translateX(0%)',  offset: 1})]))]),
-
-            transition('code => login', [
+            transition('* => login', [
                 animate("600ms", keyframes([
                     style({ transform: 'translateX(-50)', offset: 0}),
                     style({ transform: 'translateX(-0.3%)', offset: 0.2}),
@@ -84,7 +78,6 @@ type Button = 'Sign In' | 'Sign Up';
 
 
     ]
-    // keyframe password invisibale on bottom, make whole thing invisible move up fast make all visible. AAAnd do overflow hidden
 })
 
 
@@ -102,7 +95,7 @@ export class LoginToolBarComponent implements OnInit {
     screen: BehaviorSubject<screenType> = new BehaviorSubject('login');
     activePane: screenType = 'login';
     textBold: screenType;
-    emailSend: boolean;
+    resetButton: string = 'Send Email';
 
     get loginForm() { return this.login.controls; }
     get resetForm() { return this.reset.controls; }
@@ -150,14 +143,15 @@ export class LoginToolBarComponent implements OnInit {
           .subscribe(() => console.log('user is logged in'));
   }
 
-    onResetConfirmSubmit() {
-        this.emailSend = true;
+    switchButtonLabel(screen?: screenType) {
+
+        // do some service stuff...
         const email = this.reset.get('resetEmail').value;
-        // do some service stuff  ...
 
-        this.switchState('code');
-
+        // enter mail code... order can change
+        this.switchState(screen);
     }
+
 
     switchState(reset?: screenType) {
         if (reset) {
@@ -174,13 +168,16 @@ export class LoginToolBarComponent implements OnInit {
         }
     }
 
-    loggggg(){
-        this.activePane = 'password';
-    }
 
     // ===== helper
-    get sendResend():string{
-        return this.emailSend ? 'Resend Email' : 'Send Email';
+    get sendResend(): string {
+
+        if (this.activePane === 'password') {
+            return 'Change Password';
+        } else {
+            return this.resetButton;
+        }
+
     }
 
     private switchScreen(screen: screenType) {
@@ -194,14 +191,16 @@ export class LoginToolBarComponent implements OnInit {
 
         } else if (screen === 'register') {
             this.activePane='register';
+            this.loginForm.confirmPassword.enable();
 
             this.mainButton = 'Sign Up'
             this.secondButton = 'Sign In';
             this.help = 'Already registered?';
-            this.loginForm.confirmPassword.enable();
 
         } else if (screen === 'reset') {
             this.activePane = 'reset';
+            this.resetButton = 'Send Email';
+            this.resetForm.resetEmail.enable();
 
             this.resetForm.resetCode.disable();
             this.resetForm.resetPassword.disable();
@@ -209,10 +208,20 @@ export class LoginToolBarComponent implements OnInit {
 
         } else if (screen === 'code') {
             this.activePane = 'code';
+            this.resetButton = 'Resend Email';
             this.resetForm.resetCode.enable();
+
+
+            this.resetForm.resetPassword.disable();
+            this.resetForm.confirmResetPassword.disable();
+
+        }else if (screen === 'password') {
+            this.activePane = 'password';
             this.resetForm.resetPassword.enable();
             this.resetForm.confirmResetPassword.enable();
 
+            this.resetForm.resetEmail.disable();
+            this.resetForm.resetCode.disable();
         }
     }
 
@@ -235,7 +244,7 @@ export class LoginToolBarComponent implements OnInit {
 }
 
 
-// custom validator to blur that two fields match
+// custom validator to confirmed that two fields match
 export function MustMatch(controlName: string, matchingControlName: string) {
     return (formGroup: FormGroup) => {
 

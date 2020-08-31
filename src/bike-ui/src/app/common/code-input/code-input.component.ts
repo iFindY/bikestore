@@ -27,7 +27,7 @@ export class CodeInputComponent implements ControlValueAccessor, OnDestroy {
     cursor: string = '_';
 
     @Output()
-    blur: EventEmitter<any> = new EventEmitter<any>();
+    confirmed: EventEmitter<any> = new EventEmitter<any>();
     subscriptions: Subscription;
     index: number;
 
@@ -100,7 +100,7 @@ export class CodeInputComponent implements ControlValueAccessor, OnDestroy {
 
         if (currentIndex == 3) {
             codeInputs.item(currentIndex).blur();
-            this.blur.emit(this.form);
+            this.confirmed.emit(this.form);
 
         } else {
             codeInputs.item(++currentIndex).focus();
