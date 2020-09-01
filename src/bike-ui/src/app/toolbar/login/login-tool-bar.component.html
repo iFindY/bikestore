@@ -16,6 +16,7 @@
                                   errorMsg="not a valid email"
                                   placeholder="Ex. peter@gmail.com"
                                   [required]="true"
+                                  [tabIndex]="state.login.index"
                                   formControlName="email">
                     </custom-input>
                 </div>
@@ -31,6 +32,7 @@
                                   [hintVisible]="activePane==='register'"
                                   [errorVisible]="activePane==='register'"
                                   [required]="true"
+                                  [tabIndex]="state.login.index"
                                   formControlName="password">
                     </custom-input>
 
@@ -43,6 +45,7 @@
                                   [hintVisible]="activePane==='register' && loginForm['confirmPassword'].valid"
                                   [errorVisible]="activePane==='register'"
                                   [required]="true"
+                                  [tabIndex]="state.register.index"
                                   formControlName="confirmPassword">
                     </custom-input>
 
@@ -56,6 +59,7 @@
                             id="smallButton"
                             class="no-hover-effect"
                             (click)="switchState('reset')"
+                            tabIndex="-1"
                             [disableRipple]="true">
                         forgot password ?
                     </button>
@@ -82,7 +86,8 @@
                             type="button"
                             class="no-hover-effect register"
                             [disableRipple]="true"
-                            (click)="switchState()">
+                            (click)="switchState()"
+                            tabindex="-1">
                         {{secondButton}}
                     </button>
                 </div>
@@ -110,6 +115,7 @@
                                       errorMsg="not a valid email"
                                       placeholder="Enter your email address to receive an reset link"
                                       [required]="true"
+                                      [tabIndex]="state.reset.index"
                                       formControlName="resetEmail"></custom-input>
                     </div>
 
@@ -128,6 +134,7 @@
                                       errorMsg="to simple"
                                       placeholder="Enter new password"
                                       [required]="true"
+                                      [tabIndex]="state.password.index"
                                       formControlName="resetPassword"></custom-input>
 
                         <custom-input controlType="password"
@@ -137,6 +144,7 @@
                                       errorMsg="not matching"
                                       placeholder="Confirm password"
                                       [required]="true"
+                                      [tabIndex]="state.password.index"
                                       formControlName="confirmResetPassword"></custom-input>
                     </div>
 
@@ -155,6 +163,7 @@
                                 color="primary"
                                 type="submit"
                                 [disabled]="reset.invalid"
+                                [tabIndex]="(state.reset.index||state.password.index)?0:-1"
                                 style="border-radius: 10px;width: 210px;height: 35px">
                             {{sendResend}}
                         </button>
@@ -167,7 +176,8 @@
                                 type="button"
                                 class="no-hover-effect register"
                                 style="margin-left: -5px;"
-                                [disableRipple]="true"
+                                [disableRipple]="true" tabindex="-1"
+                                tabIndex="-1"
                                 (click)="switchState('login')">
                             Sign In
                         </button>

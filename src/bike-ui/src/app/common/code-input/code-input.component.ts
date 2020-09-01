@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, forwardRef, HostListener, OnDestroy, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, forwardRef, HostListener, Input, OnDestroy, Output } from '@angular/core';
 import {
     AbstractControl,
     ControlValueAccessor,
@@ -30,6 +30,7 @@ export class CodeInputComponent implements ControlValueAccessor, OnDestroy {
     confirmed: EventEmitter<any> = new EventEmitter<any>();
     subscriptions: Subscription;
     index: number;
+    @Input()tabIndex:number
 
     // custom type array, objects to get object reference
     input: { id: number, val: string }[] = [

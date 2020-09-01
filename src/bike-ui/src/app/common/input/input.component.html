@@ -5,6 +5,7 @@
     <mat-error *ngIf="control.touched && control.invalid && errorVisible && !focused" style="text-align: left;">{{errorMsg}}</mat-error>
 
     <input matInput
+           [tabIndex]="tabIndex"
            [(ngModel)]="value"
            [errorStateMatcher]="errorMatcher"
            (input)="onChange($event.target.value);"
@@ -15,6 +16,7 @@
 
     <button mat-icon-button
             matSuffix
+            [tabIndex]="-1"
             (click)="click($event)"
             [attr.aria-label]="'Hide'"
             [disableRipple]="true">

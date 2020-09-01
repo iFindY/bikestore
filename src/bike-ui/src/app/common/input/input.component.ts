@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, ElementRef, forwardRef, HostBinding, HostListener, Injector, Input, } from '@angular/core';
-import { ControlValueAccessor, FormControl, FormGroupDirective, NG_VALIDATORS, NG_VALUE_ACCESSOR, NgControl, NgForm } from '@angular/forms';
+import { ControlValueAccessor, FormControl, FormGroupDirective, NG_VALUE_ACCESSOR, NgControl, NgForm } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
@@ -37,7 +37,6 @@ export class InputComponent implements ControlValueAccessor {
     private _disabled = false;
     private _required = false;
 
-
     autofilled?: boolean;
     control:NgControl;
     stateChanges = new Subject<void>();
@@ -46,6 +45,7 @@ export class InputComponent implements ControlValueAccessor {
     errorMatcher: ErrorStateMatcher;
 
 
+    @Input() tabIndex: number;
     @Input() hidden: boolean = true;
     @Input() hintVisible: boolean = true;
     @Input() errorVisible: boolean = true;
@@ -135,6 +135,7 @@ export class InputComponent implements ControlValueAccessor {
     }
 
 //== == == == helper
+
 
 
     setDescribedByIds(ids: string[]) {

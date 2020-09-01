@@ -44,7 +44,7 @@ type Button = 'Sign In' | 'Sign Up';
                     style({ transform: 'translateX(0%)',  offset: 1})]))]),
           ]),
 
-        
+
         trigger('move', [
             state('login',      style({ height: '80px' })),
             state('register',   style({ height: '150px' })),
@@ -91,6 +91,7 @@ type Button = 'Sign In' | 'Sign Up';
 export class LoginToolBarComponent implements OnInit {
 
     test:number = 120;
+    state = new State();
     login: FormGroup;
     reset: FormGroup;
     PASSWORD_PATTERN = /^(?=.*[A-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[\&\+\,\:\;\=\?\#\$\!\=\*\'\@])\S{6,12}$/;
@@ -98,6 +99,7 @@ export class LoginToolBarComponent implements OnInit {
     secondButton: Button = 'Sign Up'
     mainButton: Button = 'Sign In';
     help: string = 'Dont have an account?';
+
 
     screen: BehaviorSubject<screenType> = new BehaviorSubject('login');
     activePane: screenType = 'login';
@@ -122,9 +124,9 @@ export class LoginToolBarComponent implements OnInit {
 
         this.reset = fb.group(
             {
-                resetEmail: ["de@de.de", [Validators.pattern(this.MAIL_PATTERN)]],
-                resetCode:'',
-                resetPassword:         [, [Validators.pattern(this.PASSWORD_PATTERN)]],
+                resetEmail:             [, [Validators.pattern(this.MAIL_PATTERN)]],
+                resetCode:              null,
+                resetPassword:          [, [Validators.pattern(this.PASSWORD_PATTERN)]],
                 confirmResetPassword:   [, [Validators.pattern(this.PASSWORD_PATTERN)]]
             },
             {
@@ -194,6 +196,7 @@ export class LoginToolBarComponent implements OnInit {
 
     private switchScreen(screen: screenType) {
         if (screen === 'login') {
+            this.state.onLogin();
             this.activePane='login';
 
             this.mainButton = 'Sign In'
@@ -202,6 +205,7 @@ export class LoginToolBarComponent implements OnInit {
             this.loginForm.confirmPassword.disable();
 
         } else if (screen === 'register') {
+            this.state.onRegister();
             this.activePane='register';
             this.loginForm.confirmPassword.enable();
 
@@ -210,6 +214,7 @@ export class LoginToolBarComponent implements OnInit {
             this.help = 'Already registered?';
 
         } else if (screen === 'reset') {
+            this.state.onReset();
             this.activePane = 'reset';
             this.resetButton = 'Send Email';
             this.resetForm.resetEmail.enable();
@@ -219,6 +224,7 @@ export class LoginToolBarComponent implements OnInit {
             this.resetForm.confirmResetPassword.disable();
 
         } else if (screen === 'code') {
+            this.state.onCode();
             this.activePane = 'code';
             this.resetButton = 'Resend Email';
             this.resetForm.resetCode.enable();
@@ -228,6 +234,7 @@ export class LoginToolBarComponent implements OnInit {
             this.resetForm.confirmResetPassword.disable();
 
         } else if (screen === 'password') {
+            this.state.onPassword();
             this.activePane = 'password';
             this.resetForm.resetPassword.enable();
             this.resetForm.confirmResetPassword.enable();
@@ -236,6 +243,7 @@ export class LoginToolBarComponent implements OnInit {
             this.resetForm.resetCode.disable();
 
         } else if (screen === 'done') {
+            this.state.onLogin();
             this.activePane = 'done';
             this.test=300;
 
@@ -259,6 +267,56 @@ export class LoginToolBarComponent implements OnInit {
 
         };
     }
+
+}
+
+class State {
+
+    login    = {index: -1}
+    register = {index: -1}
+    reset    = {index: -1}
+    code     = {index: -1}
+    password = {index: -1}
+
+    onLogin() {
+        this.login.index    = 0;
+        this.register.index = -1;
+        this.reset.index    = -1;
+        this.code.index     = -1;
+        this.password.index = -1;
+    };
+
+    onRegister() {
+        this.login.index    =  0;
+        this.register.index =  0;
+        this.reset.index    = -1;
+        this.code.index     = -1;
+        this.password.index = -1;
+    };
+
+    onReset() {
+        this.login.index    = -1;
+        this.register.index = -1;
+        this.reset.index    =  0;
+        this.code.index     = -1;
+        this.password.index = -1;
+    };
+
+    onCode() {
+        this.login.index    = -1;
+        this.register.index = -1;
+        this.reset.index    =  0;
+        this.code.index     =  0;
+        this.password.index = -1;
+    };
+
+    onPassword() {
+        this.login.index    = -1;
+        this.register.index = -1;
+        this.reset.index    = -1;
+        this.code.index     = -1;
+        this.password.index =  0;
+    };
 
 }
 
