@@ -2,11 +2,11 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidatorFn, FormControl } from '@angular/forms';
 import { AuthenticationService } from '../../services/authentication.service';
 import { filter, tap } from 'rxjs/operators';
-import { animate, keyframes, state, style, transition, trigger, query, animateChild } from '@angular/animations';
+import { animate, keyframes, state, style, transition, trigger, query, animateChild, group } from '@angular/animations';
 import { BehaviorSubject } from 'rxjs';
 import { log } from 'util';
 
-type screenType = 'login' | 'reset' | 'register' | 'code' | 'password';
+type screenType = 'login' | 'reset' | 'register' | 'code' | 'password'| 'done';
 type Button = 'Sign In' | 'Sign Up';
 
 @Component({
@@ -14,26 +14,22 @@ type Button = 'Sign In' | 'Sign Up';
     templateUrl: './login-tool-bar.component.html',
     styleUrls: ['./login-tool-bar.component.scss'],
     animations: [
-        trigger('move', [
-            state('login',      style({ height: '80px' })),
-            state('register',   style({ height: '150px' })),
-            transition('login <=> register', animate('300ms ease-out'))]),
-
-        trigger('moveText', [
-            state('login',      style({ 'margin-top': '5px' })),
-            state('register',   style({  'margin-top': '33px' })),
-            transition('login <=> register', animate('300ms ease-out'))]),
 
         trigger('slide', [
             state('login',      style({ transform: 'translateX(0)' })),
+            state('register',   style({ transform: 'translateX(0)' })),
             state('reset',      style({ transform: 'translateX(-50%)' })),
             state('code',       style({ transform: 'translateX(-50%)' })),
             state('password',   style({ transform: 'translateX(-50%)' })),
 
             // order matter
+            transition('login <=> register',[
+                group([
+                    query('@move', animateChild()),
+                    query('@moveText', animateChild())])]),
+
             transition('reset => code',[
                 query('@moveResetDigits', animateChild())]),
-
 
             transition('* => reset', [
                 animate("600ms", keyframes([
@@ -47,6 +43,17 @@ type Button = 'Sign In' | 'Sign Up';
                     style({ transform: 'translateX(-0.3%)', offset: 0.2}),
                     style({ transform: 'translateX(0%)',  offset: 1})]))]),
           ]),
+
+        
+        trigger('move', [
+            state('login',      style({ height: '80px' })),
+            state('register',   style({ height: '150px' })),
+            transition('login <=> register', animate('300ms ease-out'))]),
+
+        trigger('moveText', [
+            state('login',      style({ 'margin-top': '5px' })),
+            state('register',   style({  'margin-top': '33px' })),
+            transition('login <=> register', animate('300ms ease-out'))]),
 
         trigger('moveResetDigits', [
             state('reset',      style({ height: '80px' })),
@@ -67,8 +74,9 @@ type Button = 'Sign In' | 'Sign Up';
         trigger('showPassword', [
             state('code',       style({transform: 'translateY(0%)' })),
             state('password',   style({ transform: 'translateY(-{{top}}%)' }), { params: { top: 120 } }),
+            state('done',       style({ transform: 'translateY(-{{top}}%)' }), { params: { top: 120 } }),
 
-            transition('code => password', [
+            transition("code => password", [
                 animate("1600ms", keyframes([
                     style({ opacity:"100%", transform: 'translateY(0)', offset: 0}),
                     style({ opacity:"0%",   transform: 'translateY(0)', offset: 0.3}),
@@ -76,14 +84,13 @@ type Button = 'Sign In' | 'Sign Up';
                     style({ opacity:"100%",   transform: 'translateY(-{{top}}%)', offset: 1})]))])
         ]),
 
-
     ]
 })
 
 
 export class LoginToolBarComponent implements OnInit {
 
-
+    test:number = 120;
     login: FormGroup;
     reset: FormGroup;
     PASSWORD_PATTERN = /^(?=.*[A-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[\&\+\,\:\;\=\?\#\$\!\=\*\'\@])\S{6,12}$/;
@@ -127,13 +134,15 @@ export class LoginToolBarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-      this.screen.asObservable().subscribe(screen => this.switchScreen(screen));
+      this.screen.asObservable().subscribe(screen => {
+          console.log('on screen', screen);
+          this.switchScreen(screen);
+      });
 
       this.resetForm['resetCode'].disable();
       this.resetForm['resetPassword'].disable();
       this.resetForm['confirmResetPassword'].disable();
 
-      this.reset.valueChanges.subscribe(x=>console.log(JSON.stringify(x)));
   }
 
   onLoginSubmit() {
@@ -145,11 +154,14 @@ export class LoginToolBarComponent implements OnInit {
 
     switchButtonLabel(screen?: screenType) {
 
-        // do some service stuff...
-        const email = this.reset.get('resetEmail').value;
+        if (this.screen.value === 'password') {
+            this.switchScreen('done');
+        }else {
+            this.switchState(screen);
+        }
 
-        // enter mail code... order can change
-        this.switchState(screen);
+        // do some service stuff here ...
+
     }
 
 
@@ -215,13 +227,20 @@ export class LoginToolBarComponent implements OnInit {
             this.resetForm.resetPassword.disable();
             this.resetForm.confirmResetPassword.disable();
 
-        }else if (screen === 'password') {
+        } else if (screen === 'password') {
             this.activePane = 'password';
             this.resetForm.resetPassword.enable();
             this.resetForm.confirmResetPassword.enable();
 
             this.resetForm.resetEmail.disable();
             this.resetForm.resetCode.disable();
+
+        } else if (screen === 'done') {
+            this.activePane = 'done';
+            this.test=300;
+
+            this.resetForm.resetPassword.disable();
+            this.resetForm.confirmResetPassword.disable();
         }
     }
 
