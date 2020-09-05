@@ -169,6 +169,8 @@ export class LoginToolBarComponent implements OnInit {
             this.screen.next('done');
         } else if (this.screen.value === 'done') {
             this.screen.next('login');
+            this.resetForm.resetCode.reset();
+            this.reset.reset();
 
         } else {
             this.screen.next(screen);

@@ -50,7 +50,11 @@ export class CodeInputComponent implements ControlValueAccessor, OnDestroy {
 
     onTouched: () => void = () => {};
     onChange: any = () => { };
-    writeValue(val: any): void {val && this.form.setValue(val, { emitEvent: false });}
+    writeValue(val: any): void {
+        val ?
+            val && this.form.setValue(val, { emitEvent: false }) :
+            this.form.reset();
+    }
     registerOnChange(fn: any): void {this.form.valueChanges.subscribe(fn);}
     registerOnTouched(fn: any): void {this.onTouched = fn;}
     setDisabledState?(isDisabled: boolean): void {isDisabled ? this.form.disable() : this.form.enable();}
