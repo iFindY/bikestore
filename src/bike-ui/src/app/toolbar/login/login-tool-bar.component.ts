@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidatorFn, FormControl } from '@angular/forms';
 import { AuthenticationService } from '../../services/authentication.service';
 import { filter, tap } from 'rxjs/operators';
-import { animate, keyframes, state, style, transition, trigger, query, animateChild, group } from '@angular/animations';
+import { animate, keyframes, state, style, transition, trigger, query, animateChild, group, stagger } from '@angular/animations';
 import { BehaviorSubject } from 'rxjs';
 import { log } from 'util';
 
@@ -21,6 +21,7 @@ type Button = 'Sign In' | 'Sign Up';
             state('reset',      style({ transform: 'translateX(-50%)' })),
             state('code',       style({ transform: 'translateX(-50%)' })),
             state('password',   style({ transform: 'translateX(-50%)' })),
+            state('done',       style({ transform: 'translateX(-50%)' })),
 
             // order matter
             transition('login <=> register',[
@@ -59,6 +60,7 @@ type Button = 'Sign In' | 'Sign Up';
             state('reset',      style({ height: '80px' })),
             state('code',       style({ height: '150px' })),
             state('password',   style({ height: '150px' })),
+            state('done',       style({ height: '150px' })),
 
             transition('reset => code',
                 animate("400ms", keyframes([
@@ -72,16 +74,24 @@ type Button = 'Sign In' | 'Sign Up';
         ]),
 
         trigger('showPassword', [
-            state('code',       style({transform: 'translateY(0%)' })),
-            state('password',   style({ transform: 'translateY(-{{top}}%)' }), { params: { top: 120 } }),
-            state('done',       style({ transform: 'translateY(-{{top}}%)' }), { params: { top: 120 } }),
+            state('code',       style({ transform: 'translateY(0%)' })),
+            state('password',   style({ transform: 'translateY(-{{top}}%)' }), { params: { top: 120 } }), // variable sneed defaoult values
+            state('done',       style({ transform: 'translateY(-{{done}}%)' }), { params: { top: 120, done:220 } }),
 
             transition("code => password", [
                 animate("1600ms", keyframes([
-                    style({ opacity:"100%", transform: 'translateY(0)', offset: 0}),
-                    style({ opacity:"0%",   transform: 'translateY(0)', offset: 0.3}),
-                    style({ opacity:"0%",   transform: 'translateY(-{{top}}%)', offset: 0.35}),
-                    style({ opacity:"100%",   transform: 'translateY(-{{top}}%)', offset: 1})]))])
+                    style({ opacity:"100%",     transform: 'translateY(0%)', offset: 0}),
+                    style({ opacity:"0%",       transform: 'translateY(0%)', offset: 0.3}),
+                    style({ opacity:"0%",       transform: 'translateY(-{{top}}%)', offset: 0.35}),
+                    style({ opacity:"100%",     transform: 'translateY(-{{top}}%)', offset: 1})]))]),
+
+            transition("password => done", [
+                    animate("1600ms", keyframes([
+                    style({ opacity:"100%",     transform: 'translateY(-{{top}}%)', offset: 0}),
+                    style({ opacity:"0%",       transform: 'translateY(-{{top}}%)', offset: 0.3}),
+                    style({ opacity:"0%",       transform: 'translateY(-{{done}}%)', offset: 0.35}),
+                    style({ opacity:"100%",     transform: 'translateY(-{{done}}%)', offset: 1})]))])
+
         ]),
 
     ]
@@ -124,10 +134,10 @@ export class LoginToolBarComponent implements OnInit {
 
         this.reset = fb.group(
             {
-                resetEmail:             [, [Validators.pattern(this.MAIL_PATTERN)]],
+                resetEmail:             ["de@de.ee", [Validators.pattern(this.MAIL_PATTERN)]],
                 resetCode:              null,
-                resetPassword:          [, [Validators.pattern(this.PASSWORD_PATTERN)]],
-                confirmResetPassword:   [, [Validators.pattern(this.PASSWORD_PATTERN)]]
+                resetPassword:          ["Test123!", [Validators.pattern(this.PASSWORD_PATTERN)]],
+                confirmResetPassword:   ["Test123!", [Validators.pattern(this.PASSWORD_PATTERN)]]
             },
             {
                 validator: MustMatch('resetPassword', 'confirmResetPassword') // Adding cross-validation
@@ -155,14 +165,16 @@ export class LoginToolBarComponent implements OnInit {
   }
 
     switchButtonLabel(screen?: screenType) {
-
         if (this.screen.value === 'password') {
-            this.switchScreen('done');
-        }else {
-            this.switchState(screen);
+            this.screen.next('done');
+        } else if (this.screen.value === 'done') {
+            this.screen.next('login');
+
+        } else {
+            this.screen.next(screen);
         }
 
-        // do some service stuff here ...
+        // do some service stuff here, resend email agian if missing ...
 
     }
 
@@ -184,15 +196,7 @@ export class LoginToolBarComponent implements OnInit {
 
 
     // ===== helper
-    get sendResend(): string {
 
-        if (this.activePane === 'password') {
-            return 'Change Password';
-        } else {
-            return this.resetButton;
-        }
-
-    }
 
     private switchScreen(screen: screenType) {
         if (screen === 'login') {
@@ -236,6 +240,8 @@ export class LoginToolBarComponent implements OnInit {
         } else if (screen === 'password') {
             this.state.onPassword();
             this.activePane = 'password';
+            this.resetButton = 'Change Password';
+
             this.resetForm.resetPassword.enable();
             this.resetForm.confirmResetPassword.enable();
 
@@ -243,9 +249,9 @@ export class LoginToolBarComponent implements OnInit {
             this.resetForm.resetCode.disable();
 
         } else if (screen === 'done') {
-            this.state.onLogin();
+            this.state.onDone();
             this.activePane = 'done';
-            this.test=300;
+            this.resetButton = 'Return';
 
             this.resetForm.resetPassword.disable();
             this.resetForm.confirmResetPassword.disable();
@@ -277,6 +283,7 @@ class State {
     reset    = {index: -1}
     code     = {index: -1}
     password = {index: -1}
+    done = {index: -1}
 
     onLogin() {
         this.login.index    = 0;
@@ -316,6 +323,13 @@ class State {
         this.reset.index    = -1;
         this.code.index     = -1;
         this.password.index =  0;
+    };
+    onDone() {
+        this.login.index    = -1;
+        this.register.index = -1;
+        this.reset.index    = -1;
+        this.code.index     = -1;
+        this.password.index = -1;
     };
 
 }

@@ -1,5 +1,6 @@
 <div class="panes" [@slide]="activePane">
 
+<!-- screen 1-->
     <div>
         <h1 mat-dialog-title [ngClass]="{'bold': activePane==='login'}" style="margin-bottom: 11px">Sign In</h1>
         <h1 mat-dialog-title style="margin-bottom: 90px;" [ngClass]="{'bold': activePane==='register'}">Sign Up</h1>
@@ -96,19 +97,22 @@
         </div>
     </div>
 
-
+<!--screen 2-->
     <div>
         <h1 mat-dialog-title style="margin-bottom: 11px;font-weight: bold">Reset</h1>
         <h1 mat-dialog-title style="margin-bottom: 90px;font-weight: bold">Password</h1>
         <div mat-dialog-content style="text-align: center;position: relative;">
 
+            <ng-container *ngIf="state.reset || state.password || state.code; else done">
+
+
             <form [formGroup]="reset" autocomplete="on">
 
                 <!--email & verification code-->
-                <div style="overflow:hidden;height: 80px;" [@moveResetDigits]="{value: activePane, params: {top: 120}}">
+                <div style="overflow:hidden;height: 80px;" [@moveResetDigits]="{value: activePane, params: {top: test}}">
 
-                    <!--reset email-->
-                    <div [@showPassword]="{value: activePane, params: {top: 120}}">
+                <!--reset email-->
+                    <div [@showPassword]="{value: activePane, params: {top: 120,done:300}}">
                         <custom-input type="email"
                                       label="Reset Email"
                                       icon="account_circle"
@@ -120,13 +124,13 @@
                     </div>
 
                     <!--verification code--> <!--remove cursor-->
-                    <div style="margin-top: 15px" [@showPassword]="{value: activePane, params: {top: 300}}">
+                    <div style="margin-top: 15px" [@showPassword]="{value: activePane, params: {top: 300,done:300}}">
                         <code-input formControlName="resetCode" (confirmed)="switchButtonLabel('password')"></code-input>
                     </div>
 
 
-                    <div [@showPassword]="{value: activePane, params: {top: test}}">
-                        <!--reset and confirm password -->
+                    <div [@showPassword]="{value: activePane, params: {top: 120,done:300}}">
+                    <!--reset and confirm password -->
                         <custom-input controlType="password"
                                       type="password"
                                       label="New Password"
@@ -148,9 +152,13 @@
                                       formControlName="confirmResetPassword"></custom-input>
                     </div>
 
-<!--                    <h1 mat-dialog-title style="font-weight: bold" [@showSuccess]="{value: activePane, params: {top: 120}}">-->
-<!--                        New Password Active</h1>-->
+                    <div [@showPassword]="{value: activePane, params: {top: 80,done:180}}">
 
+                        <h2 >Password Changed!</h2>
+                        <h4>Your password has been changed successfully.</h4>
+                        <mat-icon style="width: 50px;height: 50px;font-size: 50px;color: green;margin-bottom: 8px">done</mat-icon>
+
+                    </div>
 
                 </div>
 
@@ -165,7 +173,7 @@
                                 [disabled]="reset.invalid"
                                 [tabIndex]="(state.reset.index||state.password.index)?0:-1"
                                 style="border-radius: 10px;width: 210px;height: 35px">
-                            {{sendResend}}
+                            {{resetButton}}
                         </button>
                     </div>
 
@@ -187,9 +195,12 @@
 
             </form>
 
-
+            </ng-container>
         </div>
     </div>
 
 
 </div>
+
+
+<ng-template #done>Hallo there!</ng-template>
