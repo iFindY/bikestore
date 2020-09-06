@@ -24,10 +24,10 @@ public class CustomUsernamePasswordAuthenticationFilter extends UsernamePassword
     }
 
     private UsernamePasswordAuthenticationToken getAuthRequest(HttpServletRequest request) {
-        String username = obtainUsername(request);
+        String email = obtainUsername(request);
         String password = obtainPassword(request);
 
-        return new UsernamePasswordAuthenticationToken(username, password);
+        return new UsernamePasswordAuthenticationToken(email, password);
     }
 
     @Override
@@ -37,8 +37,8 @@ public class CustomUsernamePasswordAuthenticationFilter extends UsernamePassword
                 .map(auth-> getDecoder().decode(auth))
                 .map(String::new)
                 .map(val -> { try { return new JSONObject(val); } catch (JSONException e) { return new JSONObject(); }})
-                .map(json-> { try { return json.getString("mail"); } catch (JSONException e) { return ""; } })
-                .orElse(request.getParameter("mail")); // if login data is not in header
+                .map(json-> { try { return json.getString("email"); } catch (JSONException e) { return ""; } })
+                .orElse(request.getParameter("email")); // if login data is not in header
     }
 
     @Override

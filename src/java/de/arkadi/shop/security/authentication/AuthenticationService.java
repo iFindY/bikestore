@@ -26,9 +26,12 @@ public class AuthenticationService {
         return this.userRepository.findStoreUserByUsername(name);
     }
 
+    public StoreUser loadUserByEmail(String email){
+        return this.userRepository.findStoreUserByEmail(email);
+    }
 
-    public Boolean performAuthenticationChecks(String name) {
-        return loadUserByUsername(name).getEnabled();
+    public Boolean performAuthenticationChecks(String email) {
+        return loadUserByEmail(email).getEnabled();
     }
 
     public Integer decreaseRemainingLoginAttempts(String name) {
@@ -39,11 +42,11 @@ public class AuthenticationService {
         loadUserByUsername(name).setEnabled(false);
     }
 
-    public void resetRemainingLoginAttempts(String name) {
-        loadUserByUsername(name).increaseAttempts();
+    public void resetRemainingLoginAttempts(String email) {
+        loadUserByEmail(email).increaseAttempts();
     }
 
     public String getAuthority(String name){
-        return this.authoritiesRepository.findAuthorityByUsername(name).getAuthority();
+        return this.authoritiesRepository.findAuthorityByEmail(name).getAuthority();
     }
 }

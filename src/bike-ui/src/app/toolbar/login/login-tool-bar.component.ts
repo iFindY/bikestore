@@ -147,7 +147,7 @@ export class LoginToolBarComponent implements OnInit {
 
   ngOnInit(): void {
       this.screen.asObservable().subscribe(screen => {
-          console.log('on screen', screen);
+          console.log('ON SCREEN: ', screen);
           this.switchScreen(screen);
       });
 
@@ -160,6 +160,7 @@ export class LoginToolBarComponent implements OnInit {
   onLoginSubmit() {
       const email = this.login.get('email').value,
           password = this.login.get('password').value;
+
       this.authService.login(email, password)
           .subscribe(() => console.log('user is logged in'));
   }

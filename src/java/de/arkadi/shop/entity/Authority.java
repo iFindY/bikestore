@@ -17,7 +17,7 @@ import lombok.Data;
 public class Authority {
 
     @Id
-    String username;
+    String email;
 
     String authority;
 

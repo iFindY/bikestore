@@ -37,23 +37,23 @@ public class CustomUserDetailsService implements UserDetailsService {
      * Locates the user based on the username.
      */
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         String authority;
         StoreUser user;
 
         try {
-            user = ofNullable(this.authenticationService.loadUserByUsername(username))
-                    .orElseThrow(() -> new UsernameNotFoundException(username));
+            user = ofNullable(this.authenticationService.loadUserByEmail(email))
+                    .orElseThrow(() -> new UsernameNotFoundException(email));
 
-            authority = this.authenticationService.getAuthority(user.getUsername());
+            authority = this.authenticationService.getAuthority(user.getEmail());
 
-            return User.withUsername(user.getUsername())
+            return User.withUsername(user.getEmail())
                     .password(user.getPassword())
                     .roles(authority)
                     .build();
 
         } catch (Exception e) {
-            logger.error("Username not found [" + username + "]!");
+            logger.error("Username not found [" + email + "]!");
 
             UsernameNotFoundException ex =  new UsernameNotFoundException("Login denied.", e);
             ex.addSuppressed(e);

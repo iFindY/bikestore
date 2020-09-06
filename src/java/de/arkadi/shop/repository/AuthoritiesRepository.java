@@ -6,6 +6,6 @@ import de.arkadi.shop.entity.Authority;
 
 public interface AuthoritiesRepository extends JpaRepository<Authority, Long> {
 
-    Authority findAuthorityByUsername(String name);
+    Authority findAuthorityByEmail(String email);
 
 }

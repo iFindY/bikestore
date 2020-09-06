@@ -64,13 +64,13 @@ export class AuthenticationService {
   }
 
   // any is for accessing unknown properties
-  login(mail: string, password: string): Observable<any> {
+  login(email: string, password: string): Observable<any> {
 
-    const headers = new HttpHeaders({ 'authentication': btoa(JSON.stringify({ mail, password }))});
+    const headers = new HttpHeaders({ 'authentication': btoa(JSON.stringify({ email, password }))});
 
     return this.http.post<User>('api/auth/login', null, { headers: headers })
         .pipe(
-            //shareReplay(),
+            shareReplay(),
             tap(user => this.subject.next(user)));
   }
 

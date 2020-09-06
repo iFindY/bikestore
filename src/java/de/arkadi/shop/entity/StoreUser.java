@@ -21,8 +21,8 @@ public class StoreUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    String username;
-    String password, email;
+    String email;
+    String password, username;
     Boolean enabled;
     Integer attempts;
 

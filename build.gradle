@@ -6,7 +6,9 @@ plugins {
 
 group = 'de.arkadi'
 version = '1'
-sourceCompatibility = '11'
+sourceCompatibility = JavaVersion.VERSION_14
+targetCompatibility = JavaVersion.VERSION_14
+
 
 configurations {
     developmentOnly
@@ -71,5 +73,11 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+
+//bootRun {
+//    jvmArgs=["-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=32323"]
+//}
+
 
 tasks.classes.dependsOn angular
