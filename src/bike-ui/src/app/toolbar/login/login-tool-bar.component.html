@@ -3,15 +3,17 @@
 <!-- screen 1-->
     <div>
         <h1 mat-dialog-title [ngClass]="{'bold': activePane==='login'}" style="margin-bottom: 11px">Sign In</h1>
-        <h1 mat-dialog-title style="margin-bottom: 90px;" [ngClass]="{'bold': activePane==='register'}">Sign Up</h1>
-        <div mat-dialog-content style="text-align: center;position: relative;overflow: hidden;">
+        <h1 mat-dialog-title style="margin-bottom: 90px;"
+            [ngClass]="{'bold': activePane==='register'||activePane==='registerd'}">Sign Up</h1>
+        <div mat-dialog-content style="text-align: center; position: relative; overflow: hidden;">
 
-            <form [formGroup]="login" (ngSubmit)="onLoginSubmit()" autocomplete="off" novalidate>
+            <form [formGroup]="login" (ngSubmit)="onLoginSubmit()" autocomplete="on" novalidate>
 
 
-                <div>
+                <div style="overflow:hidden; height: 149px;" [@move]="activePane">
                     <!--email-->
-                    <custom-input type="email"
+                    <custom-input style="display: block"
+                            type="email" [@registerd]="{value: activePane, params: {done:300}}"
                                   label="Email"
                                   icon="account_circle"
                                   errorMsg="not a valid email"
@@ -20,12 +22,10 @@
                                   [tabIndex]="state.login.index"
                                   formControlName="email">
                     </custom-input>
-                </div>
-
-                <div style="overflow:hidden;height: 70px;" [@move]="activePane">
 
                     <!--password-->
-                    <custom-input controlType="password"
+                    <custom-input style="display: block"
+                            controlType="password" [@registerd]="{value: activePane, params: {done:300}}"
                                   label="Password"
                                   icon="visibility"
                                   errorMsg="to simple"
@@ -38,7 +38,8 @@
                     </custom-input>
 
                     <!--confirm password-->
-                    <custom-input controlType="password"
+                    <custom-input style="display: block"
+                            controlType="password" [@registerd]="{value: activePane, params: {done:300}}"
                                   label="Verify Password"
                                   icon="visibility"
                                   errorMsg="not matching"
@@ -50,12 +51,20 @@
                                   formControlName="confirmPassword">
                     </custom-input>
 
+                    <div style="margin-top: 12px" [@registerd]="{value: activePane, params: {done:120}}">
+
+                        <h2>Account Created!</h2>
+                        <h4>Please check your mailbox for an activation link.</h4>
+                        <mat-icon style="width: 50px;height: 50px;font-size: 50px;color: green;margin-bottom: 8px">done</mat-icon>
+
+                    </div>
+
                 </div>
 
                 <div style="text-align: right;margin-right: 40px;margin-top: -22px;">
 
                     <!--forgot password button -->
-                    <button mat-button
+                    <button mat-button [ngStyle]="{'visibility':screen.value === 'registerd' ? 'collapse' : 'visible'}"
                             type="button"
                             id="smallButton"
                             class="no-hover-effect"

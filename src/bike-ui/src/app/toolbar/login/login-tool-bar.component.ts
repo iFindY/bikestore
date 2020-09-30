@@ -6,8 +6,15 @@ import { animate, keyframes, state, style, transition, trigger, query, animateCh
 import { BehaviorSubject } from 'rxjs';
 import { log } from 'util';
 
-type screenType = 'login' | 'reset' | 'register' | 'code' | 'password'| 'done';
-type Button = 'Sign In' | 'Sign Up';
+type ScreenType = 'login' | 'logged-in' | 'reset' | 'register' | 'registerd'| 'code' | 'password'| 'done';
+type Button = 'Sign In' | 'Sign Up'| 'Return';
+
+
+// trigger('detailExpand', [
+//     state('collapsed, void', style({ height: '0px', minHeight: '0' })),
+//     state('expanded', style({ height: '*' })),
+//     transition('expanded <=> void, expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)'))
+// ])
 
 @Component({
     selector: 'app-login',
@@ -18,6 +25,7 @@ type Button = 'Sign In' | 'Sign Up';
         trigger('slide', [
             state('login',      style({ transform: 'translateX(0)' })),
             state('register',   style({ transform: 'translateX(0)' })),
+            state('registerd',  style({ transform: 'translateX(0)' })),
             state('reset',      style({ transform: 'translateX(-50%)' })),
             state('code',       style({ transform: 'translateX(-50%)' })),
             state('password',   style({ transform: 'translateX(-50%)' })),
@@ -47,31 +55,45 @@ type Button = 'Sign In' | 'Sign Up';
 
 
         trigger('move', [
-            state('login',      style({ height: '80px' })),
-            state('register',   style({ height: '150px' })),
-            transition('login <=> register', animate('300ms ease-out'))]),
+            state('login',               style({ height: '149px' })),
+            state('register, registerd', style({ height: '229px',transform: 'translateY(0)' })),
+            transition('login <=> register', animate('300ms ease-out')),
+            transition('register => registerd',[
+                query('@registerd', animateChild())]),
+
+        ]),
 
         trigger('moveText', [
-            state('login',      style({ 'margin-top': '5px' })),
-            state('register',   style({  'margin-top': '33px' })),
+            state('login',                 style({ 'margin-top': '5px' })),
+            state('register, registerd',   style({  'margin-top': '33px' })),
             transition('login <=> register', animate('300ms ease-out'))]),
 
         trigger('moveResetDigits', [
             state('reset',      style({ height: '80px' })),
-            state('code',       style({ height: '150px' })),
-            state('password',   style({ height: '150px' })),
-            state('done',       style({ height: '150px' })),
+            state('code',       style({ height: '149px' })),
+            state('password',   style({ height: '149px' })),
+            state('done',       style({ height: '149px' })),
 
             transition('reset => code',
                 animate("400ms", keyframes([
                     style({ height: '80px', offset: 0 }),
                     style({ height: '140px', offset: 0.3 }),
-                    style({ height: '150px', offset: 1 })]))),
+                    style({ height: '149px', offset: 1 })]))),
 
             transition('code => password',[
                 query('@showPassword', animateChild())]),
 
         ]),
+
+        trigger('registerd', [
+            state('registerd',  style({transform: 'translateY(-{{done}}%)' }), { params: {done:200 } }),
+            transition('register => registerd', [
+                animate("1000ms", keyframes([
+                    style({ opacity:"100%",     transform: 'translateY(0%)', offset: 0}),
+                    style({ opacity:"0",        transform: 'translateY(0%)', offset: 0.3}),
+                    style({ opacity:"0",        transform: 'translateY(-{{done}}%)', offset: 0.35}),
+                    style({ opacity:"100%",     transform: 'translateY(-{{done}}%)', offset: 1})]))])
+            ]),
 
         trigger('showPassword', [
             state('code',       style({ transform: 'translateY(0%)' })),
@@ -111,9 +133,9 @@ export class LoginToolBarComponent implements OnInit {
     help: string = 'Dont have an account?';
 
 
-    screen: BehaviorSubject<screenType> = new BehaviorSubject('login');
-    activePane: screenType = 'login';
-    textBold: screenType;
+    screen: BehaviorSubject<ScreenType> = new BehaviorSubject('login');
+    activePane: ScreenType = 'login';
+    textBold: ScreenType;
     resetButton: string = 'Send Email';
 
     get loginForm() { return this.login.controls; }
@@ -123,9 +145,9 @@ export class LoginToolBarComponent implements OnInit {
 
         this.login = fb.group(
           {
-              email:            [, [Validators.required, Validators.pattern(this.MAIL_PATTERN)]],
-              password:         [, [Validators.required, this.conditionalValidator(Validators.pattern(this.PASSWORD_PATTERN)).bind(this)]],
-              confirmPassword:  [, [Validators.pattern(this.PASSWORD_PATTERN)]]
+              email:            ["tes@de.de", [Validators.required, Validators.pattern(this.MAIL_PATTERN)]],
+              password:         ["Test123!", [Validators.required, this.conditionalValidator(Validators.pattern(this.PASSWORD_PATTERN)).bind(this)]],
+              confirmPassword:  ["Test123!", [Validators.pattern(this.PASSWORD_PATTERN)]]
           },
           {
               validator: MustMatch('password', 'confirmPassword')  // Adding cross-validation
@@ -134,10 +156,10 @@ export class LoginToolBarComponent implements OnInit {
 
         this.reset = fb.group(
             {
-                resetEmail:             ["de@de.ee", [Validators.pattern(this.MAIL_PATTERN)]],
+                resetEmail:             [null, [Validators.pattern(this.MAIL_PATTERN)]],
                 resetCode:              null,
-                resetPassword:          ["Test123!", [Validators.pattern(this.PASSWORD_PATTERN)]],
-                confirmResetPassword:   ["Test123!", [Validators.pattern(this.PASSWORD_PATTERN)]]
+                resetPassword:          [null, [Validators.pattern(this.PASSWORD_PATTERN)]],
+                confirmResetPassword:   [null, [Validators.pattern(this.PASSWORD_PATTERN)]]
             },
             {
                 validator: MustMatch('resetPassword', 'confirmResetPassword') // Adding cross-validation
@@ -159,13 +181,38 @@ export class LoginToolBarComponent implements OnInit {
 
   onLoginSubmit() {
       const email = this.login.get('email').value,
-          password = this.login.get('password').value;
+          password = this.login.get('password').value,
+          confirmPassword = this.login.get('confirmPassword').value;
+      console.log("me clicked ")
 
-      this.authService.login(email, password)
-          .subscribe(() => console.log('user is logged in'));
+      if (this.screen.value === 'login') {
+          console.log("me in login state ")
+
+          // this.authService.login(email, password)
+          //     .subscribe(
+          //         (r) => {
+          //             this.screen.next('logged-in');
+          //             console.log('user is logged in'+r)},
+          //         (e)  => console.log('failed :' + e));
+
+      } else if (this.screen.value === 'register') {
+          this.screen.next('registerd');
+          console.log("me in registerd state ")
+          //
+          // this.authService.register(email, password, confirmPassword)
+          //     .subscribe(
+          //         (r) => {
+          //           console.log('register success:'+r);
+          //           this.screen.next('registerd')},
+          //         (e) => console.log('failed :' + e));
+      }else if(this.screen.value === 'registerd'){
+          this.screen.next('login');
+      }
+
+
   }
 
-    switchButtonLabel(screen?: screenType) {
+    switchButtonLabel(screen?: ScreenType) {
         if (this.screen.value === 'password') {
             this.screen.next('done');
         } else if (this.screen.value === 'done') {
@@ -182,7 +229,7 @@ export class LoginToolBarComponent implements OnInit {
     }
 
 
-    switchState(reset?: screenType) {
+    switchState(reset?: ScreenType) {
         if (reset) {
             this.screen.next(reset);
         } else {
@@ -200,65 +247,89 @@ export class LoginToolBarComponent implements OnInit {
 
     // ===== helper
 
+    private switchScreen(screen: ScreenType) {
 
-    private switchScreen(screen: screenType) {
-        if (screen === 'login') {
-            this.state.onLogin();
-            this.activePane='login';
+        switch(screen) {
+            case 'login': {
+                this.state.onLogin();
+                this.activePane='login';
 
-            this.mainButton = 'Sign In'
-            this.secondButton = 'Sign Up';
-            this.help = 'Dont have an account?';
-            this.loginForm.confirmPassword.disable();
+                this.mainButton = 'Sign In'
+                this.secondButton = 'Sign Up';
+                this.help = 'Dont have an account?';
 
-        } else if (screen === 'register') {
-            this.state.onRegister();
-            this.activePane='register';
-            this.loginForm.confirmPassword.enable();
+                this.loginForm.password.enable();
+                this.loginForm.confirmPassword.disable();
+                break;
+            }
+            case 'register': {
+                this.state.onRegister();
+                this.activePane='register';
+                this.loginForm.confirmPassword.enable();
 
-            this.mainButton = 'Sign Up'
-            this.secondButton = 'Sign In';
-            this.help = 'Already registered?';
+                this.mainButton = 'Sign Up'
+                this.secondButton = 'Sign In';
+                this.help = 'Already registered?';
+                break;
+            }
+            case 'registerd': {
+                this.state.onDone();
+                this.activePane = 'registerd';
+                this.mainButton = 'Return'
 
-        } else if (screen === 'reset') {
-            this.state.onReset();
-            this.activePane = 'reset';
-            this.resetButton = 'Send Email';
-            this.resetForm.resetEmail.enable();
+                this.loginForm.password.disable();
+                this.loginForm.confirmPassword.disable();
+                break;
+            }
+            case 'reset': {
+                this.state.onReset();
+                this.activePane = 'reset';
+                this.resetButton = 'Send Email';
+                this.resetForm.resetEmail.enable();
 
-            this.resetForm.resetCode.disable();
-            this.resetForm.resetPassword.disable();
-            this.resetForm.confirmResetPassword.disable();
+                this.resetForm.resetCode.disable();
+                this.resetForm.resetPassword.disable();
+                this.resetForm.confirmResetPassword.disable();
+                break;
+            }
+            case 'code': {
+                this.state.onCode();
+                this.activePane = 'code';
+                this.resetButton = 'Resend Email';
+                this.resetForm.resetCode.enable();
 
-        } else if (screen === 'code') {
-            this.state.onCode();
-            this.activePane = 'code';
-            this.resetButton = 'Resend Email';
-            this.resetForm.resetCode.enable();
 
+                this.resetForm.resetPassword.disable();
+                this.resetForm.confirmResetPassword.disable();
+                break;
+            }
+            case 'password': {
+                this.state.onPassword();
+                this.activePane = 'password';
+                this.resetButton = 'Change Password';
 
-            this.resetForm.resetPassword.disable();
-            this.resetForm.confirmResetPassword.disable();
+                this.resetForm.resetPassword.enable();
+                this.resetForm.confirmResetPassword.enable();
 
-        } else if (screen === 'password') {
-            this.state.onPassword();
-            this.activePane = 'password';
-            this.resetButton = 'Change Password';
+                this.resetForm.resetEmail.disable();
+                this.resetForm.resetCode.disable();
+                break;
+            }
+            case 'done': {
+                this.state.onDone();
+                this.activePane = 'done';
+                this.resetButton = 'Return';
 
-            this.resetForm.resetPassword.enable();
-            this.resetForm.confirmResetPassword.enable();
-
-            this.resetForm.resetEmail.disable();
-            this.resetForm.resetCode.disable();
-
-        } else if (screen === 'done') {
-            this.state.onDone();
-            this.activePane = 'done';
-            this.resetButton = 'Return';
-
-            this.resetForm.resetPassword.disable();
-            this.resetForm.confirmResetPassword.disable();
+                this.resetForm.resetPassword.disable();
+                this.resetForm.confirmResetPassword.disable();
+                break;
+            }
+            default: {
+                //statements;
+                break;
+            }
         }
+
     }
 
 
@@ -281,15 +352,17 @@ export class LoginToolBarComponent implements OnInit {
 
 class State {
 
-    login    = {index: -1}
-    register = {index: -1}
-    reset    = {index: -1}
-    code     = {index: -1}
-    password = {index: -1}
-    done = {index: -1}
+    login     = {index: -1}
+    register  = {index: -1}
+    registerd = {index: -1}
+
+    reset     = {index: -1}
+    code      = {index: -1}
+    password  = {index: -1}
+    done      = {index: -1}
 
     onLogin() {
-        this.login.index    = 0;
+        this.login.index    =  0;
         this.register.index = -1;
         this.reset.index    = -1;
         this.code.index     = -1;

@@ -31,11 +31,13 @@ export class AuthenticationService {
      * on start up get possible ACTIVE USER SESSION if exists and is not time outed
      * if active session exists then it will return a user
      */
-    http.get<User>('api/user').subscribe(user => this.subject.next(user ? user : ANONYMOUS_USER));
+
+    // later
+   // http.get<User>('api/user').subscribe(user => this.subject.next(user ? user : ANONYMOUS_USER));
 
   }
 
-  signUp(email: string, password: string): Observable<User> {
+  register(email: string, password: string, confirmedPassword: string): Observable<User> {
 
     /**
      * create post request to create new user, pass in json object with email and password.
@@ -50,10 +52,13 @@ export class AuthenticationService {
      * if the sign up component fire several times and create several subscription of the observable
      * they will all share result of this blue print body
      * */
-    return this.http.post<User>('/api/signup', { email, password })
+    return this.http.post<User>('/api/user/register', {
+      email             : btoa(email),
+      password          : btoa(password),
+      confirmedPassword : btoa(confirmedPassword)})
         .pipe(
             shareReplay(), // this stop multiple request of creating same user
-            tap(user => this.subject.next(user)));// emit new values on the BehaviorObject, and hay we know that we work with User objects
+            tap(user => this.subject.next(user))); // emit new values on the BehaviorObject, and hay we know that we work with User objects
   }
 
   logOut(): Observable<any> {
