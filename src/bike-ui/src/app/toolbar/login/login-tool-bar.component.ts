@@ -32,10 +32,11 @@ type Button = 'Sign In' | 'Sign Up'| 'Return';
             state('done',       style({ transform: 'translateX(-50%)' })),
 
             // order matter
-            transition('login <=> register',[
+            transition('login <=> register, registerd => login',[
                 group([
                     query('@move', animateChild()),
-                    query('@moveText', animateChild())])]),
+                    query('@moveText', animateChild()),
+                    query('@registerd', animateChild())])]),
 
             transition('reset => code',[
                 query('@moveResetDigits', animateChild())]),
@@ -56,8 +57,9 @@ type Button = 'Sign In' | 'Sign Up'| 'Return';
 
         trigger('move', [
             state('login',               style({ height: '149px' })),
+            state('reset',               style({ height: '149px' })), // hide stuff on transition
             state('register, registerd', style({ height: '229px',transform: 'translateY(0)' })),
-            transition('login <=> register', animate('300ms ease-out')),
+            transition('login <=> register,registerd=>login', animate('300ms ease-out')),
             transition('register => registerd',[
                 query('@registerd', animateChild())]),
 
@@ -69,10 +71,8 @@ type Button = 'Sign In' | 'Sign Up'| 'Return';
             transition('login <=> register', animate('300ms ease-out'))]),
 
         trigger('moveResetDigits', [
-            state('reset',      style({ height: '80px' })),
-            state('code',       style({ height: '149px' })),
-            state('password',   style({ height: '149px' })),
-            state('done',       style({ height: '149px' })),
+            state('reset,login',          style({ height: '80px' })),
+            state('code,password,done',   style({ height: '149px' })),
 
             transition('reset => code',
                 animate("400ms", keyframes([
@@ -86,13 +86,22 @@ type Button = 'Sign In' | 'Sign Up'| 'Return';
         ]),
 
         trigger('registerd', [
-            state('registerd',  style({transform: 'translateY(-{{done}}%)' }), { params: {done:200 } }),
+            state('registerd',  style({transform: 'translateY(-{{top}}%)' }), { params: {top:200 } }),
+            state('login',      style({transform: 'translateY(0)' }), { params: {top:200 } }),
+
             transition('register => registerd', [
                 animate("1000ms", keyframes([
-                    style({ opacity:"100%",     transform: 'translateY(0%)', offset: 0}),
-                    style({ opacity:"0",        transform: 'translateY(0%)', offset: 0.3}),
-                    style({ opacity:"0",        transform: 'translateY(-{{done}}%)', offset: 0.35}),
-                    style({ opacity:"100%",     transform: 'translateY(-{{done}}%)', offset: 1})]))])
+                    style({ opacity:"100%",     transform: 'translateY(0)', offset: 0}),
+                    style({ opacity:"0",        transform: 'translateY(0)', offset: 0.3}),
+                    style({ opacity:"0",        transform: 'translateY(-{{top}}%)', offset: 0.35}),
+                    style({ opacity:"100%",     transform: 'translateY(-{{top}}%)', offset: 1})]))]),
+
+            transition("registerd => login", [
+                animate("400ms", keyframes([
+                    style({ opacity:"100%",   transform: 'translateY(-{{top}}%)', offset: 0}),
+                    style({ opacity:"0%",    transform: 'translateY(-{{top}}%)', offset: 0.3}),
+                    style({ opacity:"0%",    transform: 'translateY(0)', offset: 0.7}),
+                    style({ opacity:"100%",   transform: 'translateY(0)', offset: 1})]))])
             ]),
 
         trigger('showPassword', [
