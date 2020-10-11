@@ -2,12 +2,12 @@ package de.arkadi.shop.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import de.arkadi.shop.entity.StoreUser;
+import de.arkadi.shop.entity.User;
 
-public interface UserRepository extends JpaRepository<StoreUser, Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
 
-    StoreUser findStoreUserByUsername(String name);
+    User findUserByUsername(String name);
 
-    StoreUser findStoreUserByEmail(String email);
+    User findUserByEmail(String email);
 
 }

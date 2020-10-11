@@ -99,7 +99,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
             .authorizeRequests()
                 // the request equals "/" as allowed for all
-                .antMatchers("/","api/auth/register").permitAll()
+                .antMatchers("/","/api/user/register").permitAll()
                 // any request which has not ben intercepted previously, has to be authenticated
                 .anyRequest().authenticated().and()
 

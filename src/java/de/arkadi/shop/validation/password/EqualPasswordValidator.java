@@ -1,25 +1,17 @@
-package de.arkadi.shop.validation;
+package de.arkadi.shop.validation.password;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import javax.validation.constraintvalidation.SupportedValidationTarget;
-import javax.validation.constraintvalidation.ValidationTarget;
+import de.arkadi.shop.model.UserRegistrationDTO;
 
-
-//TIP   Object[] as input of the constructor
-@SupportedValidationTarget(ValidationTarget.PARAMETERS)
-public class EqualPasswordValidator implements ConstraintValidator<EqualEmailParameters, Object[]> {
+public class EqualPasswordValidator implements ConstraintValidator<EqualPassword, UserRegistrationDTO> {
 
     @Override
-    public void initialize(EqualEmailParameters constraintAnnotation) {}
+    public void initialize(EqualPassword constraintAnnotation) {}
 
     @Override
-    public boolean isValid(Object[] value, ConstraintValidatorContext context) {
+    public boolean isValid(UserRegistrationDTO value, ConstraintValidatorContext context) {
 
-        if (!(value[3] instanceof String) || !(value[4] instanceof String)) {
-            throw new IllegalArgumentException("Illegal method signature. Two String parameters expected.");
-        }
-
-        return value[3].equals(value[4]);
+        return value.getPassword().equals(value.getConfirmedPassword());
     }
 }

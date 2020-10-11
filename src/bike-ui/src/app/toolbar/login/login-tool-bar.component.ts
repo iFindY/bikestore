@@ -1,21 +1,19 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, AbstractControl, ValidatorFn, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidatorFn, FormControl, Form } from '@angular/forms';
 import { AuthenticationService } from '../../services/authentication.service';
 import { filter, tap } from 'rxjs/operators';
 import { animate, keyframes, state, style, transition, trigger, query, animateChild, group, stagger } from '@angular/animations';
 import { BehaviorSubject } from 'rxjs';
 import { log } from 'util';
+import { MatDialogRef } from '@angular/material/dialog';
 
-type ScreenType = 'login' | 'logged-in' | 'reset' | 'register' | 'registerd'| 'code' | 'password'| 'done';
+type ScreenType = 'login' | 'logged-in' | 'reset' | 'register' | 'registerd'| 'code' | 'password'| 'done'|'hide';
 type Button = 'Sign In' | 'Sign Up'| 'Return';
 
-
-// trigger('detailExpand', [
-//     state('collapsed, void', style({ height: '0px', minHeight: '0' })),
-//     state('expanded', style({ height: '*' })),
-//     transition('expanded <=> void, expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)'))
-// ])
-
+/*
+    evry trigger should know their state.
+    if it is a neasted trigger, doest metter have to redefine them
+ */
 @Component({
     selector: 'app-login',
     templateUrl: './login-tool-bar.component.html',
@@ -54,12 +52,10 @@ type Button = 'Sign In' | 'Sign Up'| 'Return';
                     style({ transform: 'translateX(0%)',  offset: 1})]))]),
           ]),
 
-
         trigger('move', [
-            state('login',               style({ height: '149px' })),
-            state('reset',               style({ height: '149px' })), // hide stuff on transition
-            state('register, registerd', style({ height: '229px',transform: 'translateY(0)' })),
-            transition('login <=> register,registerd=>login', animate('300ms ease-out')),
+            state('login, reset',        style({ height: '149px' })),
+            state('register, registerd', style({ height: '229px', transform: 'translateY(0)' })),
+            transition('login <=> register,registerd => login', animate('300ms ease-out')),
             transition('register => registerd',[
                 query('@registerd', animateChild())]),
 
@@ -71,8 +67,8 @@ type Button = 'Sign In' | 'Sign Up'| 'Return';
             transition('login <=> register', animate('300ms ease-out'))]),
 
         trigger('moveResetDigits', [
-            state('reset,login',          style({ height: '80px' })),
-            state('code,password,done',   style({ height: '149px' })),
+            state('reset, login',            style({ height: '80px' })),
+            state('code, password, done',   style({ height: '149px' })),
 
             transition('reset => code',
                 animate("400ms", keyframes([
@@ -123,12 +119,10 @@ type Button = 'Sign In' | 'Sign Up'| 'Return';
                     style({ opacity:"0%",       transform: 'translateY(-{{done}}%)', offset: 0.35}),
                     style({ opacity:"100%",     transform: 'translateY(-{{done}}%)', offset: 1})]))])
 
-        ]),
+        ])
 
     ]
 })
-
-
 export class LoginToolBarComponent implements OnInit {
 
     test:number = 120;
@@ -150,7 +144,9 @@ export class LoginToolBarComponent implements OnInit {
     get loginForm() { return this.login.controls; }
     get resetForm() { return this.reset.controls; }
 
-    constructor(private fb: FormBuilder, private authService: AuthenticationService) {
+    constructor(private fb: FormBuilder,
+                private authService: AuthenticationService,
+                public dialogRef: MatDialogRef<LoginToolBarComponent>) {
 
         this.login = fb.group(
           {
@@ -192,10 +188,9 @@ export class LoginToolBarComponent implements OnInit {
       const email = this.login.get('email').value,
           password = this.login.get('password').value,
           confirmPassword = this.login.get('confirmPassword').value;
-      console.log("me clicked ")
 
       if (this.screen.value === 'login') {
-          console.log("me in login state ")
+            this.screen.next('hide');
 
           // this.authService.login(email, password)
           //     .subscribe(
@@ -205,9 +200,7 @@ export class LoginToolBarComponent implements OnInit {
           //         (e)  => console.log('failed :' + e));
 
       } else if (this.screen.value === 'register') {
-          this.screen.next('registerd');
-          console.log("me in registerd state ")
-          //
+          this.screen.next('registerd');//
           // this.authService.register(email, password, confirmPassword)
           //     .subscribe(
           //         (r) => {
@@ -221,34 +214,36 @@ export class LoginToolBarComponent implements OnInit {
 
   }
 
-    switchButtonLabel(screen?: ScreenType) {
-        if (this.screen.value === 'password') {
-            this.screen.next('done');
-        } else if (this.screen.value === 'done') {
-            this.screen.next('login');
-            this.resetForm.resetCode.reset();
-            this.reset.reset();
+    secondScreenState(screen?: ScreenType, validCode?: FormGroup) {
 
-        } else {
-            this.screen.next(screen);
+        switch (this.screen.value) {
+            case 'reset':       this.screen.next('code'); break;
+            case 'password':    this.screen.next('done'); break;
+            case 'code':        if(validCode?.valid) this.screen.next('password');break;
+            case 'done':
+                this.screen.next('login');
+                this.resetForm.resetCode.reset();
+                this.reset.reset();
         }
 
         // do some service stuff here, resend email agian if missing ...
-
     }
 
 
-    switchState(reset?: ScreenType) {
+    firstScreenState(reset?: ScreenType) {
         if (reset) {
             this.screen.next(reset);
         } else {
             switch (this.screen.value) {
-                case 'login':
-                    this.screen.next('register');
-                    break;
+                case 'login': this.screen.next('register'); break;
+                case 'done':
+                case 'code':
+                case 'reset':
+                case 'password':
                 case 'register':
+                case 'registerd':
+           //     case 'hide':
                     this.screen.next('login');
-                    break;
             }
         }
     }
@@ -261,6 +256,7 @@ export class LoginToolBarComponent implements OnInit {
         switch(screen) {
             case 'login': {
                 this.state.onLogin();
+                this.reset.reset();
                 this.activePane='login';
 
                 this.mainButton = 'Sign In'
@@ -292,6 +288,7 @@ export class LoginToolBarComponent implements OnInit {
             }
             case 'reset': {
                 this.state.onReset();
+                this.login.reset();
                 this.activePane = 'reset';
                 this.resetButton = 'Send Email';
                 this.resetForm.resetEmail.enable();
@@ -334,7 +331,7 @@ export class LoginToolBarComponent implements OnInit {
                 break;
             }
             default: {
-                //statements;
+                this.dialogRef.close();
                 break;
             }
         }

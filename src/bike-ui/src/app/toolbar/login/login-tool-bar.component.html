@@ -68,7 +68,7 @@
                             type="button"
                             id="smallButton"
                             class="no-hover-effect"
-                            (click)="switchState('reset')"
+                            (click)="firstScreenState('reset')"
                             tabIndex="-1"
                             [disableRipple]="true">
                         forgot password ?
@@ -96,7 +96,7 @@
                             type="button"
                             class="no-hover-effect register"
                             [disableRipple]="true"
-                            (click)="switchState()"
+                            (click)="firstScreenState()"
                             tabindex="-1">
                         {{secondButton}}
                     </button>
@@ -111,8 +111,6 @@
         <h1 mat-dialog-title style="margin-bottom: 11px;font-weight: bold">Reset</h1>
         <h1 mat-dialog-title style="margin-bottom: 90px;font-weight: bold">Password</h1>
         <div mat-dialog-content style="text-align: center;position: relative;">
-
-            <ng-container *ngIf="state.reset || state.password || state.code; else done">
 
 
             <form [formGroup]="reset" autocomplete="on">
@@ -133,8 +131,8 @@
                     </div>
 
                     <!--verification code--> <!--remove cursor-->
-                    <div style="margin-top: 15px" [@showPassword]="{value: activePane, params: {top: 300,done:300}}">
-                        <code-input formControlName="resetCode" (confirmed)="switchButtonLabel('password')"></code-input>
+                    <div  style="margin-top: 15px" [@showPassword]="{value: activePane, params: {top: 300,done:300}}">
+                        <code-input [tabIndex]="state.code.index" formControlName="resetCode" (confirmed)="secondScreenState('password',$event)"></code-input>
                     </div>
 
 
@@ -176,7 +174,7 @@
                     <!--main action-->
                     <div style="margin: 20px 30px 15px 30px;">
                         <button mat-raised-button
-                                (click)="switchButtonLabel('code')"
+                                (click)="secondScreenState('code')"
                                 color="primary"
                                 type="submit"
                                 [disabled]="reset.invalid"
@@ -195,7 +193,7 @@
                                 style="margin-left: -5px;"
                                 [disableRipple]="true" tabindex="-1"
                                 tabIndex="-1"
-                                (click)="switchState('login')">
+                                (click)="firstScreenState()">
                             Sign In
                         </button>
                     </div>
@@ -204,12 +202,8 @@
 
             </form>
 
-            </ng-container>
         </div>
     </div>
 
 
 </div>
-
-
-<ng-template #done>Hallo there!</ng-template>

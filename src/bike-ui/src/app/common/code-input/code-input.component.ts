@@ -27,10 +27,12 @@ export class CodeInputComponent implements ControlValueAccessor, OnDestroy {
     cursor: string = '_';
 
     @Output()
-    confirmed: EventEmitter<any> = new EventEmitter<any>();
+    confirmed: EventEmitter<FormGroup> = new EventEmitter<FormGroup>();
     subscriptions: Subscription;
     index: number;
-    @Input()tabIndex:number
+    currentIndex: number = 0;
+
+    @Input() tabIndex: number
 
     // custom type array, objects to get object reference
     input: { id: number, val: string }[] = [
@@ -60,31 +62,40 @@ export class CodeInputComponent implements ControlValueAccessor, OnDestroy {
     @HostListener('keydown', ['$event', '$event.key', '$event.target.id'])
     blockChar(event: KeyboardEvent, key: string, id: string) {
         event.preventDefault();
-        let index = Number(id);
+        this.currentIndex = Number(id);
 
         // on enter code input
         if (RegExp(/^[a-zA-Z0-9]$/).test(key)) {
             // set field value
-            this.input[index].val = key.toUpperCase();
+            this.input[this.currentIndex].val = key.toUpperCase();
             // go next field
-            this.focusRight(index);
+            this.focusRight(this.currentIndex);
 
         // on delete code input
         } else if (key === 'Delete' || key === 'Backspace') {
             // go left if empty field
-            if (!this.input[index].val) index = this.focusLeft(index);
+            if (!this.input[this.currentIndex].val) this.currentIndex = this.focusLeft(this.currentIndex);
             // delete current field value
-            this.input[index].val = '';
+            this.input[this.currentIndex].val = '';
 
         // on input navigation
-        } else if (key === 'ArrowRight') {
-            this.focusRight(index);
+        } else if (key === 'ArrowRight' || key==='Tab') {
+            this.focusRight(this.currentIndex);
 
         } else if (key === 'ArrowLeft') {
-            this.focusLeft(index);
+            this.focusLeft(this.currentIndex);
         }
     }
 
+
+    @HostListener('keyup')
+    focusOut() {
+        if (this.currentIndex===3) {
+            const codeInputs = this.elRef.nativeElement.querySelectorAll('input');
+            codeInputs.item(this.currentIndex).blur();
+            this.confirmed.emit(this.form);
+        }
+    }
 
 
 //== == == == helper
@@ -98,14 +109,7 @@ export class CodeInputComponent implements ControlValueAccessor, OnDestroy {
 
     private focusRight(currentIndex: number) {
         const codeInputs = this.elRef.nativeElement.querySelectorAll('input');
-
-        if (currentIndex == 3) {
-            codeInputs.item(currentIndex).blur();
-            this.confirmed.emit(this.form);
-
-        } else {
-            codeInputs.item(++currentIndex).focus();
-        }
+        if (currentIndex < 3) codeInputs.item(++currentIndex).focus();
     }
 
 
@@ -130,7 +134,6 @@ export function populated() {
         populated ?
             controls.forEach(c => c.setErrors(null)) :
             controls.forEach(c => c.setErrors({ 'empty': true }));
-
     }
 }
 

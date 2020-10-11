@@ -24,25 +24,29 @@ INSERT INTO BIKES (id, contact, email, model, name, phone, purchase_date, purcha
 
 
 -- create security tables
-CREATE SCHEMA SECURITY
+CREATE SCHEMA SECURITY;
+    -- set current schema
+    SET SEARCH_PATH = SECURITY;
+
+    CREATE TYPE auths AS ENUM ('USER', 'ADMIN', 'MANAGER');
+
     CREATE TABLE USERS (
-        username VARCHAR(50) NOT NULL,
-        password VARCHAR(100) NOT NULL,
         email VARCHAR(50) NOT NULL PRIMARY KEY,
-        enabled BOOLEAN NOT NULL,
+        username VARCHAR(50),
+        password VARCHAR(100) NOT NULL,
+        enabled BOOLEAN NOT NULL DEFAULT FALSE,
         attempts SMALLINT NOT NULL DEFAULT 3
-    )
+    );
 
     CREATE TABLE AUTHORITIES (
         email VARCHAR(50) NOT NULL PRIMARY KEY,
-        authority VARCHAR(50) NOT NULl,
+        authority auths NOT NULl DEFAULT 'USER',
         CONSTRAINT fk_authorities_users FOREIGN KEY (email) REFERENCES users(email)
-    )
+    );
 
     CREATE UNIQUE INDEX IX_AUTH_USERS ON AUTHORITIES (email, authority);
 
--- populate security tables
-SET SEARCH_PATH = SECURITY;
+
 INSERT INTO USERS (username, password, email, enabled) VALUES ('Frank','{noop}Test123!','frank111@mail.de',true);
 INSERT INTO USERS (username,password,email, enabled) VALUES ('Peter','{noop}password','peterfff@mail.fr',true);
 INSERT INTO USERS (username, password, email, enabled) VALUES ('Manuel','{noop}bitcoin','man@gmail.de',false);

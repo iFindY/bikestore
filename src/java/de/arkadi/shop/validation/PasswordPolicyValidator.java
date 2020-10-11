@@ -28,7 +28,8 @@ public class PasswordPolicyValidator implements ConstraintValidator<PasswordPoli
     @Override
     public boolean isValid(String password, ConstraintValidatorContext context) {
         List<Rule> passwordRules = new ArrayList<>();
-        passwordRules.add(new LengthRule(10, 128));
+        passwordRules.add(new LengthRule(8, 20));
+
         CharacterCharacteristicsRule passwordChars = new CharacterCharacteristicsRule(MIN_COMPLEX_RULES,
                 new CharacterRule(EnglishCharacterData.UpperCase, MIN_UPPER_CASE_CHARS),
                 new CharacterRule(EnglishCharacterData.LowerCase, MIN_LOWER_CASE_CHARS),

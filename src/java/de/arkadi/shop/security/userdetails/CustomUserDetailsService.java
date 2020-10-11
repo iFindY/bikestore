@@ -2,11 +2,9 @@ package de.arkadi.shop.security.userdetails;
 
 import static java.util.Optional.ofNullable;
 import static org.slf4j.LoggerFactory.*;
+import static org.springframework.security.core.userdetails.User.withUsername;
 
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.userdetails.User;
-
-
 
 import org.slf4j.Logger;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,7 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import de.arkadi.shop.entity.StoreUser;
+import de.arkadi.shop.entity.User;
 import de.arkadi.shop.security.authentication.AuthenticationService;
 
 /**
@@ -39,7 +37,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         String authority;
-        StoreUser user;
+        User user;
 
         try {
             user = ofNullable(this.authenticationService.loadUserByEmail(email))
@@ -47,7 +45,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
             authority = this.authenticationService.getAuthority(user.getEmail());
 
-            return User.withUsername(user.getEmail())
+            return withUsername(user.getEmail())
                     .password(user.getPassword())
                     .roles(authority)
                     .build();

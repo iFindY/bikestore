@@ -16,9 +16,13 @@ import lombok.Data;
 @Table(schema = "SECURITY", name = "AUTHORITIES")
 public class Authority {
 
+    public enum UserRights {USER, ADMIN, MANAGER;}
+
     @Id
     String email;
 
-    String authority;
+    UserRights authority;
+
+
 
 }

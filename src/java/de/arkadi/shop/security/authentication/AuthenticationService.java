@@ -3,7 +3,7 @@ package de.arkadi.shop.security.authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import de.arkadi.shop.entity.StoreUser;
+import de.arkadi.shop.entity.User;
 import de.arkadi.shop.repository.AuthoritiesRepository;
 import de.arkadi.shop.repository.UserRepository;
 
@@ -22,12 +22,12 @@ public class AuthenticationService {
         this.authoritiesRepository = authoritiesRepository;
     }
 
-    public StoreUser loadUserByUsername(String name){
-        return this.userRepository.findStoreUserByUsername(name);
+    public User loadUserByUsername(String name){
+        return this.userRepository.findUserByUsername(name);
     }
 
-    public StoreUser loadUserByEmail(String email){
-        return this.userRepository.findStoreUserByEmail(email);
+    public User loadUserByEmail(String email){
+        return this.userRepository.findUserByEmail(email);
     }
 
     public Boolean performAuthenticationChecks(String email) {
@@ -47,6 +47,6 @@ public class AuthenticationService {
     }
 
     public String getAuthority(String name){
-        return this.authoritiesRepository.findAuthorityByEmail(name).getAuthority();
+        return this.authoritiesRepository.findAuthorityByEmail(name).getAuthority().toString();
     }
 }

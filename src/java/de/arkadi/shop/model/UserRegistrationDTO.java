@@ -1,35 +1,24 @@
 package de.arkadi.shop.model;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
 
-import de.arkadi.shop.validation.PasswordConfirmed;
+
+import java.util.Base64;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import de.arkadi.shop.validation.PasswordPolicy;
 import de.arkadi.shop.validation.UniqueEmail;
-import de.arkadi.shop.validation.UniqueUsername;
-
-import lombok.AllArgsConstructor;
+import de.arkadi.shop.validation.password.EqualPassword;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@AllArgsConstructor
+
 @Getter
-@Setter
+@EqualPassword
 @NoArgsConstructor
-@PasswordConfirmed
-public class UserDto {
+public class UserRegistrationDTO {
 
-    @NotEmpty(message="Please enter your firstname")
-    private String firstname;
-
-    @NotEmpty(message="Please enter your lastname")
-    private String lastname;
-
-    @NotEmpty(message="Please enter a username")
-    @UniqueUsername
-    private String username;
 
     @NotEmpty(message="Please enter an email")
     @Email(message="Email is not valid")
@@ -41,13 +30,28 @@ public class UserDto {
     private String password;
 
     @NotEmpty(message="Please confirm your password")
-    private String confirmPassword;
+    private String confirmedPassword;
 
-    @Min(4)
-    private int securityPin;
 
-    @Min(4)
-    private int confirmSecurityPin;
+    @JsonSetter("email")
+    public void setEmail(String email) {
+        this.email = decode(email);
+    }
+
+    @JsonSetter("password")
+    public void setPassword(String password) {
+        this.password = decode(password);
+
+    }
+
+    @JsonSetter("confirmedPassword")
+    public void setConfirmedPassword(String confirmedPassword) {
+        this.confirmedPassword = decode(confirmedPassword);
+    }
+
+    private String decode(String base64){
+        return new String (Base64.getDecoder().decode(base64.getBytes()));
+    }
 
 }
 
