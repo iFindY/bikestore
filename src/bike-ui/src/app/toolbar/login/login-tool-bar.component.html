@@ -78,13 +78,13 @@
                 <div style="margin: 22px 30px 15px 30px;">
 
                     <!--main action button-->
-                    <button mat-raised-button
+                    <loading-button
+                            [loading]="loading"
                             color="primary"
                             type="submit"
-                            [disabled]="login.invalid"
-                            style="border-radius: 10px;width: 210px;height: 35px">
+                            [disabled]="login.invalid || loading">
                         {{mainButton}}
-                    </button>
+                    </loading-button>
                 </div>
 
                 <div style="margin: 5px 30px 10px 30px;" [@moveText]="activePane">
@@ -173,15 +173,13 @@
                 <div>
                     <!--main action-->
                     <div style="margin: 20px 30px 15px 30px;">
-                        <button mat-raised-button
-                                (click)="secondScreenState('code')"
-                                color="primary"
-                                type="submit"
-                                [disabled]="reset.invalid"
+                        <loading-button
+                                (submit)="secondScreenState('code')"
                                 [tabIndex]="(state.reset.index||state.password.index)?0:-1"
-                                style="border-radius: 10px;width: 210px;height: 35px">
+                                [loading]="loading"
+                                [disabled]="reset.invalid || loading">
                             {{resetButton}}
-                        </button>
+                        </loading-button>
                     </div>
 
                     <!-- switch screen action-->

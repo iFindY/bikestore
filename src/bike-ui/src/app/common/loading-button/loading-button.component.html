@@ -1,0 +1,16 @@
+<div class="button-container">
+
+
+    <div class="spinner-container" *ngIf="loading">
+        <mat-spinner diameter="24"></mat-spinner>
+    </div>
+
+    <button mat-raised-button
+            [tabIndex]="tabIndex"
+            [color]="color"
+            [type]="type"
+            [disabled]="disabled"
+            (click)="fire($event)">
+        <ng-content></ng-content></button>
+
+</div>

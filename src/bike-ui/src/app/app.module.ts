@@ -19,6 +19,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { InputComponent } from './common/input/input.component';
 import { CodeInputComponent } from './common/code-input/code-input.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { LoadingButtonComponent } from './common/loading-button/loading-button.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -31,7 +33,8 @@ import { CodeInputComponent } from './common/code-input/code-input.component';
     LoginToolBarComponent,
     LoginComponent,
     InputComponent,
-    CodeInputComponent
+    CodeInputComponent,
+    LoadingButtonComponent
   ],
     imports: [
         BrowserAnimationsModule,
@@ -44,7 +47,8 @@ import { CodeInputComponent } from './common/code-input/code-input.component';
         MatButtonModule,
         MatInputModule,
         MatIconModule,
-        FormsModule
+        FormsModule,
+        MatProgressSpinnerModule
     ],
   providers: [],
   bootstrap: [AppComponent]

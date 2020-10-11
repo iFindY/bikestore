@@ -134,7 +134,7 @@ export class LoginToolBarComponent implements OnInit {
     secondButton: Button = 'Sign Up'
     mainButton: Button = 'Sign In';
     help: string = 'Dont have an account?';
-
+    loading: boolean;
 
     screen: BehaviorSubject<ScreenType> = new BehaviorSubject('login');
     activePane: ScreenType = 'login';
@@ -200,7 +200,15 @@ export class LoginToolBarComponent implements OnInit {
           //         (e)  => console.log('failed :' + e));
 
       } else if (this.screen.value === 'register') {
-          this.screen.next('registerd');//
+          // testing stuff but  this work has to be done
+          this.loading=true;
+          this.login.disable();
+          setTimeout(() => {
+              this.loading = false;
+
+              this.screen.next('registerd');
+          }, 2000);
+
           // this.authService.register(email, password, confirmPassword)
           //     .subscribe(
           //         (r) => {
