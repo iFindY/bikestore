@@ -152,7 +152,8 @@ export class LoginToolBarComponent implements OnInit {
           {
               email:            ["tes@de.de", [Validators.required, Validators.pattern(this.MAIL_PATTERN)]],
               password:         ["Test123!", [Validators.required, this.conditionalValidator(Validators.pattern(this.PASSWORD_PATTERN)).bind(this)]],
-              confirmPassword:  ["Test123!", [Validators.pattern(this.PASSWORD_PATTERN)]]
+              confirmPassword:  ["Test123!", [Validators.pattern(this.PASSWORD_PATTERN)]],
+              forgotPassword:[]
           },
           {
               validator: MustMatch('password', 'confirmPassword')  // Adding cross-validation

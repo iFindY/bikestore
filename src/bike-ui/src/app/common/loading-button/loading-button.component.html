@@ -11,6 +11,9 @@
             [type]="type"
             [disabled]="disabled"
             (click)="fire($event)">
-        <ng-content></ng-content></button>
+        <span [@hidden]="animation">
+            <ng-content></ng-content>
+        </span>
+    </button>
 
 </div>

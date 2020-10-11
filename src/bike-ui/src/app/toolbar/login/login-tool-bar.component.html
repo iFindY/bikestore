@@ -65,6 +65,7 @@
 
                     <!--forgot password button -->
                     <button mat-button [ngStyle]="{'visibility':screen.value === 'registerd' ? 'collapse' : 'visible'}"
+                            [disabled]="loading"
                             type="button"
                             id="smallButton"
                             class="no-hover-effect"
@@ -97,7 +98,8 @@
                             class="no-hover-effect register"
                             [disableRipple]="true"
                             (click)="firstScreenState()"
-                            tabindex="-1">
+                            tabindex="-1"
+                            [disabled]="loading">
                         {{secondButton}}
                     </button>
                 </div>
