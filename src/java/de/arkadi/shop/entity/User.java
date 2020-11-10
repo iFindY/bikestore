@@ -12,6 +12,9 @@ import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.SecondaryTable;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -24,6 +27,7 @@ import lombok.NoArgsConstructor;
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler", "password" })
 @Table(schema = "security", name = "users")
+@TypeDef(name = "pgsql_enum", typeClass = PsSqlEnumType.class)
 @SecondaryTable(schema = "security", name = "authorities", pkJoinColumns = @PrimaryKeyJoinColumn(name = "email", referencedColumnName = "email"))
 public class User {
 
@@ -42,8 +46,8 @@ public class User {
     @Column()
     private String username;
 
-    @Column(name = "authority",table = "authorities")
-    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, columnDefinition = "auths")
+    @Type( type = "pgsql_enum" )
     private UserRights authority;
 
     public User(String email, String password) {

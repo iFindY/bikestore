@@ -193,12 +193,12 @@ export class LoginToolBarComponent implements OnInit {
       if (this.screen.value === 'login') {
             this.screen.next('hide');
 
-          // this.authService.login(email, password)
-          //     .subscribe(
-          //         (r) => {
-          //             this.screen.next('logged-in');
-          //             console.log('user is logged in'+r)},
-          //         (e)  => console.log('failed :' + e));
+          this.authService.login(email, password)
+              .subscribe(
+                  (r) => {
+                      this.screen.next('logged-in');
+                      console.log('user is logged in'+r)},
+                  (e)  => console.log('failed :' + e));
 
       } else if (this.screen.value === 'register') {
           // testing stuff but  this work has to be done
@@ -210,12 +210,12 @@ export class LoginToolBarComponent implements OnInit {
               this.screen.next('registerd');
           }, 2000);
 
-          // this.authService.register(email, password, confirmPassword)
-          //     .subscribe(
-          //         (r) => {
-          //           console.log('register success:'+r);
-          //           this.screen.next('registerd')},
-          //         (e) => console.log('failed :' + e));
+          this.authService.register(email, password, confirmPassword)
+              .subscribe(
+                  (r) => {
+                    console.log('register success:'+r);
+                    this.screen.next('registerd')},
+                  (e) => console.log('failed :' + e));
       }else if(this.screen.value === 'registerd'){
           this.screen.next('login');
       }
