@@ -35,10 +35,12 @@ public class Authority {
     public enum UserRights {USER, ADMIN, MANAGER;}
 
     @Id
+    @Column(name = "email")
     String email;
 
-    @Column(nullable = false, columnDefinition = "auths")
-    @Type( type = "pgsql_enum" )
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "auths")
+    @Type(type = "pgsql_enum" )
     UserRights authority;
 
 }

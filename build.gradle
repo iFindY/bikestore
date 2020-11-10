@@ -80,4 +80,4 @@ test {
 //}
 
 
- // tasks.classes.dependsOn angular
+  tasks.classes.dependsOn angular

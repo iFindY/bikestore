@@ -2,6 +2,8 @@ package de.arkadi.shop.controllers;
 
 import javax.validation.Valid;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,13 +25,17 @@ public class UserController {
     // @ModelAttribute("user") binding part of a request body  key = user
     // @RequestBody binding whole stuff
     @PostMapping("/register")
-    public String register( @RequestBody @Valid UserRegistrationDTO user, BindingResult result) {
-        if(result.hasErrors()) {
-            return "register";
-        }
-        this.registrationService.registerNewUser(user);
+    public ResponseEntity<String> register( @RequestBody @Valid UserRegistrationDTO user, BindingResult result) {
 
-        return "redirect:register?success";
+        if (result.hasErrors()) {
+
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("user already exists");
+        } else {
+
+            this.registrationService.registerNewUser(user);
+            return ResponseEntity.ok("user ");
+        }
+
     }
 
 }

@@ -198,7 +198,7 @@ export class LoginToolBarComponent implements OnInit {
                   (r) => {
                       this.screen.next('logged-in');
                       console.log('user is logged in'+r)},
-                  (e)  => console.log('failed :' + e));
+                  (e)  => console.log('LOGIN failed :' + JSON.stringify(e)));
 
       } else if (this.screen.value === 'register') {
           // testing stuff but  this work has to be done
@@ -215,7 +215,7 @@ export class LoginToolBarComponent implements OnInit {
                   (r) => {
                     console.log('register success:'+r);
                     this.screen.next('registerd')},
-                  (e) => console.log('failed :' + e));
+                  (e) => console.log('REGISTER failed :' + JSON.stringify(e)));
       }else if(this.screen.value === 'registerd'){
           this.screen.next('login');
       }

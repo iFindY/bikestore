@@ -27,8 +27,6 @@ import lombok.NoArgsConstructor;
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler", "password" })
 @Table(schema = "security", name = "users")
-@TypeDef(name = "pgsql_enum", typeClass = PsSqlEnumType.class)
-@SecondaryTable(schema = "security", name = "authorities", pkJoinColumns = @PrimaryKeyJoinColumn(name = "email", referencedColumnName = "email"))
 public class User {
 
     @Id
@@ -46,9 +44,6 @@ public class User {
     @Column()
     private String username;
 
-    @Column(nullable = false, columnDefinition = "auths")
-    @Type( type = "pgsql_enum" )
-    private UserRights authority;
 
     public User(String email, String password) {
         this.email = email;

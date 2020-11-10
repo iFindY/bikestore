@@ -29,6 +29,7 @@ public class UserRegistrationService {
         User newUser = new User(user.getEmail(), encoder.encode(user.getPassword()));
         Authority authority = new Authority(user.getEmail(), USER);
 
+
         userRepository.save(newUser);
         authoritiesRepository.save(authority);
     }

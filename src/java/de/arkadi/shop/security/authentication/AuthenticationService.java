@@ -23,11 +23,11 @@ public class AuthenticationService {
     }
 
     public User loadUserByUsername(String name){
-        return this.userRepository.findUserByUsername(name);
+        return this.userRepository.findUserByName(name);
     }
 
     public User loadUserByEmail(String email){
-        return this.userRepository.findUserByEmail(email);
+        return this.userRepository.findUserByMail(email);
     }
 
     public Boolean performAuthenticationChecks(String email) {
@@ -46,7 +46,7 @@ public class AuthenticationService {
         loadUserByEmail(email).increaseAttempts();
     }
 
-    public String getAuthority(String name){
-        return this.authoritiesRepository.findAuthorityByEmail(name).getAuthority().toString();
+    public String getAuthority(String mail){
+        return this.authoritiesRepository.findAuthorityByEmail(mail).getAuthority().toString();
     }
 }
