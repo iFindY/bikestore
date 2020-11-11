@@ -272,6 +272,7 @@ export class LoginToolBarComponent implements OnInit {
                 this.secondButton = 'Sign Up';
                 this.help = 'Dont have an account?';
 
+                this.loginForm.email.enable();
                 this.loginForm.password.enable();
                 this.loginForm.confirmPassword.disable();
                 break;

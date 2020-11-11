@@ -33,7 +33,7 @@ public class UserController {
         } else {
 
             this.registrationService.registerNewUser(user);
-            return ResponseEntity.ok("user ");
+            return ResponseEntity.ok("user registered successfully");
         }
 
     }
