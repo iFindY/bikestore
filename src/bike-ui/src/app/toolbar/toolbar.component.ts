@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import {MatDialog} from '@angular/material/dialog';
 import { LoginToolBarComponent } from './login/login-tool-bar.component';
+import { AuthenticationService } from '../services/authentication.service';
 
 
 @Component({
@@ -27,7 +28,7 @@ export class ToolbarComponent  {
   // just for testing
   clicked: string = 'out';
 
-  constructor(public dialog: MatDialog) {};
+  constructor(public dialog: MatDialog, public authenticationService: AuthenticationService) {};
 
 
   showLoginDialog() {

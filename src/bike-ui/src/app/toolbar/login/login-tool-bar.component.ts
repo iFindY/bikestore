@@ -1,13 +1,13 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ValidatorFn, FormControl, Form } from '@angular/forms';
 import { AuthenticationService } from '../../services/authentication.service';
 import { filter, tap } from 'rxjs/operators';
 import { animate, keyframes, state, style, transition, trigger, query, animateChild, group, stagger } from '@angular/animations';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { log } from 'util';
 import { MatDialogRef } from '@angular/material/dialog';
 
-type ScreenType = 'login' | 'logged-in' | 'reset' | 'register' | 'registerd'| 'code' | 'password'| 'done'|'hide';
+type ScreenType = 'login' |'logout'| 'reset' | 'register' | 'registerd'| 'code' | 'password'| 'done';
 type Button = 'Sign In' | 'Sign Up'| 'Return';
 
 /*
@@ -24,10 +24,11 @@ type Button = 'Sign In' | 'Sign Up'| 'Return';
             state('login',      style({ transform: 'translateX(0)' })),
             state('register',   style({ transform: 'translateX(0)' })),
             state('registerd',  style({ transform: 'translateX(0)' })),
-            state('reset',      style({ transform: 'translateX(-50%)' })),
-            state('code',       style({ transform: 'translateX(-50%)' })),
-            state('password',   style({ transform: 'translateX(-50%)' })),
-            state('done',       style({ transform: 'translateX(-50%)' })),
+            state('reset',      style({ transform: 'translateX(-33%)' })),
+            state('code',       style({ transform: 'translateX(-33%)' })),
+            state('password',   style({ transform: 'translateX(-33%)' })),
+            state('done',       style({ transform: 'translateX(-33%)' })),
+            state('logout',     style({ transform: 'translateX(-66%)' })),
 
             // order matter
             transition('login <=> register, registerd => login',[
@@ -42,12 +43,19 @@ type Button = 'Sign In' | 'Sign Up'| 'Return';
             transition('* => reset', [
                 animate("600ms", keyframes([
                     style({ transform: 'translateX(0)', offset: 0}),
-                    style({ transform: 'translateX(-49.7%)', offset: 0.2}),
-                    style({ transform: 'translateX(-50%)',  offset: 1})]))]),
+                    style({ transform: 'translateX(-32.7%)', offset: 0.2}),
+                    style({ transform: 'translateX(-33%)',  offset: 1})]))]),
+
+            transition('login <=> logout', [
+                animate('600ms', keyframes([
+                    style({ opacity: '100%', transform: 'translateX(0)', offset: 0 }),
+                    style({ opacity: '0%', transform: 'translateX(-65.3%)', offset: 0.2 }),
+                    style({ opacity: '100%', transform: 'translateX(-66%)', offset: 1 })]))]),
+
 
             transition('* => login', [
                 animate("600ms", keyframes([
-                    style({ transform: 'translateX(-50)', offset: 0}),
+                    style({ transform: 'translateX(-33)', offset: 0}),
                     style({ transform: 'translateX(-0.3%)', offset: 0.2}),
                     style({ transform: 'translateX(0%)',  offset: 1})]))]),
           ]),
@@ -123,7 +131,7 @@ type Button = 'Sign In' | 'Sign Up'| 'Return';
 
     ]
 })
-export class LoginToolBarComponent implements OnInit {
+export class LoginToolBarComponent implements OnInit,OnDestroy {
 
     test:number = 120;
     state = new State();
@@ -135,8 +143,9 @@ export class LoginToolBarComponent implements OnInit {
     mainButton: Button = 'Sign In';
     help: string = 'Dont have an account?';
     loading: boolean;
+    subscriptions: Subscription;
 
-    screen: BehaviorSubject<ScreenType> = new BehaviorSubject('login');
+    screen: BehaviorSubject<ScreenType>;
     activePane: ScreenType = 'login';
     textBold: ScreenType;
     resetButton: string = 'Send Email';
@@ -146,7 +155,14 @@ export class LoginToolBarComponent implements OnInit {
 
     constructor(private fb: FormBuilder,
                 private authService: AuthenticationService,
-                public dialogRef: MatDialogRef<LoginToolBarComponent>) {
+                public dialogRef: MatDialogRef<LoginToolBarComponent>,
+                private chDet: ChangeDetectorRef) {
+
+
+        this.subscriptions = this.authService.isLoggedIn$.subscribe(x => {
+            this.screen = x ? new BehaviorSubject('logout') : new BehaviorSubject('login');
+            this.chDet.detectChanges();
+        });
 
         this.login = fb.group(
           {
@@ -173,8 +189,14 @@ export class LoginToolBarComponent implements OnInit {
 
   }
 
+    ngOnDestroy(): void {
+       this.subscriptions.unsubscribe();
+    }
+
   ngOnInit(): void {
-      this.screen.asObservable().subscribe(screen => {
+
+
+      this.subscriptions = this.screen.asObservable().subscribe(screen => {
           console.log('ON SCREEN: ', screen);
           this.switchScreen(screen);
       });
@@ -186,23 +208,21 @@ export class LoginToolBarComponent implements OnInit {
   }
 
   onLoginSubmit() {
+
       const email = this.login.get('email').value,
           password = this.login.get('password').value,
           confirmPassword = this.login.get('confirmPassword').value;
 
       if (this.screen.value === 'login') {
-            this.screen.next('hide');
 
           this.authService.login(email, password)
               .subscribe(
-                  (r) => {
-                      this.screen.next('logged-in');
-                      console.log('user is logged in'+r)},
+                  (r) => this.screen.next('logout'),
                   (e)  => console.log('LOGIN failed :' + JSON.stringify(e)));
 
       } else if (this.screen.value === 'register') {
-          // testing stuff but  this work has to be done
-          this.loading=true;
+          // testing stuff but this work has to be done
+          this.loading = true;
           this.login.disable();
           setTimeout(() => {
               this.loading = false;
@@ -212,14 +232,11 @@ export class LoginToolBarComponent implements OnInit {
 
           this.authService.register(email, password, confirmPassword)
               .subscribe(
-                  (r) => {
-                    console.log('register success:'+r);
-                    this.screen.next('registerd')},
+                  (r) => {this.screen.next('registerd')},
                   (e) => console.log('REGISTER failed :' + JSON.stringify(e)));
-      }else if(this.screen.value === 'registerd'){
+      } else if(this.screen.value === 'registerd'){
           this.screen.next('login');
       }
-
 
   }
 
@@ -251,7 +268,6 @@ export class LoginToolBarComponent implements OnInit {
                 case 'password':
                 case 'register':
                 case 'registerd':
-           //     case 'hide':
                     this.screen.next('login');
             }
         }
@@ -340,9 +356,16 @@ export class LoginToolBarComponent implements OnInit {
                 this.resetForm.confirmResetPassword.disable();
                 break;
             }
+            case 'logout':
             default: {
-                this.dialogRef.close();
-                break;
+             //   this.dialogRef.close()
+
+                this.state.onLogout();
+                this.activePane = 'logout';
+                this.resetButton = 'Return';
+
+                this.loginForm.email.disable();
+                this.loginForm.password.disable();
             }
         }
 
@@ -377,8 +400,20 @@ class State {
     password  = {index: -1}
     done      = {index: -1}
 
+    logout    = {index: -1}
+
     onLogin() {
         this.login.index    =  0;
+        this.logout.index   = -1;
+        this.register.index = -1;
+        this.reset.index    = -1;
+        this.code.index     = -1;
+        this.password.index = -1;
+    };
+
+    onLogout() {
+        this.login.index    = -1;
+        this.logout.index   = -1;
         this.register.index = -1;
         this.reset.index    = -1;
         this.code.index     = -1;
@@ -387,6 +422,7 @@ class State {
 
     onRegister() {
         this.login.index    =  0;
+        this.logout.index   = -1;
         this.register.index =  0;
         this.reset.index    = -1;
         this.code.index     = -1;
@@ -395,6 +431,7 @@ class State {
 
     onReset() {
         this.login.index    = -1;
+        this.logout.index   = -1;
         this.register.index = -1;
         this.reset.index    =  0;
         this.code.index     = -1;
@@ -403,6 +440,7 @@ class State {
 
     onCode() {
         this.login.index    = -1;
+        this.logout.index   = -1;
         this.register.index = -1;
         this.reset.index    =  0;
         this.code.index     =  0;
@@ -411,6 +449,7 @@ class State {
 
     onPassword() {
         this.login.index    = -1;
+        this.logout.index   = -1;
         this.register.index = -1;
         this.reset.index    = -1;
         this.code.index     = -1;
@@ -418,6 +457,7 @@ class State {
     };
     onDone() {
         this.login.index    = -1;
+        this.logout.index   = -1;
         this.register.index = -1;
         this.reset.index    = -1;
         this.code.index     = -1;

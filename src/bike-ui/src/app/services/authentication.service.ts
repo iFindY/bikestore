@@ -5,8 +5,8 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from './authentication.model';
 
 export const ANONYMOUS_USER: User = {
-  id: undefined,
-  email: ''
+  id: null,
+  roles: []
 };
 
 
@@ -16,11 +16,11 @@ export const ANONYMOUS_USER: User = {
 export class AuthenticationService {
 
   // need an initial value
-  private subject = new BehaviorSubject<User>(undefined);
+  subject = new BehaviorSubject<User>({ roles: null, id: 'Login' }); // wrong male it undefiend
   // when ever we subscribe we get always the last value, filter only invalid users
-  user$: Observable<User> = this.subject.asObservable().pipe(filter(user=>!!user));
+  user$: Observable<User> = this.subject.asObservable().pipe(filter(user => !!user));
   // derive from user observable, '!!' operator convert to boolean
-  isLoggedIn$: Observable<boolean> = this.user$.pipe(map(user => !!user.id));
+  isLoggedIn$: Observable<boolean> = this.user$.pipe(map(user => !!user.roles));
   // based on 'login' observable and invert it
   isLoggedOut$: Observable<boolean> = this.isLoggedIn$.pipe(map(isLoggedIn => !isLoggedIn));
 
@@ -76,7 +76,9 @@ export class AuthenticationService {
     return this.http.post<User>('api/auth/login', null, { headers: headers })
         .pipe(
             shareReplay(),
-            tap(user => this.subject.next(user)));
+            tap(user => {
+              this.subject.next(user);
+            }));
   }
 
 
