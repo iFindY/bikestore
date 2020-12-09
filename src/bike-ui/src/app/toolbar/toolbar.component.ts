@@ -1,8 +1,12 @@
 import { Component } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import {MatDialog} from '@angular/material/dialog';
-import { LoginToolBarComponent } from './login/login-tool-bar.component';
-import { AuthenticationService } from '../services/authentication.service';
+import { LoginComponent } from '../login/login.component';
+import { Observable } from 'rxjs';
+import { select, Store } from '@ngrx/store';
+import { UserState } from '../state/user/user.reducers';
+import { getUser } from '../state/user/user.selectors';
+import { map } from 'rxjs/operators';
 
 
 @Component({
@@ -28,11 +32,13 @@ export class ToolbarComponent  {
   // just for testing
   clicked: string = 'out';
 
-  constructor(public dialog: MatDialog, public authenticationService: AuthenticationService) {};
+  user$: Observable<string> = this.store.pipe(select(getUser), map(user => user?.name ? user.name : 'Login'));
+
+  constructor(public dialog: MatDialog,  private store: Store<UserState>) {};
 
 
   showLoginDialog() {
-    this.dialog.open(LoginToolBarComponent,{ autoFocus: false });
+    this.dialog.open(LoginComponent,{ autoFocus: false });
   }
 
 

@@ -1,5 +1,5 @@
 <!--mega menu here and button inside -->
-<button mat-button (click)="showLoginDialog()">{{(authenticationService.user$|async).id}}</button>
+<button mat-button (click)="showLoginDialog()">{{user$|async}}</button>
 
 <!--this is the black under line -->
 <div style="margin:0 -8px 0 -8px;height: 20px;background-color: rgb(48,49,50)"></div>

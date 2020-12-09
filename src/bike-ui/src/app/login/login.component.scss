@@ -1,7 +1,77 @@
-#rcorners1 {
-    border-radius: 25px;
-    background: #73AD21;
-    padding: 20px;
-    width: 200px;
-    height: 150px;
+
+:host {
+    display: block;
+    overflow: hidden; /* Hide everything that doesn't fit component */
+}
+
+.panes {
+    height: 100%;
+    width: 300%;      /* Make the parent element to take up twice of the component's width */
+    display: flex;    /* Align all children in a row */
+    div { flex: 1; }  /* Evenly divide width between children */
+}
+
+ .bold{
+     font-weight: bold;
+ }
+
+
+
+
+::ng-deep {
+    .mat-dialog-container{
+        border-radius: 30px;
+        max-width: 340px;
+        min-height: 590px;
+        max-height: 590px;
+        overflow-y: hidden;
+
+        .mat-form-field-appearance-outline .mat-form-field-outline {
+            top: 0.6em;
+        }
+
+    }
+
+    .mat-dialog-content{
+        overflow: none;
+    }
+
+    .mat-icon-button{
+        width: 24px !important;
+        height: 24px !important;
+    }
+
+    #smallButton {
+        line-height: 12px;
+        font-size: 11px;
+        padding: 0;
+        transition: color 0.5s ease-in;
+
+        .mat-button-focus-overlay {
+            background-color: transparent;
+        }
+    }
+
+    .register:hover:enabled, #smallButton:hover:enabled {
+        color: dodgerblue;
+        transition: color 0.5s ease;
+    }
+
+    .register {
+        padding: 0;
+        line-height: 16px;
+        background-color: transparent;
+        transition: color 0.5s ease-in;
+
+        .mat-button-focus-overlay {
+            background-color:transparent;
+        }
+
+    }
+
+    //.register:hover:enabled {
+    //    color: dodgerblue;
+    //    transition: color 0.5s ease;
+    //}
+
 }
