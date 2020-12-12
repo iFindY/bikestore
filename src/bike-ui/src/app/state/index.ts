@@ -1,12 +1,13 @@
 import {
     ActionReducer,
-    ActionReducerMap, createFeatureSelector,
+    ActionReducerMap,
     MetaReducer
 } from '@ngrx/store';
 import {routerReducer} from '@ngrx/router-store';
 import { userReducer, UserState } from './user/user.reducers';
 import { environment } from '../../environments/environment';
 import { RouterReducerState } from '@ngrx/router-store/src/reducer';
+import { localStorageSync } from 'ngrx-store-localstorage';
 
 
 
@@ -24,6 +25,10 @@ export const reducers: ActionReducerMap<AppState> = {
 
 
 
+const reducerKeys = ['user','router'];
+export function localStorageSyncReducer(reducer: ActionReducer<any>): ActionReducer<any> {
+    return localStorageSync({ keys: reducerKeys, rehydrate: true, storage: sessionStorage })(reducer);
+}
 
 export function logger(reducer:ActionReducer<any>)
     : ActionReducer<any> {
@@ -36,7 +41,7 @@ export function logger(reducer:ActionReducer<any>)
 
 }
 
-export const metaReducers: MetaReducer<AppState>[] = !environment.production ? [logger] : [];
+export const metaReducers: MetaReducer<AppState>[] = !environment.production ? [logger, localStorageSyncReducer] : [localStorageSyncReducer];
 
 
 
