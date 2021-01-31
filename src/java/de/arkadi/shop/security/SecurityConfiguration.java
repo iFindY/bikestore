@@ -1,6 +1,9 @@
 package de.arkadi.shop.security;
 
 
+import javax.persistence.EntityManagerFactory;
+
+import org.hibernate.SessionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

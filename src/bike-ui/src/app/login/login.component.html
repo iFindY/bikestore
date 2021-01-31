@@ -4,7 +4,7 @@
     <div>
         <h1 mat-dialog-title [ngClass]="{'bold': activePane==='login'}" style="margin-bottom: 11px">Sign In</h1>
         <h1 mat-dialog-title style="margin-bottom: 90px;"
-            [ngClass]="{'bold': activePane==='register'||activePane==='registerd'}">Sign Up</h1>
+            [ngClass]="{'bold': activePane==='register'||activePane==='registered'}">Sign Up</h1>
         <div mat-dialog-content style="text-align: center; position: relative; overflow: hidden;">
 
             <form [formGroup]="login" (ngSubmit)="onLoginSubmit()" autocomplete="on" novalidate>
@@ -13,7 +13,7 @@
                 <div style="overflow:hidden; height: 149px;" [@move]="activePane">
                     <!--email-->
                     <custom-input style="display: block"
-                            type="email" [@registerd]="{value: activePane, params: {top:300}}"
+                            type="email" [@registered]="{value: activePane, params: {top:300}}"
                                   label="Email"
                                   icon="account_circle"
                                   errorMsg="not a valid email"
@@ -25,7 +25,7 @@
 
                     <!--password-->
                     <custom-input style="display: block"
-                            controlType="password" [@registerd]="{value: activePane, params: {top:300}}"
+                            controlType="password" [@registered]="{value: activePane, params: {top:300}}"
                                   label="Password"
                                   icon="visibility"
                                   errorMsg="to simple"
@@ -39,7 +39,7 @@
 
                     <!--confirm password-->
                     <custom-input style="display: block"
-                            controlType="password" [@registerd]="{value: activePane, params: {top:300}}"
+                            controlType="password" [@registered]="{value: activePane, params: {top:300}}"
                                   label="Verify Password"
                                   icon="visibility"
                                   errorMsg="not matching"
@@ -51,7 +51,7 @@
                                   formControlName="confirmPassword">
                     </custom-input>
 
-                    <div style="margin-top: 12px" [@registerd]="{value: activePane, params: {top:120}}">
+                    <div style="margin-top: 12px" [@registered]="{value: activePane, params: {top:120}}">
 
                         <h2>Account Created!</h2>
                         <h4>Please check your mailbox for an activation link.</h4>
@@ -64,7 +64,7 @@
                 <div style="text-align: right;margin-right: 40px;margin-top: -22px;">
 
                     <!--forgot password button -->
-                    <button mat-button [ngStyle]="{'visibility':activePane === 'registerd' ? 'collapse' : 'visible'}"
+                    <button mat-button [ngStyle]="{'visibility':activePane === 'registered' ? 'collapse' : 'visible'}"
                             [disabled]="loading"
                             type="button"
                             id="smallButton"

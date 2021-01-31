@@ -1,9 +1,11 @@
 package de.arkadi.shop.security.authentication;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import de.arkadi.shop.entity.User;
+import de.arkadi.shop.entity.UserDBO;
 import de.arkadi.shop.repository.AuthoritiesRepository;
 import de.arkadi.shop.repository.UserRepository;
 
@@ -22,28 +24,28 @@ public class AuthenticationService {
         this.authoritiesRepository = authoritiesRepository;
     }
 
-    public User loadUserByUsername(String name){
+    public Optional<UserDBO> loadUserByUsername(String name){
         return this.userRepository.findUserByName(name);
     }
 
-    public User loadUserByEmail(String email){
+    public Optional<UserDBO> loadUserByEmail(String email){
         return this.userRepository.findUserByMail(email);
     }
 
     public Boolean performAuthenticationChecks(String email) {
-        return loadUserByEmail(email).getEnabled();
+        return loadUserByEmail(email).map(UserDBO::getEnabled).orElse(false);
     }
 
     public Integer decreaseRemainingLoginAttempts(String name) {
-        return loadUserByUsername(name).decreaseAttempts();
+        return loadUserByUsername(name).map(UserDBO::decreaseAttempts).orElse(0);
     }
 
     public void lockUser(String name) {
-        loadUserByUsername(name).setEnabled(false);
+        loadUserByUsername(name).ifPresent(user -> user.setEnabled(false));
     }
 
     public void resetRemainingLoginAttempts(String email) {
-        loadUserByEmail(email).increaseAttempts();
+        loadUserByEmail(email).ifPresent(UserDBO::increaseAttempts);
     }
 
     public String getAuthority(String mail){

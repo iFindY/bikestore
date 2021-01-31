@@ -1,15 +1,17 @@
 package de.arkadi.shop.repository;
 
 
+import java.util.Optional;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import de.arkadi.shop.entity.User;
+import de.arkadi.shop.entity.UserDBO;
 
 @Repository
 @Transactional
@@ -19,26 +21,28 @@ public class UserRepository {
     private EntityManager em;
 
 
-
-    public User findUserByMail(@NotNull String mail) {
-        TypedQuery<User> query = em
-                .createQuery("SELECT user FROM User user WHERE user.email = :mail", User.class)
-                .setParameter("mail", mail);
-
-        return query.getResultStream().findFirst().orElse(null);
+    public Optional<UserDBO> findUserByMail(@NotNull String mail) {
+        return getCurrentSession()
+                .createNamedQuery("find_user_by_mail", UserDBO.class)
+                .setParameter("mail", mail)
+                .uniqueResultOptional();
     }
 
-    public User findUserByName(@NotNull String name) {
-        TypedQuery<User> query = em
-                .createQuery("SELECT user FROM User user WHERE user.username = :name", User.class)
-                .setParameter("name", name);
-
-        return query.getResultStream().findFirst().orElse(null);
+    public Optional<UserDBO>  findUserByName(@NotNull String name) {
+        return getCurrentSession()
+                .createNamedQuery("find_user_by_name", UserDBO.class)
+                .setParameter("name", name)
+                .uniqueResultOptional();
     }
 
-    public User save(@NotNull User user) {
-        em.persist(user);
+    public UserDBO save(@NotNull UserDBO user) {
+        getCurrentSession().persist(user);
         return user;
+    }
+
+
+    private Session getCurrentSession() {
+        return em.unwrap(org.hibernate.Session.class);
     }
 
 }

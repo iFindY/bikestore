@@ -1,4 +1,4 @@
-export type LoginScreen = 'login' | 'logged-in' | 'logout' | 'reset' | 'register' | 'registerd' | 'code' | 'password' | 'done';
+export type LoginScreen = 'login' | 'logged-in' | 'logout' | 'reset' | 'register' | 'registered' | 'code' | 'password' | 'done';
 
 
 

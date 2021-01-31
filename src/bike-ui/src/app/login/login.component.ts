@@ -9,13 +9,13 @@ import { LoginScreen, User } from './login.model';
 import { getScreen, getUser } from '../state/user/user.selectors';
 import { hideScreen, login, register, switchScreen } from '../state/user/user.actions';
 import { MatDialogRef } from '@angular/material/dialog';
-import { filter, map, skip } from 'rxjs/operators';
+import { filter, skip } from 'rxjs/operators';
 
 type Button = 'Sign In' | 'Sign Up'| 'Return';
 
 /*
-    evry trigger should know their state.
-    if it is a neasted trigger, doest metter have to redefine them
+    every trigger should know their state.
+    if it is a nested trigger, doest meter have to redefine them
  */
 @Component({
     selector: 'app-login',
@@ -26,7 +26,7 @@ type Button = 'Sign In' | 'Sign Up'| 'Return';
         trigger('slide', [
             state('login',      style({ transform: 'translateX(0)' })),
             state('register',   style({ transform: 'translateX(0)' })),
-            state('registerd',  style({ transform: 'translateX(0)' })),
+            state('registered',  style({ transform: 'translateX(0)' })),
             state('reset',      style({ transform: 'translateX(-33%)' })),
             state('code',       style({ transform: 'translateX(-33%)' })),
             state('password',   style({ transform: 'translateX(-33%)' })),
@@ -34,11 +34,11 @@ type Button = 'Sign In' | 'Sign Up'| 'Return';
             state('logout',     style({ transform: 'translateX(-66%)' })),
 
             // order matter
-            transition('login <=> register, registerd => login',[
+            transition('login <=> register, registered => login',[
                 group([
                     query('@move', animateChild()),
                     query('@moveText', animateChild()),
-                    query('@registerd', animateChild())])]),
+                    query('@registered', animateChild())])]),
 
             transition('reset => code',[
                 query('@moveResetDigits', animateChild())]),
@@ -65,16 +65,16 @@ type Button = 'Sign In' | 'Sign Up'| 'Return';
 
         trigger('move', [
             state('login, reset',        style({ height: '149px' })),
-            state('register, registerd', style({ height: '229px', transform: 'translateY(0)' })),
-            transition('login <=> register,registerd => login', animate('300ms ease-out')),
-            transition('register => registerd',[
-                query('@registerd', animateChild())]),
+            state('register, registered', style({ height: '229px', transform: 'translateY(0)' })),
+            transition('login <=> register,registered => login', animate('300ms ease-out')),
+            transition('register => registered',[
+                query('@registered', animateChild())]),
 
         ]),
 
         trigger('moveText', [
             state('login',                 style({ 'margin-top': '5px' })),
-            state('register, registerd',   style({  'margin-top': '33px' })),
+            state('register, registered',   style({  'margin-top': '33px' })),
             transition('login <=> register', animate('300ms ease-out'))]),
 
         trigger('moveResetDigits', [
@@ -92,18 +92,18 @@ type Button = 'Sign In' | 'Sign Up'| 'Return';
 
         ]),
 
-        trigger('registerd', [
-            state('registerd',  style({transform: 'translateY(-{{top}}%)' }), { params: {top:200 } }),
+        trigger('registered', [
+            state('registered',  style({transform: 'translateY(-{{top}}%)' }), { params: {top:200 } }),
             state('login',      style({transform: 'translateY(0)' }), { params: {top:200 } }),
 
-            transition('register => registerd', [
+            transition('register => registered', [
                 animate("1000ms", keyframes([
                     style({ opacity:"100%",     transform: 'translateY(0)', offset: 0}),
                     style({ opacity:"0",        transform: 'translateY(0)', offset: 0.3}),
                     style({ opacity:"0",        transform: 'translateY(-{{top}}%)', offset: 0.35}),
                     style({ opacity:"100%",     transform: 'translateY(-{{top}}%)', offset: 1})]))]),
 
-            transition("registerd => login", [
+            transition("registered => login", [
                 animate("400ms", keyframes([
                     style({ opacity:"100%",   transform: 'translateY(-{{top}}%)', offset: 0}),
                     style({ opacity:"0%",    transform: 'translateY(-{{top}}%)', offset: 0.3}),
@@ -222,7 +222,7 @@ export class LoginComponent implements OnInit,OnDestroy {
 
           this.store.dispatch(register({ email, password, confirmedPassword }))
 
-      } else if(this.activePane === 'registerd'){
+      } else if(this.activePane === 'registered'){
           this.store.dispatch(switchScreen({ screen: 'login' }))
       }
   }
@@ -239,7 +239,7 @@ export class LoginComponent implements OnInit,OnDestroy {
                 case 'reset':
                 case 'password':
                 case 'register':
-                case 'registerd':
+                case 'registered':
                     this.store.dispatch(switchScreen({ screen: 'login' }));
             }
         }
@@ -302,9 +302,9 @@ export class LoginComponent implements OnInit,OnDestroy {
                 this.help = 'Already registered?';
                 break;
             }
-            case 'registerd': {
+            case 'registered': {
                 this.state.onDone();
-                this.activePane = 'registerd';
+                this.activePane = 'registered';
                 this.mainButton = 'Return'
 
                 this.loginForm.password.disable();
@@ -392,7 +392,7 @@ class State {
 
     login     = {index: -1}
     register  = {index: -1}
-    registerd = {index: -1}
+    registered = {index: -1}
 
     reset     = {index: -1}
     code      = {index: -1}

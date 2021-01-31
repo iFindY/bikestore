@@ -9,6 +9,9 @@ import { Settings, User } from '../../login/login.model';
 export const switchScreen = createAction('[USER] switch screen', props<{ screen }>());
 export const hideScreen = createAction('[USER] hide screen');
 
+export const setMessage = createAction('[USER] set message',props<{ message }>());
+
+
 export const login = createAction('[USER] login', props<{ email, password }>());
 export const loginSuccess = createAction('[USER] login success', props<{ user: User }>());
 export const logout = createAction('[USER] logout');

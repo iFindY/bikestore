@@ -30,18 +30,18 @@ public class UserRegistrationDTO {
 
     @JsonSetter("email")
     public void setEmail(String email) {
-        this.email = decode(email);
+        this.email = email;
     }
 
     @JsonSetter("password")
     public void setPassword(String password) {
-        this.password = decode(password);
+        this.password = password;
 
     }
 
     @JsonSetter("confirmedPassword")
     public void setConfirmedPassword(String confirmedPassword) {
-        this.confirmedPassword = decode(confirmedPassword);
+        this.confirmedPassword = confirmedPassword;
     }
 
     private String decode(String base64){
