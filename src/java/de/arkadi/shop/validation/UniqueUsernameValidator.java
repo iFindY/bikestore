@@ -5,12 +5,14 @@ import javax.validation.ConstraintValidatorContext;
 
 import de.arkadi.shop.repository.UserRepository;
 
-import lombok.AllArgsConstructor;
 
-@AllArgsConstructor
 public class UniqueUsernameValidator implements ConstraintValidator<UniqueUsername, String> {
 
     private final UserRepository repository;
+
+    public UniqueUsernameValidator(UserRepository repository) {
+        this.repository = repository;
+    }
 
     @Override
     public boolean isValid(String username, ConstraintValidatorContext context) {

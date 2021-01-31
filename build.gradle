@@ -6,8 +6,8 @@ plugins {
 
 group = 'de.arkadi'
 version = '1'
-sourceCompatibility = JavaVersion.VERSION_14
-targetCompatibility = JavaVersion.VERSION_14
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
 
 
 configurations {
@@ -38,7 +38,7 @@ sourceSets {
 
 task angular(type: Exec) {
     workingDir 'src/bike-ui'
-    commandLine 'ng', 'build','--prod', '--aot'
+    commandLine 'ng', 'build','--aot','--prod'
 }
 
 dependencies {
@@ -59,11 +59,9 @@ dependencies {
     implementation 'org.springframework.session:spring-session-core'
 
     implementation 'org.flywaydb:flyway-core'
-    compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'org.postgresql:postgresql'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-    annotationProcessor 'org.projectlombok:lombok'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
@@ -79,5 +77,4 @@ test {
 //    jvmArgs=["-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=32323"]
 //}
 
-
-  tasks.classes.dependsOn angular
+// tasks.classes.dependsOn angular

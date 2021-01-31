@@ -13,9 +13,7 @@ import org.hibernate.annotations.TypeDef;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import lombok.Data;
 
-@Data
 @Entity
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -42,5 +40,21 @@ public class Authority {
     @Column(columnDefinition = "auths")
     @Type(type = "pgsql_enum" )
     UserRights authority;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public UserRights getAuthority() {
+        return authority;
+    }
+
+    public void setAuthority(UserRights authority) {
+        this.authority = authority;
+    }
 
 }

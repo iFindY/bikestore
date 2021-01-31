@@ -29,6 +29,8 @@ public class ShopApplication implements WebMvcConfigurer {
      * set security constrain to confidential for all requests '/*'
      * Spring boot will use ths been by creating the amended tomcat server
      */
+
+  /*
     @Bean
     public ServletWebServerFactory servletContainer() {
         TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory() {
@@ -47,11 +49,13 @@ public class ShopApplication implements WebMvcConfigurer {
         tomcat.addAdditionalTomcatConnectors(redirectConnector());
         return tomcat;
     }
-
+*/
     /**
      * this is a tomcat connector to redirect http on port 80 to  port 8443
      * where other connector created by spring is listening
      */
+    /*
+
     private Connector redirectConnector() {
         Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
         connector.setScheme("http");
@@ -59,10 +63,12 @@ public class ShopApplication implements WebMvcConfigurer {
         connector.setRedirectPort(8443);
         return connector;
     }
+*/
 
+    /*
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/").setViewName("forward:/ui/index.html");
     }
-
+*/
 }

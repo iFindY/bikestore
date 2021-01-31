@@ -10,13 +10,8 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import de.arkadi.shop.validation.PasswordPolicy;
 import de.arkadi.shop.validation.UniqueEmail;
 import de.arkadi.shop.validation.password.EqualPassword;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-
-@Getter
 @EqualPassword
-@NoArgsConstructor
 public class UserRegistrationDTO {
 
 
@@ -51,6 +46,18 @@ public class UserRegistrationDTO {
 
     private String decode(String base64){
         return new String (Base64.getDecoder().decode(base64.getBytes()));
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getConfirmedPassword() {
+        return confirmedPassword;
     }
 
 }

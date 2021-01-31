@@ -2,6 +2,7 @@ package de.arkadi.shop.controllers;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -13,14 +14,16 @@ import org.springframework.web.bind.annotation.RestController;
 import de.arkadi.shop.model.UserRegistrationDTO;
 import de.arkadi.shop.services.UserRegistrationService;
 
-import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api/user")
 public class UserController {
 
     private final UserRegistrationService registrationService;
+
+    public UserController(UserRegistrationService registrationService) {
+        this.registrationService = registrationService;
+    }
 
     // @ModelAttribute("user") binding part of a request body  key = user
     // @RequestBody binding whole stuff

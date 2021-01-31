@@ -1,46 +1,32 @@
 package de.arkadi.shop.security.handler;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONObject;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
-import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
-import org.springframework.security.web.savedrequest.RequestCache;
-import org.springframework.security.web.savedrequest.SavedRequest;
-import org.springframework.util.StringUtils;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 
 public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
-    private final RequestCache requestCache = new HttpSessionRequestCache();
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
-             {
+            throws IOException {
 
-        SavedRequest savedRequest = requestCache.getRequest(request, response);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
 
-        if (savedRequest == null) {
-            clearAuthenticationAttributes(request);
-            return;
-        }
+        PrintWriter out = response.getWriter();
+        UserDetails user = (UserDetails) authentication.getPrincipal();
+        JSONObject item = new JSONObject();
+        item.put("name", user.getUsername()).put("roles", authentication.getAuthorities().toString());
+        out.print(item);
+        out.flush();
 
-        if (isAlwaysUseDefaultTargetUrl() || hasTargetUrlParameter(request)) {
-            requestCache.removeRequest(request, response);
-            clearAuthenticationAttributes(request);
-            return;
-        }
-
-        clearAuthenticationAttributes(request);
-    }
-
-    protected boolean hasTargetUrlParameter(HttpServletRequest request) {
-        String targetUrlParameter = getTargetUrlParameter();
-        return targetUrlParameter != null && StringUtils.hasText(request.getParameter(targetUrlParameter));
     }
 
 }

@@ -3,6 +3,8 @@ package de.arkadi.shop.controllers;
 import de.arkadi.shop.entity.Bike;
 import de.arkadi.shop.repository.BikeRepository;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,15 +12,16 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
 
-import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/bikes")
-@RequiredArgsConstructor
 public class BikesController {
 
     final BikeRepository bikeRepository;
 
+    public BikesController(BikeRepository bikeRepository) {
+        this.bikeRepository = bikeRepository;
+    }
 
     @GetMapping
     public List<Bike> list() {

@@ -5,7 +5,6 @@ import static de.arkadi.shop.entity.Authority.UserRights.*;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import de.arkadi.shop.entity.Authority;
 import de.arkadi.shop.entity.User;
@@ -13,16 +12,20 @@ import de.arkadi.shop.model.UserRegistrationDTO;
 import de.arkadi.shop.repository.AuthoritiesRepository;
 import de.arkadi.shop.repository.UserRepository;
 
-import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
 public class UserRegistrationService {
 
     private final UserRepository userRepository;
     private final AuthoritiesRepository authoritiesRepository;
 
     private final PasswordEncoder encoder;
+
+    public UserRegistrationService(UserRepository userRepository, AuthoritiesRepository authoritiesRepository, PasswordEncoder encoder) {
+        this.userRepository = userRepository;
+        this.authoritiesRepository = authoritiesRepository;
+        this.encoder = encoder;
+    }
 
     public void registerNewUser(UserRegistrationDTO user) {
 
