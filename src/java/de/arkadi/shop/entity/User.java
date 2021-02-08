@@ -13,14 +13,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 
 @Entity
-
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler", "password" })
 @Table(schema = "security", name = "users")
 @NamedQueries({
-        @NamedQuery(name = "find_user_by_mail", query = "SELECT user FROM UserDBO user WHERE user.email = :mail"),
-        @NamedQuery(name = "find_user_by_name", query = "SELECT user FROM UserDBO user WHERE user.username = :name")})
-public class UserDBO {
+        @NamedQuery(name = "find_user_by_mail", query = "SELECT user FROM User user WHERE user.email = :mail"),
+        @NamedQuery(name = "find_user_by_name", query = "SELECT user FROM User user WHERE user.username = :name")})
+public class User {
 
 
     @Id
@@ -39,12 +38,12 @@ public class UserDBO {
     private String username;
 
 
-    public UserDBO(String email, String password) {
+    public User(String email, String password) {
         this.email = email;
         this.password = password;
     }
 
-    public UserDBO() {
+    public User() {
         // hibernate
     }
 

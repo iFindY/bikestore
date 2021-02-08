@@ -16,7 +16,6 @@ import org.springframework.session.web.http.DefaultCookieSerializer;
 
 @Configuration
 @EnableSpringHttpSession
-@ConditionalOnProperty(name = "use.redis.session.store", havingValue = "false", matchIfMissing = true)
 public class SessionStoreConfiguration {
 
     @Bean
@@ -38,7 +37,6 @@ public class SessionStoreConfiguration {
         cookieSerializer.setCookieName("x-auth-token");
         cookieSerializer.setCookieMaxAge(14400); // 4h in seconds 
         cookieSerializer.setUseHttpOnlyCookie(true);
-        cookieSerializer.setSameSite("LAX");
 
         return cookieSerializer;
     }

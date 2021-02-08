@@ -5,9 +5,10 @@ import static de.arkadi.shop.entity.Authority.UserRights.*;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import de.arkadi.shop.entity.Authority;
-import de.arkadi.shop.entity.UserDBO;
+import de.arkadi.shop.entity.User;
 import de.arkadi.shop.model.UserRegistrationDTO;
 import de.arkadi.shop.repository.AuthoritiesRepository;
 import de.arkadi.shop.repository.UserRepository;
@@ -27,14 +28,15 @@ public class UserRegistrationService {
         this.encoder = encoder;
     }
 
-    public void registerNewUser(UserRegistrationDTO user) {
+    @Transactional
+    public User registerNewUser(UserRegistrationDTO user) {
 
-        UserDBO newUser = new UserDBO(user.getEmail(), encoder.encode(user.getPassword()));
+        User newUser = new User(user.getEmail(), encoder.encode(user.getPassword()));
         Authority authority = new Authority(user.getEmail(), USER);
-
 
         userRepository.save(newUser);
         authoritiesRepository.save(authority);
+        return newUser;
     }
 
 }

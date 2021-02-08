@@ -48,16 +48,15 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-rest'
     // security
     implementation 'org.springframework.boot:spring-boot-starter-security'
-    // Spring Security Access Control List is a Spring component which supports Domain Object Security.spring
-    implementation 'org.springframework.security:spring-security-acl'
-
-    implementation 'org.passay:passay:1.6.0'
-    implementation 'org.json:json:20200518'
-
+    implementation 'org.springframework.security:spring-security-acl' // Spring Security Access Control List is a Spring component which supports Domain Object Security.spring
     // mvc
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.session:spring-session-core'
-
+    //mail
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    // stuff
+    implementation 'org.passay:passay:1.6.0'
+    implementation 'org.json:json:20200518'
     implementation 'org.flywaydb:flyway-core'
     runtimeOnly 'org.postgresql:postgresql'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'

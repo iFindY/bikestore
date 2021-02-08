@@ -11,7 +11,7 @@ import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import de.arkadi.shop.entity.UserDBO;
+import de.arkadi.shop.entity.User;
 
 @Repository
 @Transactional
@@ -21,21 +21,21 @@ public class UserRepository {
     private EntityManager em;
 
 
-    public Optional<UserDBO> findUserByMail(@NotNull String mail) {
+    public Optional<User> findUserByMail(@NotNull String mail) {
         return getCurrentSession()
-                .createNamedQuery("find_user_by_mail", UserDBO.class)
+                .createNamedQuery("find_user_by_mail", User.class)
                 .setParameter("mail", mail)
                 .uniqueResultOptional();
     }
 
-    public Optional<UserDBO>  findUserByName(@NotNull String name) {
+    public Optional<User> findUserByName(@NotNull String name) {
         return getCurrentSession()
-                .createNamedQuery("find_user_by_name", UserDBO.class)
+                .createNamedQuery("find_user_by_name", User.class)
                 .setParameter("name", name)
                 .uniqueResultOptional();
     }
 
-    public UserDBO save(@NotNull UserDBO user) {
+    public User save(@NotNull User user) {
         getCurrentSession().persist(user);
         return user;
     }

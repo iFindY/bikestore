@@ -1,5 +1,5 @@
 -- drop all tables
---DROP SCHEMA PRODUCTS, SECURITY CASCADE;
+-- DROP SCHEMA PRODUCTS, SECURITY CASCADE;
 
 -- create data tables
 CREATE SCHEMA PRODUCTS
@@ -43,6 +43,13 @@ CREATE SCHEMA SECURITY;
         authority auths NOT NULl DEFAULT 'USER',
         CONSTRAINT fk_authorities_users FOREIGN KEY (email) REFERENCES users(email)
     );
+    
+    
+    CREATE TABLE VERIFICATIONS (
+        id    SERIAL PRIMARY KEY,
+        email VARCHAR(50)  NOT NULL UNIQUE,
+        code  VARCHAR(50)  NOT NULl 
+    );
 
     CREATE UNIQUE INDEX IX_AUTH_USERS ON AUTHORITIES (email, authority);
 
@@ -55,3 +62,5 @@ INSERT INTO AUTHORITIES (email, authority) VALUES ('frank111@mail.de','ADMIN');
 INSERT INTO AUTHORITIES (email,authority) VALUES ('peterfff@mail.fr','USER');
 INSERT INTO AUTHORITIES (email, authority) VALUES ('man@gmail.de','MANAGER');
 
+
+INSERT INTO VERIFICATIONS (email, code) VALUES ('arkadi2.daschkeiwtsch@gmail.com','2139812DDFFWE');

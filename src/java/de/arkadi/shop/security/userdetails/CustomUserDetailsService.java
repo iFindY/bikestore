@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import de.arkadi.shop.entity.UserDBO;
+import de.arkadi.shop.entity.User;
 import de.arkadi.shop.security.authentication.AuthenticationService;
 
 /**
@@ -36,7 +36,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         String authority;
-        UserDBO user;
+        User user;
 
         try {
             user = this.authenticationService.loadUserByEmail(email).orElseThrow(() -> new UsernameNotFoundException(email));
