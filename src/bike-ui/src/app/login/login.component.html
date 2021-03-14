@@ -3,9 +3,18 @@
 <!-- screen 1-->
     <div>
         <h1 mat-dialog-title [ngClass]="{'bold': activePane==='login'}" style="margin-bottom: 11px">Sign In</h1>
-        <h1 mat-dialog-title style="margin-bottom: 90px;"
-            [ngClass]="{'bold': activePane==='register'||activePane==='registered'}">Sign Up</h1>
-        <div mat-dialog-content style="text-align: center; position: relative; overflow: hidden;">
+        <h1 mat-dialog-title style="margin-bottom: 90px;" [ngClass]="{'bold': activePane==='register'||activePane==='registered'}">Sign Up</h1>
+
+        <div [ngClass]="{
+        'd-flex': activePane ==='logged-in',
+        'justify-content-center': activePane ==='logged-in',
+        'collapse' : activePane !== 'logged-in'}">
+            <img style="width: 100px" alt="Logo" src="../../assets/images/check-circle.gif"/>
+        </div>
+
+        <div mat-dialog-content
+             [ngStyle]="{'visibility': activePane ==='logged-in'? 'hidden':'visible'}"
+             style="text-align: center; position: relative; overflow: hidden;">
 
             <form [formGroup]="login" (ngSubmit)="onLoginSubmit()" autocomplete="on" novalidate>
 
@@ -13,14 +22,15 @@
                 <div style="overflow:hidden; height: 149px;" [@move]="activePane">
                     <!--email-->
                     <custom-input style="display: block"
-                            type="email" [@registered]="{value: activePane, params: {top:300}}"
+                                  type="email"
                                   label="Email"
                                   icon="account_circle"
                                   errorMsg="not a valid email"
                                   placeholder="Ex. peter@gmail.com"
                                   [required]="true"
                                   [tabIndex]="state.login.index"
-                                  formControlName="email">
+                                  formControlName="email"
+                                  [@registered]="{value: activePane, params: {top:300}}">
                     </custom-input>
 
                     <!--password-->
@@ -55,7 +65,14 @@
 
                         <h2>Account Created!</h2>
                         <h4>Please check your mailbox for an activation link.</h4>
+<!--
                         <mat-icon style="width: 50px;height: 50px;font-size: 50px;color: green;margin-bottom: 8px">done</mat-icon>
+-->
+                        <img style="
+                        transition: opacity 0.5s ease-in-out;
+                        width: 90px;
+                        transform: translateY(35%);
+                        margin-top: -25px;" alt="Logo" src="../../assets/images/check-circle.gif"/>
 
                     </div>
 
@@ -65,7 +82,7 @@
 
                     <!--forgot password button -->
                     <button mat-button [ngStyle]="{'visibility':activePane === 'registered' ? 'collapse' : 'visible'}"
-                            [disabled]="loading"
+                            [disabled]="loading$ | async"
                             type="button"
                             id="smallButton"
                             class="no-hover-effect"
@@ -80,10 +97,10 @@
 
                     <!--main action button-->
                     <loading-button
-                            [loading]="loading"
+                            [loading]="loading$ | async"
                             color="primary"
                             type="submit"
-                            [disabled]="login.invalid || loading">
+                            [disabled]="login.invalid || (loading$ | async)">
                         {{mainButton}}
                     </loading-button>
                 </div>
@@ -99,7 +116,7 @@
                             [disableRipple]="true"
                             (click)="firstScreenState()"
                             tabindex="-1"
-                            [disabled]="loading">
+                            [disabled]="loading$|async">
                         {{secondButton}}
                     </button>
                 </div>

@@ -10,13 +10,17 @@ export interface UserState {
     user: User
     settings: Settings
     screen: LoginScreen
+    loading:boolean
+    message:string
 }
 
 export const initialUserState: UserState = {
-    user: null,
-    settings:null,
-    screen: 'login'
-};
+    user: undefined,
+    settings:undefined,
+    screen: 'login',
+    loading: false,
+    message:undefined
+}
 
 /**
  * only one reducer per (sub)state with different reduce function.
@@ -29,33 +33,29 @@ export const initialUserState: UserState = {
  */
 export const userReducer = createReducer<UserState>(
     initialUserState,
-    on(UserActions.switchScreen, (state,{screen}) => ({
-        ...state,
-        screen: screen
+    on(UserActions.setMessage, (state, {message}) => ({
+        ...state, message
+    })),
+    on(UserActions.switchScreen, (state, {screen}) => ({
+        ...state, screen
+    })),
+    on(UserActions.loading, (state, {loading}) => ({
+        ...state, loading
     })),
     on(UserActions.hideScreen, (state,) => ({
-        ...state,
-        screen: state.user ? 'logged-in' : 'login'
+        ...state, screen: state.user ? 'logged-in' : 'login'
     })),
-    on(UserActions.loginSuccess, (state, { user }) => {
-        console.log(user)
-        return {
-            ...state,
-            user: user
-        }
-
-    }),
+    on(UserActions.loginSuccess, (state, {user}) => ({
+        ...state, user
+    })),
     on(UserActions.logout, (state,) => ({
-        ...state,
-        user: null
+        ...state, user: null
     })),
     on(UserActions.setSettings, (state, { settings }) => ({
-        ...state,
-        settings: settings
+        ...state, settings
     })),
     on(UserActions.cleanSettings, (state,) => ({
-        ...state,
-        settings: null
+        ...state, settings: null
     })),
     on(UserActions.clearState, () => ({
         ...initialUserState

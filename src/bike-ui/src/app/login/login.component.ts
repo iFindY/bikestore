@@ -6,10 +6,10 @@ import { AuthenticationService } from '../services/authentication.service';
 import { UserState } from '../state/user/user.reducers';
 import { select, Store } from '@ngrx/store';
 import { LoginScreen, User } from './login.model';
-import { getScreen, getUser } from '../state/user/user.selectors';
+import {getLoading, getMessage, getScreen, getUser} from '../state/user/user.selectors';
 import { hideScreen, login, register, switchScreen } from '../state/user/user.actions';
 import { MatDialogRef } from '@angular/material/dialog';
-import { filter, skip } from 'rxjs/operators';
+import {delay, filter, skip, tap} from 'rxjs/operators';
 
 type Button = 'Sign In' | 'Sign Up'| 'Return';
 
@@ -136,7 +136,9 @@ type Button = 'Sign In' | 'Sign Up'| 'Return';
 })
 export class LoginComponent implements OnInit,OnDestroy {
 
+    loading$: Observable<boolean> = this.store.pipe(select(getLoading));
     screen$: Observable<LoginScreen> = this.store.pipe(select(getScreen));
+    message$: Observable<string> = this.store.pipe(select(getMessage));
     loggedIn$: Observable<User> = this.store.pipe(select(getUser), skip(1), filter(user => Boolean(user)));
 
 
@@ -152,6 +154,7 @@ export class LoginComponent implements OnInit,OnDestroy {
     help: string = 'Dont have an account?';
     loading: boolean;
     subscriptions: Subscription;
+    message:string;
 
     activePane:LoginScreen;
     resetButton: string = 'Send Email';
@@ -196,7 +199,13 @@ export class LoginComponent implements OnInit,OnDestroy {
   ngOnInit(): void {
 
       this.subscriptions = this.screen$.subscribe(screen => this.switchScreen(screen));
-      this.subscriptions.add(this.loggedIn$.subscribe(() => this.dialogRef.close()));
+      this.subscriptions
+      .add(this.loggedIn$.pipe(delay(2000)).subscribe(() => this.dialogRef.close()))
+      .add(this.loading$.pipe(tap(this.controlForm)).subscribe())
+      .add(this.message$.subscribe(m => {
+          console.log("message",m)
+          this.message = m
+      }));
 
       this.resetForm['resetCode'].disable();
       this.resetForm['resetPassword'].disable();
@@ -266,7 +275,6 @@ export class LoginComponent implements OnInit,OnDestroy {
     // ===== helper ====== //
 
     private switchScreen(screen: LoginScreen) {
-
         switch(screen) {
             case 'login': {
                 this.state.onLogin();
@@ -386,6 +394,15 @@ export class LoginComponent implements OnInit,OnDestroy {
         };
     }
 
+    controlForm = (loading) => {
+        if (loading) {
+            this.login.disable();
+            this.reset.disable();
+        } else {
+            this.login.enable();
+            this.reset.enable();
+        }
+    }
 }
 
 class State {

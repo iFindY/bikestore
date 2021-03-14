@@ -43,57 +43,62 @@ import de.arkadi.shop.services.VerificationService;
 @RequestMapping("/api/user")
 public class UserController {
 
-    private final UserRegistrationService registrationService;
-    private final VerificationService verificationService;
-    private final UserRepository userRepository;
-    private final ApplicationEventPublisher eventPublisher;
+  private final UserRegistrationService registrationService;
+  private final VerificationService verificationService;
+  private final UserRepository userRepository;
+  private final ApplicationEventPublisher eventPublisher;
 
-    public UserController(UserRegistrationService registrationService, VerificationService verificationService,
-            UserRepository userRepository, ApplicationEventPublisher eventPublisher) {
-        this.registrationService = registrationService;
-        this.verificationService = verificationService;
-        this.userRepository = userRepository;
-        this.eventPublisher = eventPublisher;
+  public UserController(UserRegistrationService registrationService,
+      VerificationService verificationService,
+      UserRepository userRepository, ApplicationEventPublisher eventPublisher) {
+    this.registrationService = registrationService;
+    this.verificationService = verificationService;
+    this.userRepository = userRepository;
+    this.eventPublisher = eventPublisher;
+  }
+
+
+  @GetMapping("/info")
+  public ResponseEntity<Map> register() {
+    UserDetails principal = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
+        .getPrincipal();
+    Set<String> authorities = principal.getAuthorities().stream()
+        .map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
+
+    return ResponseEntity.ok(of("name", principal.getUsername(), "roles", authorities));
+  }
+
+
+  /* @ModelAttribute("user") binding part of a request body  key = user
+    @RequestBody binding whole stuff */
+  @PostMapping("/register")
+  public ResponseEntity<Map<String, String>> register(@RequestBody @Valid UserRegistrationDTO user,
+      BindingResult result) {
+
+    if (result.hasErrors()) {
+      return ResponseEntity.status(HttpStatus.CONFLICT)
+          .body(of("message", "user already exists", "user", user.getEmail()));
+    } else {
+      eventPublisher
+          .publishEvent(new UserRegistrationEvent(this.registrationService.registerNewUser(user)));
+
+      return ResponseEntity.status(HttpStatus.OK)
+          .body(of("message", "user registered successfully", "user", user.getEmail()));
     }
+  }
 
+  @GetMapping("/verify/email")
+  public String verifyEmail(@RequestParam String code) {
 
+    verificationService
+        .getEmailForCode(code)
+        .flatMap(userRepository::findUserByMail)
+        .ifPresent(user -> {
+          user.setEnabled(true);
+          userRepository.save(user);
+        });
 
-    @GetMapping("/info")
-    public ResponseEntity<Map> register() {
-        UserDetails principal = (UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Set<String> authorities = principal.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
-
-        return ResponseEntity.ok(of("name", principal.getUsername(), "roles", authorities));
-    }
-
-
-
-
-    /* @ModelAttribute("user") binding part of a request body  key = user
-      @RequestBody binding whole stuff */
-    @PostMapping("/register")
-    public ResponseEntity<Map<String, String>> register(@RequestBody @Valid UserRegistrationDTO user, BindingResult result) {
-
-        if (result.hasErrors()) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(of("message", "user already exists", "user", user.getEmail()));
-        } else {
-            eventPublisher.publishEvent(new UserRegistrationEvent(this.registrationService.registerNewUser(user)));
-
-            return ResponseEntity.status(HttpStatus.OK).body(of("message", "user registered successfully", "user", user.getEmail()));
-        }
-    }
-
-    @GetMapping("/verify/email")
-    public String verifyEmail(@RequestParam String code) {
-       verificationService
-               .getEmailForCode(code)
-               .flatMap(userRepository::findUserByMail)
-               .ifPresent(user -> {
-                   user.setEnabled(true);
-                   userRepository.save(user);
-               });
-
-        return "redirect:/login-verified"; // redirect from email address
-    }
+    return "redirect:/login-verified"; // redirect from email address
+  }
 
 }

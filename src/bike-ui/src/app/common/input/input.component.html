@@ -2,7 +2,7 @@
 
     <mat-label>{{label}}</mat-label>
     <mat-hint  [@hintDrop] *ngIf="(focused || hover) && hintVisible">{{placeholder}}</mat-hint>
-    <mat-error *ngIf="control.touched && control.invalid && errorVisible && !focused" style="text-align: left;">{{errorMsg}}</mat-error>
+    <mat-error *ngIf="(control.touched && control.invalid && errorVisible && !focused) ||( errorState && !focused)" style="text-align: left;">{{errorMsg}}</mat-error>
 
     <input matInput
            [tabIndex]="tabIndex"

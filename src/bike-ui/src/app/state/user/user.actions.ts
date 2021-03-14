@@ -9,6 +9,7 @@ import { Settings, User } from '../../login/login.model';
 export const switchScreen = createAction('[USER] switch screen', props<{ screen }>());
 export const hideScreen = createAction('[USER] hide screen');
 
+export const loading = createAction('[USER] loading', props<{ loading }>());
 export const setMessage = createAction('[USER] set message',props<{ message }>());
 
 

@@ -36,6 +36,7 @@ export class InputComponent implements ControlValueAccessor {
     private _errorMsg: string;
     private _disabled = false;
     private _required = false;
+    private _cState = false;
 
     autofilled?: boolean;
     control:NgControl;
@@ -52,6 +53,12 @@ export class InputComponent implements ControlValueAccessor {
     @Input() label: string;
     @Input() icon: string;
     @Input() controlType = 'text';
+
+    @Input() set errorState(err){
+        this._cState = err;
+        this.stateChanges.next();
+    };
+
     @Input() set required(req) {
         this._required = coerceBooleanProperty(req);
         this.stateChanges.next();
@@ -95,7 +102,7 @@ export class InputComponent implements ControlValueAccessor {
 
     ngOnInit(): void {
         this.control = this.injector.get(NgControl, null);
-        this.errorMatcher = new CustomFieldErrorMatcher(this.control)
+        this.errorMatcher = new CustomFieldErrorMatcher(this.control, this._cState)
     }
 
 
@@ -160,10 +167,10 @@ export class InputComponent implements ControlValueAccessor {
 
 
 class CustomFieldErrorMatcher implements ErrorStateMatcher {
-    constructor(private control: NgControl) {
+    constructor(private control: NgControl,  private cState) {
     }
 
     isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
-        return this.control.touched && this.control?.invalid;
+        return (this.control.touched && this.control?.invalid) || this.cState;
     }
 }
