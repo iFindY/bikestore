@@ -6,7 +6,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsChecker;
 
 import de.arkadi.shop.security.authentication.AuthenticationService;
+import org.springframework.stereotype.Component;
 
+@Component
 public class CustomUserDetailsChecker implements UserDetailsChecker {
 
     AuthenticationService authenticationService;

@@ -1,9 +1,7 @@
 package de.arkadi.shop.security;
 
 
-import javax.persistence.EntityManagerFactory;
 
-import org.hibernate.SessionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,15 +9,12 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsChecker;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
-import de.arkadi.shop.security.authentication.AuthenticationService;
 import de.arkadi.shop.security.handler.CustomAuthenticationEntryPoint;
 import de.arkadi.shop.security.authentication.CustomAuthenticationProvider;
 import de.arkadi.shop.security.filter.CustomUsernamePasswordAuthenticationFilter;
@@ -27,7 +22,7 @@ import de.arkadi.shop.security.details.CustomWebAuthenticationDetailsSource;
 import de.arkadi.shop.security.handler.CustomAuthenticationFailureHandler;
 import de.arkadi.shop.security.handler.CustomAuthenticationSuccessHandler;
 import de.arkadi.shop.security.userdetails.CustomUserDetailsChecker;
-import de.arkadi.shop.security.userdetails.CustomUserDetailsService;
+import org.springframework.stereotype.Service;
 
 /**
  *  By extending this adapter we crete a filter chain.
@@ -37,14 +32,15 @@ import de.arkadi.shop.security.userdetails.CustomUserDetailsService;
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private final CustomUserDetailsService customUserDetailsService;
-    private final AuthenticationService authenticationService;
+    private final CustomAuthenticationProvider authenticationProvider;
 
-    public SecurityConfiguration(CustomUserDetailsService customUserDetailsService,
-            AuthenticationService authenticationService) {
 
-        this.customUserDetailsService = customUserDetailsService;
-        this.authenticationService = authenticationService;
+
+    /**
+     * {@link Service} can be autowired in the configuration before bean initialisation
+     */
+    public SecurityConfiguration(CustomAuthenticationProvider authenticationProvider) {
+        this.authenticationProvider = authenticationProvider;
     }
 
     /**
@@ -121,14 +117,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
      * you can define own user details service implementing UserDetailsService
      * which will be automatically wired in by sprig to get user credentials in
      * the AuthenticationManger
+     *
+     * the {@link CustomUserDetailsChecker} will check account authentication preconditions,
+     * before checking password.
+     *
+     * the {@link PasswordEncoder} bundle different hash algorithms and apply them on prefix condition
+     * of the stored password
      */
     @Override
     public void configure(AuthenticationManagerBuilder auth){
-
-        UserDetailsChecker userDetailsChecker = new CustomUserDetailsChecker(this.authenticationService);
-        CustomAuthenticationProvider authenticationProvider = new CustomAuthenticationProvider(this.authenticationService, userDetailsChecker);
-        authenticationProvider.setPasswordEncoder(passwordEncoder());
-        authenticationProvider.setUserDetailsService(this.customUserDetailsService);
         auth.authenticationProvider(authenticationProvider);
     }
 

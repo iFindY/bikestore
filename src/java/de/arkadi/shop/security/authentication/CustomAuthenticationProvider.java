@@ -2,20 +2,31 @@ package de.arkadi.shop.security.authentication;
 
 import static java.util.Optional.ofNullable;
 
+import de.arkadi.shop.security.userdetails.CustomUserDetailsService;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsChecker;
+import org.springframework.stereotype.Component;
 
+
+@Component
 public class CustomAuthenticationProvider extends DaoAuthenticationProvider {
     private final AuthenticationService authenticationService;
 
-    public CustomAuthenticationProvider(AuthenticationService authenticationService , UserDetailsChecker userDetailsChecker) {
+    public CustomAuthenticationProvider(AuthenticationService authenticationService,
+        UserDetailsChecker userDetailsChecker,
+        CustomUserDetailsService customUserDetailsService) {
+
         super();
+        {
+             // this.setPasswordEncoder(encoder); default is there
+            this.setPreAuthenticationChecks(userDetailsChecker);
+            this.setUserDetailsService(customUserDetailsService);
+        }
         this.authenticationService = authenticationService;
-        this.setPreAuthenticationChecks(userDetailsChecker); // check if authentication is needed
     }
 
     @Override
