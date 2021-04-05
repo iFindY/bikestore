@@ -138,7 +138,7 @@ export class LoginComponent implements OnInit,OnDestroy {
 
     loading$: Observable<boolean> = this.store.pipe(select(getLoading));
     screen$: Observable<LoginScreen> = this.store.pipe(select(getScreen));
-    message$: Observable<string> = this.store.pipe(select(getMessage));
+    message$: Observable<string> = this.store.pipe(select(getMessage),tap(x=>console.log("TRIGGGGERD")));
     loggedIn$: Observable<User> = this.store.pipe(select(getUser), skip(1), filter(user => Boolean(user)));
 
 
@@ -154,7 +154,7 @@ export class LoginComponent implements OnInit,OnDestroy {
     help: string = 'Dont have an account?';
     loading: boolean;
     subscriptions: Subscription;
-    message:string;
+    message: string = undefined;
 
     activePane:LoginScreen;
     resetButton: string = 'Send Email';
@@ -203,8 +203,8 @@ export class LoginComponent implements OnInit,OnDestroy {
       .add(this.loggedIn$.pipe(delay(2000)).subscribe(() => this.dialogRef.close()))
       .add(this.loading$.pipe(tap(this.controlForm)).subscribe())
       .add(this.message$.subscribe(m => {
-          console.log("message",m)
-          this.message = m
+          console.log(m);
+          this.message = m;
       }));
 
       this.resetForm['resetCode'].disable();

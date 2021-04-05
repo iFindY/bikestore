@@ -11,7 +11,6 @@ import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import de.arkadi.shop.entity.User;
 import de.arkadi.shop.entity.Verification;
 
 @Repository
@@ -48,6 +47,14 @@ public class VerificationCodeRepository {
         getCurrentSession().persist(verification);
         return verification;
     }
+
+    public void deleteByEmail(@NotNull String email) {
+        getCurrentSession()
+            .createNamedQuery("delete_verification_by_mail")
+            .setParameter("mail", email)
+            .executeUpdate();
+    }
+
 
     private Session getCurrentSession() {
         return em.unwrap(Session.class);

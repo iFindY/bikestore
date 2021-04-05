@@ -43,9 +43,9 @@ export class UserEffects {
                             UserActions.loading({ loading: false}),
                             UserActions.loginSuccess({ user: { name, roles } }),
                             UserActions.switchScreen({ screen: 'logged-in' }))),
-                        catchError(message => of(
+                        catchError(({statusText}) => of(
                             UserActions.loading({ loading: false}),
-                            UserActions.setMessage({ message }))),
+                            UserActions.setMessage({message: statusText}))),
                         delay(1500)
                     )
             })

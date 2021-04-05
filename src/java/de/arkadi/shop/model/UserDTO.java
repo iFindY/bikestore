@@ -7,6 +7,10 @@ import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+
+/**
+ * {@link UserDetails} a spring security contract
+ */
 public class UserDTO implements UserDetails {
 
 

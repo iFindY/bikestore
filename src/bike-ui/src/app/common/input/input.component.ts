@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, ElementRef, forwardRef, HostBinding, HostListener, Injector, Input, } from '@angular/core';
 import { ControlValueAccessor, FormControl, FormGroupDirective, NG_VALUE_ACCESSOR, NgControl, NgForm } from '@angular/forms';
-import { Subject } from 'rxjs';
+import {BehaviorSubject, Subject} from 'rxjs';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { animate, style, transition, trigger } from '@angular/animations';
@@ -36,7 +36,7 @@ export class InputComponent implements ControlValueAccessor {
     private _errorMsg: string;
     private _disabled = false;
     private _required = false;
-    private _cState = false;
+    private _cState = new BehaviorSubject<boolean>(false);
 
     autofilled?: boolean;
     control:NgControl;
@@ -55,7 +55,8 @@ export class InputComponent implements ControlValueAccessor {
     @Input() controlType = 'text';
 
     @Input() set errorState(err){
-        this._cState = err;
+        this._cState.next(err);
+        console.log("setter error State",err)
         this.stateChanges.next();
     };
 
@@ -90,7 +91,7 @@ export class InputComponent implements ControlValueAccessor {
     get placeholder() {return this._placeholder;}
 
 
-//== == == == init
+    //======== init ========//
 
     constructor(private injector: Injector, fm: FocusMonitor, elRef: ElementRef<HTMLElement>,private chRef:ChangeDetectorRef) {
 
@@ -103,20 +104,21 @@ export class InputComponent implements ControlValueAccessor {
     ngOnInit(): void {
         this.control = this.injector.get(NgControl, null);
         this.errorMatcher = new CustomFieldErrorMatcher(this.control, this._cState)
+        this._cState.subscribe(x=>this.errorMatcher = new CustomFieldErrorMatcher(this.control,x ))
     }
 
 
-//== == == == has to implement this 4 methods
+    //======== has to implement this 4 methods ========//
 
     // takes a value and writes it to the form control element (model/code -> view)
     writeValue(value: any) {this.value = value;} // this.chRef.detectChanges();
 
     // takes a function that should be called with the value if the value changes in the form control element itself (view -> model)
     registerOnChange(fn: any): void {this.onChange = fn;}
-    onChange: any = () => { };
+    onChange: Function;
 
     registerOnTouched(fn) {this.onTouched = fn;}
-    onTouched: any = () => { };
+    onTouched:Function;
 
     setDisabledState?(isDisabled: boolean): void {this.disabled = isDisabled;}
 
@@ -167,10 +169,12 @@ export class InputComponent implements ControlValueAccessor {
 
 
 class CustomFieldErrorMatcher implements ErrorStateMatcher {
-    constructor(private control: NgControl,  private cState) {
+    private remoteError:boolean;
+    constructor(private control: NgControl, private cState:boolean) {
     }
 
     isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+        console.log("cState",this.cState);
         return (this.control.touched && this.control?.invalid) || this.cState;
     }
 }

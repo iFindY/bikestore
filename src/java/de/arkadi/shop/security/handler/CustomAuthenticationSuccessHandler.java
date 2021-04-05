@@ -15,19 +15,6 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 
 public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
-    /*
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-
-        PrintWriter out = response.getWriter();
-        UserDetails user = (UserDetails) authentication.getPrincipal();
-        JSONObject item = new JSONObject();
-        item.put("name", user.getUsername()).put("roles", authentication.getAuthorities().toString());
-        out.print(item);
-        out.flush();
-
-        */
-
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
             throws IOException {

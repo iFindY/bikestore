@@ -29,6 +29,7 @@
                                   placeholder="Ex. peter@gmail.com"
                                   [required]="true"
                                   [tabIndex]="state.login.index"
+                                  [errorState]="message==null"
                                   formControlName="email"
                                   [@registered]="{value: activePane, params: {top:300}}">
                     </custom-input>

@@ -17,6 +17,7 @@ import org.hibernate.id.IncrementGenerator;
 @Table(schema = "security", name = "verifications")
 @NamedQueries({
         @NamedQuery(name = "find_verification_by_mail", query = "SELECT ver FROM Verification ver WHERE ver.email = :mail"),
+        @NamedQuery(name = "delete_verification_by_mail", query = "DELETE FROM Verification ver WHERE ver.email = :mail"),
         @NamedQuery(name = "find_user_by_code", query = "SELECT ver FROM Verification ver WHERE ver.code = :code") })
 public class Verification {
 

@@ -72,8 +72,11 @@ test {
 }
 
 
+/*
 bootRun {
     jvmArgs=["-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=32323"]
 }
+*/
 
 // tasks.classes.dependsOn angular
+

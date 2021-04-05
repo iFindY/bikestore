@@ -1,8 +1,8 @@
 package de.arkadi.shop.security.userdetails;
 
 import static org.slf4j.LoggerFactory.*;
-import static org.springframework.security.core.userdetails.User.withUsername;
 
+import de.arkadi.shop.model.UserDTO;
 import org.springframework.security.authentication.AuthenticationManager;
 
 import org.slf4j.Logger;
@@ -11,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import de.arkadi.shop.entity.User;
 import de.arkadi.shop.security.authentication.AuthenticationService;
 
 /**
@@ -35,17 +34,14 @@ public class CustomUserDetailsService implements UserDetailsService {
      */
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        String authority;
-        User user;
+        UserDTO user;
 
         try {
-            user = this.authenticationService.loadUserByEmail(email).orElseThrow(() -> new UsernameNotFoundException(email));
-            authority = this.authenticationService.getAuthority(user.getEmail());
+            user = this.authenticationService.loadUserByEmail(email)
+                .map(UserDTO::new)
+                .orElseThrow(() -> new UsernameNotFoundException(email));
 
-            return withUsername(user.getEmail())
-                    .password(user.getPassword())
-                    .roles(authority)
-                    .build();
+            return user;
 
         } catch (Exception e) {
             logger.error("Username not found [" + email + "]!");

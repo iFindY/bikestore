@@ -1,27 +1,26 @@
 package de.arkadi.shop.security.authentication;
 
+import de.arkadi.shop.security.userdetails.CustomUserDetailsService;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import de.arkadi.shop.entity.User;
-import de.arkadi.shop.repository.AuthoritiesRepository;
 import de.arkadi.shop.repository.UserRepository;
 
 /**
  * do provide access to user data
+ * just a service between the {@link UserRepository} and the {@link CustomUserDetailsService}
  */
 @Service
 @Transactional
 public class AuthenticationService {
 
     private final UserRepository userRepository;
-    private final AuthoritiesRepository authoritiesRepository;
 
-    public AuthenticationService(UserRepository userRepository, AuthoritiesRepository authoritiesRepository) {
+    public AuthenticationService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.authoritiesRepository = authoritiesRepository;
     }
 
     public Optional<User> loadUserByUsername(String name){
@@ -46,9 +45,5 @@ public class AuthenticationService {
 
     public void resetRemainingLoginAttempts(String email) {
         loadUserByEmail(email).ifPresent(User::increaseAttempts);
-    }
-
-    public String getAuthority(String mail){
-        return this.authoritiesRepository.findAuthorityByEmail(mail).getAuthority().toString();
     }
 }

@@ -33,5 +33,8 @@ public class VerificationService {
     public Optional<String> getEmailForCode(String code) {
         return repository.findUser(code).map(Verification::getEmail);
     }
+    public void deleteCode(String email) {
+        repository.deleteByEmail(email);
+    }
 
 }
