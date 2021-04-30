@@ -1,4 +1,14 @@
-import { ChangeDetectorRef, Component, ElementRef, forwardRef, HostBinding, HostListener, Injector, Input, } from '@angular/core';
+import {
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    forwardRef,
+    HostBinding,
+    HostListener,
+    Injector,
+    Input,
+    OnInit,
+} from '@angular/core';
 import { ControlValueAccessor, FormControl, FormGroupDirective, NG_VALUE_ACCESSOR, NgControl, NgForm } from '@angular/forms';
 import {BehaviorSubject, Subject} from 'rxjs';
 import { FocusMonitor } from '@angular/cdk/a11y';
@@ -28,7 +38,7 @@ import { ErrorStateMatcher } from '@angular/material/core';
         ])
     ]
 })
-export class InputComponent implements ControlValueAccessor {
+export class InputComponent implements ControlValueAccessor, OnInit {
     static nextId = 0;
 
     private _value: string;
@@ -56,7 +66,6 @@ export class InputComponent implements ControlValueAccessor {
 
     @Input() set errorState(err){
         this._cState.next(err);
-        console.log("setter error State",err)
         this.stateChanges.next();
     };
 
@@ -103,8 +112,7 @@ export class InputComponent implements ControlValueAccessor {
 
     ngOnInit(): void {
         this.control = this.injector.get(NgControl, null);
-        this.errorMatcher = new CustomFieldErrorMatcher(this.control, this._cState)
-        this._cState.subscribe(x=>this.errorMatcher = new CustomFieldErrorMatcher(this.control,x ))
+        this.errorMatcher = new CustomFieldErrorMatcher(this.control)
     }
 
 
@@ -169,12 +177,10 @@ export class InputComponent implements ControlValueAccessor {
 
 
 class CustomFieldErrorMatcher implements ErrorStateMatcher {
-    private remoteError:boolean;
-    constructor(private control: NgControl, private cState:boolean) {
+    constructor(private control: NgControl) {
     }
 
     isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
-        console.log("cState",this.cState);
-        return (this.control.touched && this.control?.invalid) || this.cState;
+        return this.control.touched && this.control?.invalid;
     }
 }

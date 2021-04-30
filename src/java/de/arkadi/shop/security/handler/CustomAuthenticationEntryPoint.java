@@ -6,9 +6,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.access.ExceptionTranslationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 
-public class CustomAuthenticationEntryPoint extends BasicAuthenticationEntryPoint {
+/**
+ * Used by {@link ExceptionTranslationFilter}
+ */
+public class CustomAuthenticationEntryPoint extends BasicAuthenticationEntryPoint { // TODO what is it for need text
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
@@ -18,7 +22,7 @@ public class CustomAuthenticationEntryPoint extends BasicAuthenticationEntryPoin
 
     @Override
     public void afterPropertiesSet() {
-        setRealmName("Aradki");
+        setRealmName("ARKADI");
         super.afterPropertiesSet();
     }
 }

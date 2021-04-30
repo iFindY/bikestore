@@ -11,12 +11,14 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 import de.arkadi.shop.security.handler.CustomAuthenticationEntryPoint;
-import de.arkadi.shop.security.authentication.CustomAuthenticationProvider;
+import de.arkadi.shop.security.authentication.AdditionalAuthenticationProvider;
 import de.arkadi.shop.security.filter.CustomUsernamePasswordAuthenticationFilter;
 import de.arkadi.shop.security.details.CustomWebAuthenticationDetailsSource;
 import de.arkadi.shop.security.handler.CustomAuthenticationFailureHandler;
@@ -32,14 +34,14 @@ import org.springframework.stereotype.Service;
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private final CustomAuthenticationProvider authenticationProvider;
+    private final AdditionalAuthenticationProvider authenticationProvider;
 
 
 
     /**
      * {@link Service} can be autowired in the configuration before bean initialisation
      */
-    public SecurityConfiguration(CustomAuthenticationProvider authenticationProvider) {
+    public SecurityConfiguration(AdditionalAuthenticationProvider authenticationProvider) {
         this.authenticationProvider = authenticationProvider;
     }
 
@@ -80,33 +82,40 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
      // @formatter:off
-        http
-            .addFilterAt(authenticationFilter(), UsernamePasswordAuthenticationFilter.class) // at replace given filter, you can do those by defining 100,300,600
-            .formLogin()
-                .authenticationDetailsSource(new CustomWebAuthenticationDetailsSource())
-                .loginProcessingUrl("/api/auth/login") 
-                .successHandler(getAuthenticationSuccessHandler())
-                .failureHandler(getAuthenticationFailureHandler()).and()
+        http.addFilterAt(authenticationFilter(), UsernamePasswordAuthenticationFilter.class); // at replace given filter, you can do those by defining 100,300,600
 
-            .logout()
-                .logoutUrl("/api/auth/logout")
-                .invalidateHttpSession(true)
-                .deleteCookies("x-auth-token", "XSRF-TOKEN").and()
+        http.formLogin()
+            .loginProcessingUrl("/api/auth/login")
+            .authenticationDetailsSource(new CustomWebAuthenticationDetailsSource()) // get custom auth details (login/pass/pin) which the provider can use
+            .successHandler(getAuthenticationSuccessHandler()) // on success handle here
+            .failureHandler(getAuthenticationFailureHandler()); // on fail handle here
 
-            .exceptionHandling()
-                .authenticationEntryPoint(getUnauthorizedEntryPoint()).and()
 
-            .authorizeRequests()
-                // the request equals "/" as allowed for all
+        http.exceptionHandling() // access the exceptions filter
+            .authenticationEntryPoint(getUnauthorizedEntryPoint()) // response if auth fail
+            .accessDeniedHandler(getAccessDeniedHandler()); // if authenticated/valid user has not enough rights
+
+        http.rememberMe() // save user to reenter username/password/pin but not two factor authorisation //TODO how does it work
+                .key("remembered")
+                .authenticationSuccessHandler(getAuthenticationSuccessHandler());
+
+        http.logout()
+            .logoutUrl("/api/auth/logout")
+            .invalidateHttpSession(true)
+            .deleteCookies("x-auth-token", "XSRF-TOKEN");
+
+        http.authorizeRequests()
+            // the request equals "/" as allowed for all
             .antMatchers("/", "/api/user/register", "/api/user/verify/email").permitAll()
-                // any request which has not ben intercepted previously, has to be authenticated
-                .anyRequest().authenticated().and()
+            // any request which has not ben intercepted previously, has to be authenticated
+            .anyRequest().authenticated();
 
-            .csrf()
-                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and()
+        http.csrf()
+            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
 
-            .headers()
-                .contentSecurityPolicy("script-src 'self'");
+        http.headers()
+            .contentSecurityPolicy("script-src 'self'");
+
      // @formatter:on
     }
 
@@ -157,6 +166,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return new CustomAuthenticationEntryPoint();
     }
 
+
+    @Bean
+    public AccessDeniedHandler getAccessDeniedHandler() {
+        return new AccessDeniedHandlerImpl();
+    }
 
     private CustomUsernamePasswordAuthenticationFilter authenticationFilter() throws Exception {
         CustomUsernamePasswordAuthenticationFilter filter = new CustomUsernamePasswordAuthenticationFilter();

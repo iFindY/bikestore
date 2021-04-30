@@ -21,6 +21,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -57,8 +58,7 @@ public class UserController {
    * redirected here from {@link CustomAuthenticationSuccessHandler}
    */
   @GetMapping("/info")
-  public ResponseEntity<Map> getAuthenticatedUserInfo() {
-    UserDTO principal = (UserDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+  public ResponseEntity<Map> getAuthenticatedUserInfo(@AuthenticationPrincipal UserDTO principal) {
 
     Set<String> authorities = principal.getAuthorities().stream()
         .map(GrantedAuthority::getAuthority)
