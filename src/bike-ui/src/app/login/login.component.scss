@@ -4,6 +4,7 @@
     overflow: hidden; /* Hide everything that doesn't fit component */
 }
 
+
 .panes {
     height: 100%;
     width: 300%;      /* Make the parent element to take up twice of the component's width */
@@ -15,9 +16,16 @@
      font-weight: bold;
  }
 
+.circle{
+    transition: opacity 0.5s ease-in-out;
+    width: 90px;
+    transform: translateY(35%);
+    margin-top: -25px;
+}
 
-
-
+.button{
+    border-radius: 3px;
+}
 ::ng-deep {
     .mat-dialog-container{
         border-radius: 30px;

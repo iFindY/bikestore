@@ -1,27 +1,24 @@
 <div class="panes" [@slide]="activePane">
 
 <!-- screen 1-->
-    <div>
-        <h1 mat-dialog-title [ngClass]="{'bold': activePane==='login'}" style="margin-bottom: 11px">Sign In</h1>
-        <h1 mat-dialog-title style="margin-bottom: 90px;" [ngClass]="{'bold': activePane==='register'||activePane==='registered'}">Sign Up</h1>
+    <div class="first-screen">
+        <h1 mat-dialog-title style="margin-bottom: 11px" [ngClass]="{'bold': activePane==='login'}" >Sign In</h1>
+        <h1 mat-dialog-title style="margin-bottom: 90px" [ngClass]="{'bold': activePane==='register'||activePane==='registered'}">Sign Up</h1>
 
-        <div [ngClass]="{
-        'd-flex': activePane ==='logged-in',
-        'justify-content-center': activePane ==='logged-in',
-        'collapse' : activePane !== 'logged-in'}">
-            <img style="width: 100px" alt="Logo" src="../../assets/images/check-circle.gif"/>
+        <div class="collapse" [ngClass]="{ 'd-flex justify-content-center visible': activePane ==='logged-in'}">
+            <img class="w-50 h-50" alt="logo" src="../../assets/images/check-circle.gif"/>
         </div>
 
         <div mat-dialog-content
-             [ngStyle]="{'visibility': activePane ==='logged-in'? 'hidden':'visible'}"
-             style="text-align: center; position: relative; overflow: hidden;">
+             class="text-center position-relative overflow-hidden"
+             [ngStyle]="{'visibility': activePane ==='logged-in'? 'hidden':'visible'}">
 
             <form [formGroup]="login" (ngSubmit)="onLoginSubmit()" autocomplete="on" novalidate>
 
 
-                <div style="overflow:hidden; height: 149px;" [@move]="activePane">
+                <div class="overflow-hidden" style="height: 149px;" [@move]="activePane">
                     <!--email-->
-                    <custom-input style="display: block"
+                    <custom-input class="d-block"
                                   type="email"
                                   label="Email"
                                   icon="account_circle"
@@ -35,8 +32,8 @@
                     </custom-input>
 
                     <!--password-->
-                    <custom-input style="display: block"
-                            controlType="password" [@registered]="{value: activePane, params: {top:300}}"
+                    <custom-input class="d-block"
+                                  controlType="password" [@registered]="{value: activePane, params: {top:300}}"
                                   label="Password"
                                   icon="visibility"
                                   errorMsg="to simple"
@@ -49,7 +46,7 @@
                     </custom-input>
 
                     <!--confirm password-->
-                    <custom-input style="display: block"
+                    <custom-input class="d-block"
                             controlType="password" [@registered]="{value: activePane, params: {top:300}}"
                                   label="Verify Password"
                                   icon="visibility"
@@ -69,17 +66,13 @@
 <!--
                         <mat-icon style="width: 50px;height: 50px;font-size: 50px;color: green;margin-bottom: 8px">done</mat-icon>
 -->
-                        <img style="
-                        transition: opacity 0.5s ease-in-out;
-                        width: 90px;
-                        transform: translateY(35%);
-                        margin-top: -25px;" alt="Logo" src="../../assets/images/check-circle.gif"/>
+                        <img class="circle" alt="logo" src="../../assets/images/check-circle.gif"/>
 
                     </div>
 
                 </div>
 
-                <div style="text-align: right;margin-right: 40px;margin-top: -22px;">
+                <div style="text-align: right; margin-right: 40px; margin-top: -22px;">
 
                     <!--forgot password button -->
                     <button mat-button [ngStyle]="{'visibility':activePane === 'registered' ? 'collapse' : 'visible'}"
@@ -128,15 +121,16 @@
 
     <!--screen 2-->
     <div>
-        <h1 mat-dialog-title style="margin-bottom: 11px;font-weight: bold">Reset</h1>
-        <h1 mat-dialog-title style="margin-bottom: 90px;font-weight: bold">Password</h1>
-        <div mat-dialog-content style="text-align: center;position: relative;">
+        <h1 mat-dialog-title style="margin-bottom: 11px; font-weight: bold">Reset</h1>
+        <h1 mat-dialog-title style="margin-bottom: 90px; font-weight: bold">Password</h1>
+
+        <div mat-dialog-content class="text-center position-relative">
 
 
             <form [formGroup]="reset" autocomplete="on">
 
                 <!--email & verification code-->
-                <div style="overflow:hidden;height: 80px;" [@moveResetDigits]="{value: activePane, params: {top: test}}">
+                <div  class="overflow-hidden" style="height: 80px;" [@moveResetDigits]="{value: activePane, params: {top: test}}">
 
                 <!--reset email-->
                     <div [@showPassword]="{value: activePane, params: {top: 120,done:300}}">

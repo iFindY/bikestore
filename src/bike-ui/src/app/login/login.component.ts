@@ -171,7 +171,7 @@ export class LoginComponent implements OnInit,OnDestroy {
 
         this.login = fb.group(
           {
-              email:            ["tes@de.de", [Validators.required, Validators.pattern(this.MAIL_PATTERN)]],
+              email:            ["arkadi.daschkewitsch@gmail.com", [Validators.required, Validators.pattern(this.MAIL_PATTERN)]],
               password:         ["Test123!", [Validators.required, this.conditionalValidator(Validators.pattern(this.PASSWORD_PATTERN)).bind(this)]],
               confirmPassword:  ["Test123!", [Validators.pattern(this.PASSWORD_PATTERN)]],
               forgotPassword:[]
