@@ -5,7 +5,7 @@ import {  Observable, Subscription } from 'rxjs';
 import { AuthenticationService } from '../services/authentication.service';
 import { UserState } from '../state/user/user.reducers';
 import { select, Store } from '@ngrx/store';
-import { LoginScreen, User } from './login.model';
+import {LoginScreen, State, User} from './login.model';
 import {getLoading, getMessage, getScreen, getUser} from '../state/user/user.selectors';
 import { hideScreen, login, register, switchScreen } from '../state/user/user.actions';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -212,31 +212,20 @@ export class LoginComponent implements OnInit,OnDestroy {
       this.resetForm['confirmResetPassword'].disable();
   }
 
-    ngOnDestroy(): void {
-        this.store.dispatch(hideScreen())
-        this.subscriptions.unsubscribe();
+  onLoginSubmit() {
+
+    const email = this.login.get('email').value,
+        password = this.login.get('password').value,
+        confirmedPassword = this.login.get('confirmPassword').value;
+
+    switch (this.activePane) {
+        case "login": this.store.dispatch(login({email, password})); break;
+        case "register": this.store.dispatch(register({email, password, confirmedPassword})); break;
+        case "registered":  this.store.dispatch(switchScreen({screen: 'login'})); break;
     }
-
-    onLoginSubmit() {
-
-      const email = this.login.get('email').value,
-          password = this.login.get('password').value,
-          confirmedPassword = this.login.get('confirmPassword').value;
-
-      if (this.activePane === 'login') {
-
-          this.store.dispatch(login({ email, password }))
-
-      } else if (this.activePane === 'register') {
-
-          this.store.dispatch(register({ email, password, confirmedPassword }))
-
-      } else if(this.activePane === 'registered'){
-          this.store.dispatch(switchScreen({ screen: 'login' }))
-      }
   }
 
-    firstScreenState(screen?: LoginScreen) {
+  firstScreenState(screen?: LoginScreen) {
 
         if (screen) {
            this.store.dispatch(switchScreen({ screen }))
@@ -255,7 +244,6 @@ export class LoginComponent implements OnInit,OnDestroy {
     }
 
 
-
     secondScreenState(validCode?: FormGroup) {
 
         switch (this.activePane) {
@@ -270,6 +258,12 @@ export class LoginComponent implements OnInit,OnDestroy {
 
         // do some service stuff here, resend email again if missing ...
     }
+
+
+    ngOnDestroy(): void {
+        this.store.dispatch(hideScreen())
+        this.subscriptions.unsubscribe()
+    };
 
 
     // ===== helper ====== //
@@ -403,92 +397,9 @@ export class LoginComponent implements OnInit,OnDestroy {
             this.reset.enable();
         }
     }
-}
 
-class State {
-
-    login     = {index: -1}
-    register  = {index: -1}
-    registered = {index: -1}
-
-    reset     = {index: -1}
-    code      = {index: -1}
-    password  = {index: -1}
-    done      = {index: -1}
-
-    logout    = {index: -1}
-
-    onLogin() {
-        this.login.index    =  0;
-        this.logout.index   = -1;
-        this.register.index = -1;
-        this.reset.index    = -1;
-        this.code.index     = -1;
-        this.password.index = -1;
-    };
-    onLongedIn() {
-        this.login.index    = -1;
-        this.logout.index   = -1;
-        this.register.index = -1;
-        this.reset.index    = -1;
-        this.code.index     = -1;
-        this.password.index = -1;
-    };
-    onLogout() {
-        this.login.index    = -1;
-        this.logout.index   = -1;
-        this.register.index = -1;
-        this.reset.index    = -1;
-        this.code.index     = -1;
-        this.password.index = -1;
-    };
-
-    onRegister() {
-        this.login.index    =  0;
-        this.logout.index   = -1;
-        this.register.index =  0;
-        this.reset.index    = -1;
-        this.code.index     = -1;
-        this.password.index = -1;
-    };
-
-    onReset() {
-        this.login.index    = -1;
-        this.logout.index   = -1;
-        this.register.index = -1;
-        this.reset.index    =  0;
-        this.code.index     = -1;
-        this.password.index = -1;
-    };
-
-    onCode() {
-        this.login.index    = -1;
-        this.logout.index   = -1;
-        this.register.index = -1;
-        this.reset.index    =  0;
-        this.code.index     =  0;
-        this.password.index = -1;
-    };
-
-    onPassword() {
-        this.login.index    = -1;
-        this.logout.index   = -1;
-        this.register.index = -1;
-        this.reset.index    = -1;
-        this.code.index     = -1;
-        this.password.index =  0;
-    };
-    onDone() {
-        this.login.index    = -1;
-        this.logout.index   = -1;
-        this.register.index = -1;
-        this.reset.index    = -1;
-        this.code.index     = -1;
-        this.password.index = -1;
-    };
 
 }
-
 
 // custom validator to confirmed that two fields match
 export function MustMatch(controlName: string, matchingControlName: string) {
