@@ -56,7 +56,7 @@ export class LoginComponent implements OnInit,OnDestroy {
 
 
   get message() {
-    return this._responseMessage ? this._responseMessage : this._defaultMessage
+    return this._responseMessage ? this._responseMessage : this._defaultMessage;
   }
 
   _defaultMessage: string = 'not a valid email address';
@@ -74,7 +74,7 @@ export class LoginComponent implements OnInit,OnDestroy {
           {
               email:            ["arkadi.daschkewitsch@gmail.com", [Validators.required, Validators.pattern(this.MAIL_PATTERN)]],
               password:         ["Test123!", [Validators.required,  Validators.pattern(this.PASSWORD_PATTERN)]],
-              confirmPassword:  ["", {validators: [Validators.pattern(this.PASSWORD_PATTERN)]}], //
+              confirmPassword:  [null, {validators: [Validators.pattern(this.PASSWORD_PATTERN)]}], //
               forgotPassword:   []
           },
           {
@@ -101,10 +101,13 @@ export class LoginComponent implements OnInit,OnDestroy {
 
   ngOnInit(): void {
 
+    this.state.loginForm.valueChanges.subscribe(x=> console.log(x));
+      this.state.loginForm.statusChanges.subscribe(x=> console.log(x));
+
       this.subscriptions
       .add(this.screen$.subscribe( screen  => this.state.switchScreen(screen)))
       .add(this.loading$.subscribe(ldg     => this.state.loading(ldg)))
-      .add(this.message$.subscribe(message => this.setMessage(message)))
+      .add(this.message$.subscribe(message => this.setResetMessage(message)))
       .add(this.loggedIn$.pipe(delay(2000)).subscribe(    () => this.dialogRef.close()))
       .add(this.state.loginControls.email.valueChanges.subscribe( () => this.store.dispatch(setMessage(null))))
 
@@ -140,13 +143,13 @@ export class LoginComponent implements OnInit,OnDestroy {
            this.store.dispatch(switchScreen({ screen }))
         } else {
             switch (this.state.activePane) {
-                case 'login': this.store.dispatch(switchScreen({screen:'register'})); break;
                 case 'reset':
                 case 'password':
                 case 'register':
                 case 'code':
                 case 'done':
-                case 'registered':this.store.dispatch(switchScreen({ screen: 'login' }));
+                case 'registered' : this.store.dispatch(switchScreen({ screen: 'login' })); break;
+                case 'login': this.store.dispatch(switchScreen({screen:'register'})); break;
             }
         }
     }
@@ -167,6 +170,9 @@ export class LoginComponent implements OnInit,OnDestroy {
     }
 
 
+
+
+
     resetF($event: Event) {
         if(this.state.loginForm.invalid){
             this.state.loginControls.email.updateValueAndValidity();
@@ -182,7 +188,7 @@ export class LoginComponent implements OnInit,OnDestroy {
     };
 
 
-    private setMessage(message:string){
+    private setResetMessage(message:string){
       this._responseMessage = Boolean(message) ? message : null;
 
       this.state.loginControls.email.setErrors({"invalid": true});

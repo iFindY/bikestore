@@ -70,7 +70,7 @@ export class InputComponent implements ControlValueAccessor, OnInit, OnDestroy {
     private _cState = new BehaviorSubject<boolean>(false);
 
     autofilled?: boolean;
-    control:NgControl;
+    control: NgControl;
     stateChanges = new Subject<void>();
     focused: boolean;
     hover: boolean;
@@ -119,7 +119,7 @@ export class InputComponent implements ControlValueAccessor, OnInit, OnDestroy {
     get errorMsg() {return this._errorMsg;}
     get disabled(): boolean {return this._disabled;}
     get placeholder() {return this._placeholder;}
-
+    get error() {return this.control.touched && this.control.invalid && this.errorVisible && !this.focused;}
 
     //== == == == init
 
@@ -134,7 +134,6 @@ export class InputComponent implements ControlValueAccessor, OnInit, OnDestroy {
     ngOnInit(): void {
         this.control = this.injector.get(NgControl, null);
         this.errorMatcher = new CustomFieldErrorMatcher(this.control);
-
         this.subscription = this.stateChanges.asObservable().subscribe(() => this.chRef.detectChanges());
     }
 

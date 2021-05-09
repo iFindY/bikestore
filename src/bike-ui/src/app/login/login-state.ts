@@ -118,16 +118,23 @@ export class State {
     switch(screen) {
       case 'login': {
         this.onLogin();
-        this.resetForm.reset();
-        this.activePane='login';
 
+        this.activePane='login';
         this.mainButton = 'Sign In'
         this.secondButton = 'Sign Up';
         this.help = 'Dont have an account?';
 
+        this.resetForm.reset();
+        this.resetForm.disable();
+
         this.loginControls.email.enable();
         this.loginControls.password.enable();
         this.loginControls.confirmPassword.disable();
+
+        this.loginControls.email.setErrors(null);
+        this.loginControls.password.setErrors(null);
+        this.loginControls.confirmPassword.setErrors(null);
+
         break;
       }
       case 'logged-in': {
@@ -143,11 +150,13 @@ export class State {
       case 'register': {
         this.onRegister();
         this.activePane='register';
-        this.loginControls.confirmPassword.enable();
 
         this.mainButton = 'Sign Up'
         this.secondButton = 'Sign In';
         this.help = 'Already registered?';
+
+        this.loginControls.confirmPassword.enable();
+        this.loginControls.confirmPassword.setErrors(null);
         break;
       }
       case 'registered': {
@@ -161,10 +170,14 @@ export class State {
       }
       case 'reset': {
         this.onReset();
+        this.loginForm.disable();
         this.loginForm.reset();
+
         this.activePane = 'reset';
         this.resetButton = 'Send Email';
+
         this.resetControls.resetEmail.enable();
+        this.resetControls.resetEmail.setErrors(null);
 
         this.resetControls.resetCode.disable();
         this.resetControls.resetPassword.disable();
@@ -189,6 +202,9 @@ export class State {
 
         this.resetControls.resetPassword.enable();
         this.resetControls.confirmResetPassword.enable();
+
+        this.resetControls.resetPassword.setErrors(null);
+        this.resetControls.confirmResetPassword.setErrors(null);
 
         this.resetControls.resetEmail.disable();
         this.resetControls.resetCode.disable();
@@ -215,6 +231,9 @@ export class State {
         this.loginControls.password.disable();
       }
     }
+
+    this.loginForm.markAsPristine();
+    this.resetForm.markAsPristine();
   }
 
   public loading(loading: boolean) {
