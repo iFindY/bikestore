@@ -15,9 +15,9 @@ import { interval, Subscription } from 'rxjs';
     styleUrls: ['./code-input.component.scss'],
     providers: [
         {
-            provide: NG_VALUE_ACCESSOR,
+            provide: NG_VALUE_ACCESSOR, // annotation/anker/reference to an array of validators
             useExisting: forwardRef(() => CodeInputComponent),
-            multi: true
+            multi: true // do not replace but add extra one
         }
     ]
 })
@@ -48,7 +48,8 @@ export class CodeInputComponent implements ControlValueAccessor, OnDestroy {
         this.subscriptions = interval(1100).pipe().subscribe(() => this.cursor = this.cursor === '_' ? '' : '_');
     }
 
-//== == == == has to implement this 4/5 methods
+//== == == == has to implement this 4/5 methods, called by angular forms module only
+
 
     onTouched: () => void = () => {};
     onChange: any = () => { };
@@ -56,6 +57,7 @@ export class CodeInputComponent implements ControlValueAccessor, OnDestroy {
     registerOnChange(fn: any): void {this.form.valueChanges.subscribe(fn);}
     registerOnTouched(fn: any): void {this.onTouched = fn;}
     setDisabledState?(isDisabled: boolean): void {isDisabled ? this.form.disable() : this.form.enable();}
+
 
 //== == == == block invalid chars
 
