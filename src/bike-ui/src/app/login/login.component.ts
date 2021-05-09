@@ -101,8 +101,6 @@ export class LoginComponent implements OnInit,OnDestroy {
 
   ngOnInit(): void {
 
-    this.state.loginForm.valueChanges.subscribe(x=> console.log(x));
-      this.state.loginForm.statusChanges.subscribe(x=> console.log(x));
 
       this.subscriptions
       .add(this.screen$.subscribe( screen  => this.state.switchScreen(screen)))

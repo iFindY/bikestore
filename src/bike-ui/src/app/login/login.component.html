@@ -55,7 +55,7 @@
                                   icon="visibility"
                                   errorMsg="not matching"
                                   placeholder="matching"
-                                  [hintVisible]="state.activePane==='register' && state.loginControls['confirmPassword'].valid"
+                                  [hintVisible]="state.activePane==='register' && state.loginControls.confirmPassword.valid"
                                   [errorVisible]="state.activePane==='register'"
                                   [required]="true"
                                   [tabIndex]="state.register.index"
@@ -76,7 +76,7 @@
                 <div style="text-align: right; margin-right: 40px; margin-top: -22px;">
 
                     <!--forgot password button -->
-                    <button mat-button [ngStyle]="{'visibility':state.activePane === 'registered' ? 'collapse' : 'visible'}"
+                    <button mat-button [ngStyle]="{'visibility': state.activePane === 'registered' ? 'collapse' : 'visible'}"
                             type="button"
                             id="smallButton"
                             class="no-hover-effect"
@@ -118,7 +118,7 @@
         </div>
     </div>
 
-    <!--screen 2-->
+ <!--screen 2-->
     <div>
         <h1 mat-dialog-title style="margin-bottom: 11px; font-weight: bold">Reset</h1>
         <h1 mat-dialog-title style="margin-bottom: 90px; font-weight: bold">Password</h1>

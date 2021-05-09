@@ -112,7 +112,7 @@ export const slide = trigger('slide', [
 
     transition('* => login', [
         animate("600ms", keyframes([
-            style({ transform: 'translateX(-33)', offset: 0}),
+            style({ transform: 'translateX(-33%)', offset: 0}),
             style({ transform: 'translateX(-0.3%)', offset: 0.2}),
             style({ transform: 'translateX(0%)',  offset: 1})]))]),
 ]);
