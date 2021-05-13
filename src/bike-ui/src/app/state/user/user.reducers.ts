@@ -42,14 +42,11 @@ export const userReducer = createReducer<UserState>(
     on(UserActions.loading, (state, {loading}) => ({
         ...state, loading
     })),
-    on(UserActions.hideScreen, (state,) => ({
-        ...state, screen: state.user ? 'logged-in' : 'login'
-    })),
     on(UserActions.loginSuccess, (state, {user}) => ({
         ...state, user
     })),
     on(UserActions.logout, (state,) => ({
-        ...state, user: null
+        ...state, user: null, screen:'login'
     })),
     on(UserActions.setSettings, (state, { settings }) => ({
         ...state, settings

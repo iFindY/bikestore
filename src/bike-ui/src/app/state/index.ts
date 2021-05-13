@@ -13,7 +13,7 @@ import { localStorageSync } from 'ngrx-store-localstorage';
 
 
 export interface AppState {
-    router:RouterReducerState
+    router:RouterReducerState;
     user: UserState;
 }
 
@@ -27,7 +27,7 @@ export const reducers: ActionReducerMap<AppState> = {
 
 const reducerKeys = ['user','router'];
 export function localStorageSyncReducer(reducer: ActionReducer<any>): ActionReducer<any> {
-    return localStorageSync({ keys: reducerKeys, rehydrate: true, storage: sessionStorage })(reducer);
+    return localStorageSync({ keys: reducerKeys, rehydrate: true, storage: localStorage })(reducer);
 }
 
 export function logger(reducer:ActionReducer<any>)

@@ -9,7 +9,7 @@ import {
     trigger
 } from "@angular/animations";
 
-export type LoginScreen = 'login' | 'logged-in' | 'logout' | 'reset' | 'register' | 'registered' | 'code' | 'password' | 'done';
+export type LoginScreen = 'login' | 'logged-in' | 'logout' | 'reset' | 'register' | 'registered' | 'code' | 'password' | 'done'| 'test';
 
 
 
@@ -33,7 +33,8 @@ export interface Settings {
 // == == == == functions
 
 // custom validator to confirmed that two fields match
-import {FormGroup, ValidatorFn} from "@angular/forms";
+import { FormGroup, ValidatorFn} from "@angular/forms";
+import {interval, of} from "rxjs";
 
 export function mustMatch(controlName: string, matchingControlName: string) {
     return (formGroup: FormGroup) => {
@@ -71,6 +72,7 @@ export function conditionalValidator(activePane: LoginScreen, validators: Valida
 }
 
 
+ export const delayOnNull = val => (val == null) ? interval(1000) : of(val);
 
 /** == == == == animations
  *
@@ -86,6 +88,7 @@ export const slide = trigger('slide', [
     state('password',   style({ transform: 'translateX(-33%)' })),
     state('done',       style({ transform: 'translateX(-33%)' })),
     state('logout',     style({ transform: 'translateX(-66%)' })),
+
 
     // order matter
     transition('login <=> register, registered => login',[
@@ -103,14 +106,10 @@ export const slide = trigger('slide', [
             style({ transform: 'translateX(-32.7%)', offset: 0.2}),
             style({ transform: 'translateX(-33%)',  offset: 1})]))]),
 
-    transition('login <=> logout', [
-        animate('600ms', keyframes([
-            style({ opacity: '100%', transform: 'translateX(0)', offset: 0 }),
-            style({ opacity: '0%', transform: 'translateX(-65.3%)', offset: 0.2 }),
-            style({ opacity: '100%', transform: 'translateX(-66%)', offset: 1 })]))]),
 
 
     transition('* => login', [
+      query('@hide', animateChild()),
         animate("600ms", keyframes([
             style({ transform: 'translateX(-33%)', offset: 0}),
             style({ transform: 'translateX(-0.3%)', offset: 0.2}),
@@ -118,7 +117,7 @@ export const slide = trigger('slide', [
 ]);
 
 export const move = trigger('move', [
-        state('login, reset',        style({ height: '149px' })),
+        state('login, reset',         style({ height: '149px' })),
         state('register, registered', style({ height: '229px', transform: 'translateY(0)' })),
         transition('login <=> register,registered => login', animate('300ms ease-out')),
         transition('register => registered',[
@@ -185,4 +184,10 @@ export const showPassword = trigger('showPassword', [
                 style({ opacity:"100%",     transform: 'translateY(-{{done}}%)', offset: 1})]))])
 
     ]);
+
+export const hide = trigger('hide', [
+  state('logout',style({opacity:"100%",})),
+  state('login',  style({opacity:"0%",})),
+  transition('logout => login', animate('600ms {{delay}}ms ease-out'),{ params: { delay: 1100 } })]);
+
 

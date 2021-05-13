@@ -116,6 +116,10 @@ export class State {
 
   public switchScreen(screen: LoginScreen) {
     switch(screen) {
+      case 'test':{
+        this.activePane='test';
+break;
+      }
       case 'login': {
         this.onLogin();
 
@@ -139,12 +143,13 @@ export class State {
       }
       case 'logged-in': {
         this.onLongedIn();
-        this.resetForm.reset();
         this.activePane='logged-in';
 
-        this.loginControls.email.disable();
-        this.loginControls.password.disable();
-        this.loginControls.confirmPassword.disable();
+        this.resetForm.reset();
+        this.resetForm.disable();
+        this.loginForm.reset();
+        this.loginForm.disable();
+
         break;
       }
       case 'register': {
@@ -221,8 +226,6 @@ export class State {
       }
       case 'logout':
       default: {
-        this.dialogRef.close()
-
         this.onLogout();
         this.activePane = 'logout';
         this.resetButton = 'Return';

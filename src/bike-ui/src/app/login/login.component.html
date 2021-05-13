@@ -1,68 +1,69 @@
-<div class="panes" [@slide]="state.activePane">
+<div class="panes" [@slide]="STATE.activePane">
 
 <!-- screen 1-->
     <div class="first-screen">
-        <h1 mat-dialog-title style="margin-bottom: 11px" [ngClass]="{'bold': state.activePane==='login'}" >Sign In</h1>
-        <h1 mat-dialog-title style="margin-bottom: 90px" [ngClass]="{'bold': state.activePane==='register'||state.activePane==='registered'}">Sign Up</h1>
+        <h1 mat-dialog-title style="margin-bottom: 11px" [ngClass]="{'bold': STATE.activePane==='login'}" >Sign In</h1>
+        <h1 mat-dialog-title style="margin-bottom: 90px" [ngClass]="{'bold': STATE.activePane==='register'|| STATE.activePane==='registered'}">Sign Up</h1>
 
-        <div class="collapse" [ngClass]="{ 'd-flex justify-content-center visible': state.activePane ==='logged-in'}">
+        <div class="collapse" [ngClass]="{ 'd-flex justify-content-center visible': STATE.activePane ==='logged-in'}">
             <img class="w-50 h-50" alt="logo" src="../../assets/images/check-circle.gif"/>
         </div>
 
         <div mat-dialog-content
              class="text-center position-relative overflow-hidden"
-             [ngStyle]="{'visibility': state.activePane ==='logged-in'? 'hidden':'visible'}">
+             [ngStyle]="{'visibility': STATE.activePane ==='logged-in'? 'hidden':'visible'}">
 
-            <form [formGroup]="state.loginForm" (ngSubmit)="onLoginSubmit()" autocomplete="on" novalidate>
+            <form [formGroup]="STATE.loginForm" (ngSubmit)="onLoginSubmit()" autocomplete="on" novalidate>
 
 
-                <div class="overflow-hidden" style="height: 149px;" [@move]="state.activePane">
+                <div class="overflow-hidden" style="height: 149px;" [@move]="STATE.activePane">
                     <!--email-->
                     <custom-input class="d-block"
-                                  (input)="resetF($event)"
                                   type="email"
                                   label="Email"
                                   icon="account_circle"
                                   [errorMsg]="message"
                                   placeholder="Ex. peter@gmail.com"
                                   [required]="true"
-                                  [tabIndex]="state.login.index"
+                                  [tabIndex]="STATE.login.index"
                                   [errorState]="message==null"
                                   formControlName="email"
-                                  [@registered]="{value: state.activePane, params: {top:300}}">
+                                  (focus)="onInputFocus()"
+                                  [@registered]="{value: STATE.activePane, params: {top:300}}">
                     </custom-input>
 
                     <!--password-->
                     <custom-input class="d-block"
-                                  (input)="resetF($event)"
-                                  controlType="password" [@registered]="{value: state.activePane, params: {top:300}}"
+                                  controlType="password" [@registered]="{value: STATE.activePane, params: {top:300}}"
                                   label="Password"
                                   icon="visibility"
                                   errorMsg="to simple"
                                   placeholder="Ex. Pa$$word!195"
-                                  [hintVisible]="state.activePane=='register'"
-                                  [errorVisible]="state.activePane==='register'"
+                                  [hintVisible]="STATE.activePane=='register'"
+                                  [errorVisible]="STATE.activePane==='register'"
                                   [required]="true"
-                                  [tabIndex]="state.login.index"
+                                  [tabIndex]="STATE.login.index"
+                                  (input)="onInput()"
                                   formControlName="password">
                     </custom-input>
 
                     <!--confirm password-->
-                    <custom-input [@registered]="{value: state.activePane, params: {top:300}}"
+                    <custom-input [@registered]="{value: STATE.activePane, params: {top:300}}"
                                   class="d-block"
                                   controlType="password"
                                   label="Verify Password"
                                   icon="visibility"
                                   errorMsg="not matching"
                                   placeholder="matching"
-                                  [hintVisible]="state.activePane==='register' && state.loginControls.confirmPassword.valid"
-                                  [errorVisible]="state.activePane==='register'"
+                                  [hintVisible]="STATE.activePane==='register' && STATE.loginControls.confirmPassword.valid"
+                                  [errorVisible]="STATE.activePane==='register'"
                                   [required]="true"
-                                  [tabIndex]="state.register.index"
+                                  [tabIndex]="STATE.register.index"
+                                  (input)="onInput()"
                                   formControlName="confirmPassword">
                     </custom-input>
 
-                    <div style="margin-top: 12px" [@registered]="{value: state.activePane, params: {top:120}}">
+                    <div style="margin-top: 12px" [@registered]="{value: STATE.activePane, params: {top:120}}">
 
                         <h2>Account Created!</h2>
                         <h4>Please check your mailbox for an activation link.</h4>
@@ -76,11 +77,11 @@
                 <div style="text-align: right; margin-right: 40px; margin-top: -22px;">
 
                     <!--forgot password button -->
-                    <button mat-button [ngStyle]="{'visibility': state.activePane === 'registered' ? 'collapse' : 'visible'}"
+                    <button mat-button [ngStyle]="{'visibility': STATE.activePane === 'registered' ? 'collapse' : 'visible'}"
                             type="button"
                             id="smallButton"
                             class="no-hover-effect"
-                            (click)="firstScreenState('reset')"
+                            (click)="loginRegisterScreen('reset')"
                             tabIndex="-1"
                             [disableRipple]="true">
                         forgot password ?
@@ -94,23 +95,23 @@
                             color="primary"
                             type="submit"
                             [loading]="loading$ | async"
-                            [disabled]="state.loginForm.invalid || (loading$ | async)">
-                        {{state.mainButton}}
+                            [disabled]="STATE.loginForm.invalid || (loading$ | async)">
+                        {{STATE.mainButton}}
                     </loading-button>
                 </div>
 
-                <div style="margin: 5px 30px 10px 30px;" [@moveText]="state.activePane">
+                <div style="margin: 5px 30px 10px 30px;" [@moveText]="STATE.activePane">
 
-                    <div>{{state.help}}</div>
+                    <div>{{STATE.help}}</div>
 
                     <!--switch screen button -->
                     <button mat-button
                             type="button"
                             class="no-hover-effect register"
                             [disableRipple]="true"
-                            (click)="firstScreenState()"
+                            (click)="loginRegisterScreen()"
                             tabindex="-1">
-                        {{state.secondButton}}
+                        {{STATE.secondButton}}
                     </button>
                 </div>
 
@@ -126,30 +127,30 @@
         <div mat-dialog-content class="text-center position-relative">
 
 
-            <form [formGroup]="state.resetForm" autocomplete="on">
+            <form [formGroup]="STATE.resetForm" autocomplete="on">
 
                 <!--email & verification code-->
-                <div  class="overflow-hidden" style="height: 80px;" [@moveResetDigits]="{value: state.activePane, params: {top: ANIMATION_PARAMETER}}">
+                <div  class="overflow-hidden" style="height: 80px;" [@moveResetDigits]="{value: STATE.activePane, params: {top: ANIMATION_PARAMETER}}">
 
                 <!--reset email-->
-                    <div [@showPassword]="{value: state.activePane, params: {top: 120,done:300}}">
+                    <div [@showPassword]="{value: STATE.activePane, params: {top: 120,done:300}}">
                         <custom-input type="email"
                                       label="Reset Email"
                                       icon="account_circle"
                                       errorMsg="not a valid email"
                                       placeholder="Enter your email address to receive an reset link"
                                       [required]="true"
-                                      [tabIndex]="state.reset.index"
+                                      [tabIndex]="STATE.reset.index"
                                       formControlName="resetEmail"></custom-input>
                     </div>
 
                     <!--verification code--> <!--remove cursor-->
-                    <div  style="margin-top: 15px" [@showPassword]="{value: state.activePane, params: {top: 300,done:300}}">
-                        <code-input [tabIndex]="state.code.index" formControlName="resetCode" (confirmed)="secondScreenState($event)"></code-input>
+                    <div  style="margin-top: 15px" [@showPassword]="{value: STATE.activePane, params: {top: 300,done:300}}">
+                        <code-input [tabIndex]="STATE.code.index" formControlName="resetCode" (confirmed)="resetPasswordScreen($event)"></code-input>
                     </div>
 
 
-                    <div [@showPassword]="{value: state.activePane, params: {top: 120,done:300}}">
+                    <div [@showPassword]="{value: STATE.activePane, params: {top: 120,done:300}}">
                     <!--reset and confirm password -->
                         <custom-input controlType="password"
                                       type="password"
@@ -158,7 +159,7 @@
                                       errorMsg="to simple"
                                       placeholder="Enter new password"
                                       [required]="true"
-                                      [tabIndex]="state.password.index"
+                                      [tabIndex]="STATE.password.index"
                                       formControlName="resetPassword"></custom-input>
 
                         <custom-input controlType="password"
@@ -168,11 +169,11 @@
                                       errorMsg="not matching"
                                       placeholder="Confirm password"
                                       [required]="true"
-                                      [tabIndex]="state.password.index"
+                                      [tabIndex]="STATE.password.index"
                                       formControlName="confirmResetPassword"></custom-input>
                     </div>
 
-                    <div [@showPassword]="{value: state.activePane, params: {top: 80,done:180}}">
+                    <div [@showPassword]="{value: STATE.activePane, params: {top: 80,done:180}}">
 
                         <h2 >Password Changed!</h2>
                         <h4>Your password has been changed successfully.</h4>
@@ -187,10 +188,10 @@
                     <!--main action-->
                     <div style="margin: 20px 30px 15px 30px;">
                         <loading-button
-                                (submit)="secondScreenState()"
-                                [tabIndex]="(state.reset.index||state.password.index)?0:-1"
-                                [disabled]="state.resetForm.invalid">
-                            {{state.resetButton}}
+                                (submit)="resetPasswordScreen()"
+                                [tabIndex]="STATE.reset.index"
+                                [disabled]="STATE.resetForm.invalid">
+                            {{STATE.resetButton}}
                         </loading-button>
                     </div>
 
@@ -203,7 +204,7 @@
                                 style="margin-left: -5px;"
                                 [disableRipple]="true" tabindex="-1"
                                 tabIndex="-1"
-                                (click)="firstScreenState()">
+                                (click)="loginRegisterScreen()">
                             Sign In
                         </button>
                     </div>
@@ -215,17 +216,21 @@
         </div>
     </div>
 
-    <div>
+    <div class="d-flex flex-column">
 
-        <h1 mat-dialog-title style="margin-bottom: 11px;font-weight: bold">Sign Out</h1>
-        <h1 mat-dialog-title style="margin-bottom: 90px;font-weight: bold">Settings</h1>
-        <!--main action-->
-        <div style="margin: 20px 30px 15px 30px;">
-            <loading-button  (submit)="secondScreenState()">
-                LogOut
-            </loading-button>
-        </div>
+        <h1  [@hide]="{value: STATE.activePane, params: {delay:900}}" mat-dialog-title class="bold mb-2 d-block ">Welcome</h1>
 
+        <h1 mat-dialog-title class="bold d-block " style="min-height: 32px">{{user?.name.substr(0, user.name.indexOf('.'))}}</h1>
+
+        <span [@hide]="STATE.activePane" class="material-icons d-block d-flex justify-content-center mt-5" style="font-size: 12rem">account_circle</span>
+
+        <loading-button [@hide]="{value: STATE.activePane, params: {delay:1000}}" class="d-flex justify-content-center mt-auto"
+                        tabIndex="-1"
+                        (submit)="logOut()"
+                        [loading]="STATE.activePane!='logout'"
+                        [disabled]="STATE.activePane!='logout'">
+            Log Out
+        </loading-button>
     </div>
 
 </div>

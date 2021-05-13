@@ -13,9 +13,9 @@ export const loading = createAction('[USER] loading', props<{ loading }>());
 export const setMessage = createAction('[USER] set message',props<{ message }>());
 
 
-export const login = createAction('[USER] login', props<{ email, password }>());
-export const loginSuccess = createAction('[USER] login success', props<{ user: User }>());
+export const login  = createAction('[USER] login', props<{ email, password }>());
 export const logout = createAction('[USER] logout');
+export const loginSuccess = createAction('[USER] login success', props<{ user: User }>());
 
 export const register = createAction('[USER] register', props<{ email, password, confirmedPassword }>());
 

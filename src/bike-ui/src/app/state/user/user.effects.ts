@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {UserActions} from '../action-types';
-import {concatMap, shareReplay, catchError, delay} from 'rxjs/operators';
+import {concatMap, shareReplay, catchError, delay, tap} from 'rxjs/operators';
 import {Router} from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { User } from '../../login/login.model';
 import { of } from 'rxjs';
-import {Store} from "@ngrx/store";
+import { Store} from "@ngrx/store";
 import {UserState} from "./user.reducers";
 
 
@@ -66,7 +66,7 @@ export class UserEffects {
                             UserActions.loading({ loading: false}),
                             UserActions.switchScreen({ screen: 'registered' }),
                             UserActions.setMessage({message: null}))),
-                        catchError(({error: {message, user}}) => of(
+                        catchError(({error: {message}}) => of(
                             UserActions.loading({loading: false}),
                             UserActions.setMessage({message}))
                         )
@@ -76,5 +76,9 @@ export class UserEffects {
     );
 
 
-
+  logout$ = createEffect(() =>
+          this.actions$.pipe(
+              ofType(UserActions.logout),
+              concatMap(() => this.http.post('api/user/logout', null).pipe(tap(() => localStorage.clear())))
+          ), { dispatch: false });
 }
