@@ -24,6 +24,7 @@ import { RouterState, StoreRouterConnectingModule } from '@ngrx/router-store';
 import { environment } from '../environments/environment';
 import { metaReducers, reducers } from './state';
 import { UserEffects } from './state/user/user.effects';
+import {UserInfo} from "./resolver/UserInfo";
 
 
 @NgModule({

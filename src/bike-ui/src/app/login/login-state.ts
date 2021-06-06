@@ -28,6 +28,10 @@ export class State {
 
   get loginControls() { return this.loginForm.controls; }
   get resetControls() { return this.resetForm.controls; }
+  get resetPassword() {return this.resetControls.resetPassword.value}
+  get confirmedResetPassword() {return this.resetControls.confirmResetPassword.value}
+  get resetCode() {return Object.values(this.resetControls.resetCode.value).join('')}
+  get resetEmail() {return this.resetControls.resetEmail.value}
 
   public secondButton:   Button = 'Sign Up'
   public mainButton:     Button = 'Sign In';
@@ -115,11 +119,7 @@ export class State {
 
 
   public switchScreen(screen: LoginScreen) {
-    switch(screen) {
-      case 'test':{
-        this.activePane='test';
-break;
-      }
+    switch (screen) {
       case 'login': {
         this.onLogin();
 
@@ -192,7 +192,7 @@ break;
       case 'code': {
         this.onCode();
         this.activePane = 'code';
-        this.resetButton = 'Resend Email';
+        this.resetButton = this.resetControls.resetCode.valid ? 'Confirm' : 'Resend Email';
         this.resetControls.resetCode.enable();
 
 

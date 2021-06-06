@@ -35,7 +35,8 @@ CREATE SCHEMA SECURITY;
         username VARCHAR(50),
         password VARCHAR(100) NOT NULL,
         enabled BOOLEAN NOT NULL DEFAULT FALSE,
-        attempts SMALLINT NOT NULL DEFAULT 3
+        attempts SMALLINT NOT NULL DEFAULT 3,
+        activated BOOLEAN NOT NULL DEFAULT FALSE
     );
 
     CREATE TABLE AUTHORITIES (
@@ -54,9 +55,9 @@ CREATE SCHEMA SECURITY;
     CREATE UNIQUE INDEX IX_AUTH_USERS ON AUTHORITIES (email, authority);
 
 
-INSERT INTO USERS (username, password, email, enabled) VALUES ('Frank','{noop}Test123!','frank111@mail.de',true);
-INSERT INTO USERS (username,password,email, enabled) VALUES ('Peter','{noop}password','peterfff@mail.fr',true);
-INSERT INTO USERS (username, password, email, enabled) VALUES ('Manuel','{noop}bitcoin','man@gmail.de',false);
+INSERT INTO USERS (username, password, email, enabled,activated) VALUES ('Frank','{noop}Test123!','frank111@mail.de',true,false);
+INSERT INTO USERS (username,password,email, enabled,activated) VALUES ('Peter','{noop}password','peterfff@mail.fr',true,false);
+INSERT INTO USERS (username, password, email, enabled,activated) VALUES ('Manuel','{noop}bitcoin','man@gmail.de',false,false);
 
 INSERT INTO AUTHORITIES (email, authority) VALUES ('frank111@mail.de','ADMIN');
 INSERT INTO AUTHORITIES (email,authority) VALUES ('peterfff@mail.fr','USER');

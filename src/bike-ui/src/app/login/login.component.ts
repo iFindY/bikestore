@@ -1,11 +1,11 @@
-import {  ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { Observable, Subscription} from 'rxjs';
 import { UserState} from '../state/user/user.reducers';
 import { select, Store } from '@ngrx/store';
 import { MatDialogRef } from '@angular/material/dialog';
-import {delay, delayWhen, filter, skip, tap} from 'rxjs/operators';
-import {State} from "./login-state";
+import { delay, delayWhen, filter, skip, tap } from 'rxjs/operators';
+import { State} from "./login-state";
 import {
   LoginScreen,
   move,
@@ -24,9 +24,10 @@ import {getLoading,
   getUser} from '../state/user/user.selectors';
 
 import {
+  getResetCode,
   login, logout,
-  register, setMessage,
-  switchScreen
+  register, resetPassword, setMessage,
+  switchScreen, validateResetCode
 } from '../state/user/user.actions';
 
 
@@ -57,8 +58,7 @@ export class LoginComponent implements OnInit,OnDestroy {
   screen$: Observable<LoginScreen> = this.store.pipe(select(getScreen));
   message$: Observable<string> = this.store.pipe(select(getMessage));
   loggedIn$: Observable<User> = this.store.pipe(select(getUser), skip(1), filter(user => Boolean(user)));
-  user$: Observable<User> = this.store.pipe(select(getUser),tap(c=> console.log("user",c)));
-
+  user$: Observable<User> = this.store.pipe(select(getUser));
 
   ANIMATION_PARAMETER: number = 120;
   PASSWORD_PATTERN = /^(?=.*[A-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[&+,:;=?#$§"%&/()`!*'@])\S{6,12}$/;
@@ -144,7 +144,7 @@ export class LoginComponent implements OnInit,OnDestroy {
 
   loginRegisterScreen(screen?: LoginScreen) {
 
-        if (screen) {
+        if (screen) { // we set the screen or else  default to login register
            this.store.dispatch(switchScreen({ screen }))
         } else {
             switch (this.STATE.activePane) {
@@ -160,19 +160,16 @@ export class LoginComponent implements OnInit,OnDestroy {
     }
 
 
-    resetPasswordScreen(validCode?: FormGroup) {
+  resetPasswordScreen() {
 
-        switch (this.STATE.activePane) {
-            case 'reset':      this.store.dispatch(switchScreen({screen:'code'})); break;
-            case 'password':   this.store.dispatch(switchScreen({screen:'done'})); break;
-            case 'code':       if(validCode?.valid) this.store.dispatch(switchScreen({screen:'password'}));break;
-            case 'done':
-                this.store.dispatch(switchScreen({screen:'login'}));
-                this.STATE.resetForm.reset();
-        }
+     switch (this.STATE.activePane) {
 
-        // do some service stuff here, resend email again if missing ...
-    }
+         case 'reset':      this.store.dispatch(getResetCode({email     : this.STATE.resetEmail})); break;
+         case 'code':       this.store.dispatch(validateResetCode({code : this.STATE.resetCode, email: this.STATE.resetEmail})); break;
+         case 'password':   this.store.dispatch(resetPassword({email: this.STATE.resetEmail,newPassword : this.STATE.resetPassword,confirmedPassword: this.STATE.confirmedResetPassword})); break;
+         case 'done':       this.store.dispatch(switchScreen({screen    :'login'})); break;
+     }
+  }
 
 
     onInput(){
@@ -181,12 +178,6 @@ export class LoginComponent implements OnInit,OnDestroy {
         this.STATE.loginControls.password.updateValueAndValidity()
       }
     }
-
-
-    ngOnDestroy(): void {
-      this.subscriptions.unsubscribe()
-     if (this.STATE.activePane === 'logged-in') this.store.dispatch(switchScreen({screen: 'logout'}));
-    };
 
 
   private setResetMessage(message: string) {
@@ -201,6 +192,18 @@ export class LoginComponent implements OnInit,OnDestroy {
   logOut() {
     this.store.dispatch(logout());
   }
+
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe()
+
+    switch (this.STATE.activePane) {
+      case "logout"   :break;
+      case "logged-in":this.store.dispatch(switchScreen({screen: 'logout'}));break;
+      default         :this.store.dispatch(switchScreen({screen: 'login'}))
+    }
+
+  };
 }
 
 

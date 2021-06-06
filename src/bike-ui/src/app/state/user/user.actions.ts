@@ -1,5 +1,5 @@
 import {createAction, props} from '@ngrx/store';
-import { Settings, User } from '../../login/login.model';
+import { Settings, User} from '../../login/login.model';
 
 
 /**
@@ -7,7 +7,7 @@ import { Settings, User } from '../../login/login.model';
  * this can be typed with "USER"
  */
 export const switchScreen = createAction('[USER] switch screen', props<{ screen }>());
-export const hideScreen = createAction('[USER] hide screen');
+export const userStatus = createAction('[USER] status');
 
 export const loading = createAction('[USER] loading', props<{ loading }>());
 export const setMessage = createAction('[USER] set message',props<{ message }>());
@@ -21,6 +21,16 @@ export const register = createAction('[USER] register', props<{ email, password,
 
 export const cleanSettings = createAction('[USER] clean settings');
 export const setSettings = createAction('[USER] set settings', props<{ settings: Settings }>());
+
+export const getResetCode = createAction('[USER] create reset code',props<{email:string}>());
+export const getResetCodeSuccess = createAction('[USER] create reset code success');
+
+export const validateResetCode = createAction('[USER] validate reset code', props<{ code: string,email:string}>());
+export const validateResetCodeSuccess = createAction('[USER] validate reset code success');
+
+export const resetPassword = createAction('[USER] reset password', props<{ email, newPassword, confirmedPassword }>());
+export const resetPasswordSuccess = createAction('[USER] reset password success');
+
 
 export const clearState = createAction('[USER] clear state');
 

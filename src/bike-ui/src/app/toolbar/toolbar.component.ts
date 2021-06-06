@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import {MatDialog} from '@angular/material/dialog';
 import { LoginComponent } from '../login/login.component';
@@ -27,14 +27,15 @@ import { map } from 'rxjs/operators';
     )
   ]
 })
-export class ToolbarComponent  {
+export class ToolbarComponent {
 
   // just for testing
   clicked: string = 'out';
 
-  user$: Observable<string> = this.store.pipe(select(getUser), map(user => user?.name ? user.name : 'Login'));
+  user$: Observable<string> = this.store$.pipe(select(getUser), map(user => user?.username ? user.username : 'Login'));
 
-  constructor(public dialog: MatDialog,  private store: Store<UserState>) {};
+  constructor(public dialog: MatDialog,  private store$: Store<UserState>) {
+  };
 
 
   showLoginDialog() {

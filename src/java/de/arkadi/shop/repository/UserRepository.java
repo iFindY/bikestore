@@ -1,6 +1,7 @@
 package de.arkadi.shop.repository;
 
 
+import de.arkadi.shop.entity.Verification;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
@@ -20,6 +21,10 @@ public class UserRepository {
     @PersistenceContext
     private EntityManager em;
 
+
+    public Optional<User> findUserByVerification(@NotNull Verification verification) {
+        return findUserByMail(verification.getEmail());
+    }
 
     public Optional<User> findUserByMail(@NotNull String mail) {
         return getCurrentSession()

@@ -46,6 +46,9 @@ public class User {
     @Column(insertable = false)
     private Boolean enabled;
 
+    @Column(insertable = false)
+    private Boolean activated;
+
     @Column()
     private String username;
 
@@ -76,6 +79,18 @@ public class User {
     // =          Getters & Setters         =
     // ======================================
 
+
+    public boolean isActivated() {
+        return this.activated;
+    }
+
+    public void setActivated(boolean activated) {
+        this.activated = activated;
+    }
+
+    public void activate() {
+        this.activated = true;
+    }
 
     public boolean isLocked() {
         return attempts < 1;
@@ -116,6 +131,17 @@ public class User {
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
     }
+
+    public User enable() {
+        this.enabled = true;
+        this.increaseAttempts();
+        return this;
+    }
+
+    public void disable() {
+        this.enabled = false;
+    }
+
 
     public String getUsername() {
         return username;

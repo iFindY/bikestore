@@ -28,7 +28,7 @@
                                   [tabIndex]="STATE.login.index"
                                   [errorState]="message==null"
                                   formControlName="email"
-                                  (focus)="onInputFocus()"
+                                  (input)="onInput()"
                                   [@registered]="{value: STATE.activePane, params: {top:300}}">
                     </custom-input>
 
@@ -146,7 +146,7 @@
 
                     <!--verification code--> <!--remove cursor-->
                     <div  style="margin-top: 15px" [@showPassword]="{value: STATE.activePane, params: {top: 300,done:300}}">
-                        <code-input [tabIndex]="STATE.code.index" formControlName="resetCode" (confirmed)="resetPasswordScreen($event)"></code-input>
+                        <code-input [tabIndex]="STATE.code.index" formControlName="resetCode" (confirmed)="resetPasswordScreen()"></code-input>
                     </div>
 
 
@@ -220,7 +220,7 @@
 
         <h1  [@hide]="{value: STATE.activePane, params: {delay:900}}" mat-dialog-title class="bold mb-2 d-block ">Welcome</h1>
 
-        <h1 mat-dialog-title class="bold d-block " style="min-height: 32px">{{user?.name.substr(0, user.name.indexOf('.'))}}</h1>
+        <h1 mat-dialog-title class="bold d-block " style="min-height: 32px">{{user?.username?.substr(0, user.username.indexOf('.'))}}</h1>
 
         <span [@hide]="STATE.activePane" class="material-icons d-block d-flex justify-content-center mt-5" style="font-size: 12rem">account_circle</span>
 

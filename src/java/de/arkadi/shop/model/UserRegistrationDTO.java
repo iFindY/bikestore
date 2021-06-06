@@ -12,7 +12,7 @@ import de.arkadi.shop.validation.UniqueEmail;
 import de.arkadi.shop.validation.password.EqualPassword;
 
 @EqualPassword
-public class UserRegistrationDTO {
+public class UserRegistrationDTO implements ValidPassword {
 
 
     @NotEmpty(message="Please enter an email")
@@ -52,7 +52,7 @@ public class UserRegistrationDTO {
         return email;
     }
 
-    public String getPassword() {
+    public String getNewPassword() {
         return password;
     }
 

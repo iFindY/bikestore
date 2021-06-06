@@ -1,4 +1,4 @@
-package de.arkadi.shop.security.event;
+package de.arkadi.shop.security.event.verification;
 
 import org.springframework.context.ApplicationListener;
 import org.springframework.mail.SimpleMailMessage;
@@ -22,10 +22,10 @@ public class EmailVerificationListener implements ApplicationListener<UserRegist
     @Override
     public void onApplicationEvent(UserRegistrationEvent event) {
         String email = event.user.getEmail();
-        String verificationID= verificationService.createVerification(email);
+        String verificationID = verificationService.createVerification(email);
         SimpleMailMessage message = new SimpleMailMessage();
         message.setSubject("Verify your account");
-        message.setText("Account activation link : https://localhost:8443/api/user/verify/email?id="+verificationID);
+        message.setText("Account activation link : http://localhost:8080/api/user/register/verify/email?id="+verificationID);
         message.setTo(email);
         mailSender.send(message);
     }

@@ -1,17 +1,18 @@
 package de.arkadi.shop.validation.password;
 
+import de.arkadi.shop.model.ValidPassword;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import de.arkadi.shop.model.UserRegistrationDTO;
 
-public class EqualPasswordValidator implements ConstraintValidator<EqualPassword, UserRegistrationDTO> {
+public class EqualPasswordValidator implements ConstraintValidator<EqualPassword, ValidPassword> {
 
     @Override
     public void initialize(EqualPassword constraintAnnotation) {}
 
     @Override
-    public boolean isValid(UserRegistrationDTO value, ConstraintValidatorContext context) {
+    public boolean isValid(ValidPassword value, ConstraintValidatorContext context) {
 
-        return value.getPassword().equals(value.getConfirmedPassword());
+        return value.getNewPassword().equals(value.getConfirmedPassword());
     }
 }

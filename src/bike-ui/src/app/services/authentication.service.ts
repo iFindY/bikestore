@@ -5,7 +5,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from '../login/login.model';
 
 export const ANONYMOUS_USER: User = {
-  name: null,
+  username: null,
   roles: []
 };
 
@@ -16,7 +16,7 @@ export const ANONYMOUS_USER: User = {
 export class AuthenticationService {
 
   // need an initial value
-  subject = new BehaviorSubject<User>({ roles: null, name: 'Login' }); // wrong male it undefiend
+  subject = new BehaviorSubject<User>({ roles: null, username: 'Login' }); // wrong male it undefiend
   // when ever we subscribe we get always the last value, filter only invalid users
   user$: Observable<User> = this.subject.asObservable().pipe(filter(user => !!user));
   // derive from user observable, '!!' operator convert to boolean

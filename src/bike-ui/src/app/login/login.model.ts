@@ -9,13 +9,15 @@ import {
     trigger
 } from "@angular/animations";
 
-export type LoginScreen = 'login' | 'logged-in' | 'logout' | 'reset' | 'register' | 'registered' | 'code' | 'password' | 'done'| 'test';
+export type LoginScreen =
+    'login' | 'logged-in' | 'logout' | 'register' | 'registered' |
+    'reset' | 'code' | 'password' | 'done';
 
 
 
 export interface User {
-    name: string;
-    roles: string[];
+  username: string;
+  roles: string[];
 }
 
 

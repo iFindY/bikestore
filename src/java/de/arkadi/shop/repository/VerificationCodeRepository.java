@@ -44,8 +44,24 @@ public class VerificationCodeRepository {
     }
 
     public Verification save(@NotNull Verification verification) {
-        getCurrentSession().persist(verification);
-        return verification;
+        Optional<Verification> ent = findByEmail(verification.getEmail());
+
+        if (ent.isPresent()) {
+            ent.get().setCode(verification.getCode());
+            getCurrentSession().update(ent.get());
+            getCurrentSession().flush();
+            return ent.get();
+        } else {
+            getCurrentSession().persist(verification);
+            return verification;
+        }
+
+    }
+
+
+    public void delete(@NotNull Verification verification) {
+        getCurrentSession().delete(verification);
+
     }
 
     public void deleteByEmail(@NotNull String email) {

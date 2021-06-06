@@ -2,6 +2,7 @@ package de.arkadi.shop.security;
 
 
 
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,6 +25,8 @@ import de.arkadi.shop.security.details.CustomWebAuthenticationDetailsSource;
 import de.arkadi.shop.security.handler.CustomAuthenticationFailureHandler;
 import de.arkadi.shop.security.handler.CustomAuthenticationSuccessHandler;
 import de.arkadi.shop.security.userdetails.CustomUserDetailsChecker;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.stereotype.Service;
 
 /**
@@ -35,6 +38,19 @@ import org.springframework.stereotype.Service;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final AdditionalAuthenticationProvider authenticationProvider;
+    private final String[] notSecured = {
+        "/",
+        "/api/user/register/verify/email",
+        "/api/user/register",
+        "/api/user/verify/email",
+        "/api/user/reset",
+        "/api/user/reset/code/validate",
+        "/api/user/reset/password"};
+
+    private final String[]  entryPoints = {
+        "/api/auth/login",
+        "/api/user/register",
+        "/api/user/reset"};
 
 
 
@@ -95,23 +111,30 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .authenticationEntryPoint(getUnauthorizedEntryPoint()) // response if auth fail
             .accessDeniedHandler(getAccessDeniedHandler()); // if authenticated/valid user has not enough rights
 
+/*
         http.rememberMe() // save user to reenter username/password/pin but not two factor authorisation //TODO how does it work
                 .key("remembered")
                 .authenticationSuccessHandler(getAuthenticationSuccessHandler());
+*/
 
         http.logout()
             .logoutUrl("/api/auth/logout")
             .invalidateHttpSession(true)
-            .deleteCookies("x-auth-token", "XSRF-TOKEN");
+            .clearAuthentication(true)
+            .deleteCookies("x-auth-token", "XSRF-TOKEN") // XSRF-TOKEN  X-CSRF-TOKEN
+            .logoutSuccessHandler((request, response, authentication) -> response.setStatus(HttpServletResponse.SC_OK)); // remove default redirect
 
         http.authorizeRequests()
             // the request equals "/" as allowed for all
-            .antMatchers("/", "/api/user/register", "/api/user/verify/email").permitAll()
+            .antMatchers(notSecured).permitAll()
             // any request which has not ben intercepted previously, has to be authenticated
             .anyRequest().authenticated();
 
+
         http.csrf()
-            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+            .ignoringAntMatchers(entryPoints) // do not check csrf on this urls but add them
+            .csrfTokenRepository(csrfTokenRepository());
+
 
         http.headers()
             .contentSecurityPolicy("script-src 'self'");
@@ -172,7 +195,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return new AccessDeniedHandlerImpl();
     }
 
-    private CustomUsernamePasswordAuthenticationFilter authenticationFilter() throws Exception {
+    @Bean
+    public CustomUsernamePasswordAuthenticationFilter authenticationFilter() throws Exception {
         CustomUsernamePasswordAuthenticationFilter filter = new CustomUsernamePasswordAuthenticationFilter();
         filter.setAuthenticationManager(authenticationManagerBean());
         filter.setAuthenticationSuccessHandler(getAuthenticationSuccessHandler());
@@ -180,6 +204,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         filter.setAuthenticationDetailsSource(new CustomWebAuthenticationDetailsSource());
         filter.setFilterProcessesUrl("/api/auth/login");
         return filter;
+    }
+
+
+    @Bean
+    public CsrfTokenRepository csrfTokenRepository(){
+        return  CookieCsrfTokenRepository.withHttpOnlyFalse();
     }
 
 }
