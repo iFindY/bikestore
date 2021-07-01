@@ -34,7 +34,7 @@ public class UserService {
     public User registerNewUser(UserRegistrationDTO user) {
 
         String email = user.getEmail(),
-            password = user.getNewPassword();
+            password = user.getPassword();
 
         User newUser = anUser()
             .withEmail(email)
@@ -48,7 +48,7 @@ public class UserService {
     @Transactional
     public void resetPassword(ResetPasswordDTO passwordDTO) {
         String email = passwordDTO.getEmail(),
-            password = passwordDTO.getNewPassword();
+            password = passwordDTO.getPassword();
 
         userRepository
             .findUserByMail(email)

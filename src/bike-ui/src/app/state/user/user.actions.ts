@@ -9,7 +9,7 @@ import { Settings, User} from '../../login/login.model';
 export const switchScreen = createAction('[USER] switch screen', props<{ screen }>());
 export const userStatus = createAction('[USER] status');
 
-export const loading = createAction('[USER] loading', props<{ loading }>());
+export const loading = createAction('[USER] loading', props<{ loading: { login: boolean, reset: boolean } }>());
 export const setMessage = createAction('[USER] set message',props<{ message }>());
 
 
@@ -28,7 +28,7 @@ export const getResetCodeSuccess = createAction('[USER] create reset code succes
 export const validateResetCode = createAction('[USER] validate reset code', props<{ code: string,email:string}>());
 export const validateResetCodeSuccess = createAction('[USER] validate reset code success');
 
-export const resetPassword = createAction('[USER] reset password', props<{ email, newPassword, confirmedPassword }>());
+export const resetPassword = createAction('[USER] reset password', props<{ email, password, confirmedPassword }>());
 export const resetPasswordSuccess = createAction('[USER] reset password success');
 
 

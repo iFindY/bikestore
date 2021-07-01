@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import { Observable, Subscription} from 'rxjs';
 import { UserState} from '../state/user/user.reducers';
 import { select, Store } from '@ngrx/store';
@@ -51,10 +51,11 @@ export class LoginComponent implements OnInit,OnDestroy {
   STATE: State;
   user :User;
 
-  openingClosing = val => this.dialogRef.disableClose = val;
+  openingClosing = ({login,reset}) => this.dialogRef.disableClose = login || reset;
 
 
-  loading$: Observable<boolean> = this.store.pipe(select(getLoading),tap(this.openingClosing));
+
+  loading$: Observable<{ login:boolean,reset:boolean }> = this.store.pipe(select(getLoading),tap(this.openingClosing));
   screen$: Observable<LoginScreen> = this.store.pipe(select(getScreen));
   message$: Observable<string> = this.store.pipe(select(getMessage));
   loggedIn$: Observable<User> = this.store.pipe(select(getUser), skip(1), filter(user => Boolean(user)));
@@ -94,8 +95,8 @@ export class LoginComponent implements OnInit,OnDestroy {
 
         const reset = fb.group(
             {
-                resetEmail:             [null, [Validators.pattern(this.MAIL_PATTERN)]],
-                resetCode:               null,
+                resetEmail:             ["arkadi.daschkewitsch@gmail.com", [Validators.pattern(this.MAIL_PATTERN)]],
+                resetCode:              new FormControl(""),
                 resetPassword:          [null, [Validators.pattern(this.PASSWORD_PATTERN)]],
                 confirmResetPassword:   [null, [Validators.pattern(this.PASSWORD_PATTERN)]]
             },
@@ -111,12 +112,12 @@ export class LoginComponent implements OnInit,OnDestroy {
 
   ngOnInit(): void {
     this.subscriptions
-      .add(this.screen$.subscribe( screen                           => this.STATE.switchScreen(screen)))
-      .add(this.loading$.subscribe(ldg                              => this.STATE.loading(ldg)))
-      .add(this.message$.subscribe(message                          => this.setResetMessage(message)))
-      .add(this.user$.pipe(delayWhen(delayOnNull)).subscribe(user   => this.user = user))
-      .add(this.loggedIn$.pipe(delay(2000)).subscribe(()    => this.dialogRef.close()))
-      .add(this.STATE.loginControls.email.valueChanges.subscribe(() => this.store.dispatch(setMessage(null))))
+    .add(this.screen$.subscribe( screen                           => this.STATE.switchScreen(screen)))
+    .add(this.loading$.subscribe(ldg                              => this.STATE.loading(ldg)))
+    .add(this.message$.subscribe(message                          => this.setResetMessage(message)))
+    .add(this.user$.pipe(delayWhen(delayOnNull)).subscribe(user   => this.user = user))
+    .add(this.loggedIn$.pipe(delay(2000)).subscribe(()    => this.dialogRef.close()))
+    .add(this.STATE.loginControls.email.valueChanges.subscribe(() => this.store.dispatch(setMessage(null))));
 
     this.STATE.resetControls.resetCode.disable();
     this.STATE.resetControls.resetPassword.disable();
@@ -124,40 +125,47 @@ export class LoginComponent implements OnInit,OnDestroy {
   }
 
 
-
   onLoginSubmit() {
     this.STATE.loginForm.markAllAsTouched();
 
-    const email             = this.STATE.loginControls.email.value,
-          password          = this.STATE.loginControls.password.value,
-          confirmedPassword = this.STATE.loginControls.confirmPassword.value;
+    const email = this.STATE.loginControls.email.value,
+        password = this.STATE.loginControls.password.value,
+        confirmedPassword = this.STATE.loginControls.confirmPassword.value;
 
     switch (this.STATE.activePane) {
-        case "login"        : this.store.dispatch(login({email, password})); break;
-        case "register"     : this.store.dispatch(register({email, password, confirmedPassword})); break;
-        case "registered"   : this.store.dispatch(switchScreen({screen: 'login'})); break;
+      case "login"        :
+        this.store.dispatch(login({email, password}));
+        break;
+      case "register"     :
+        this.store.dispatch(register({email, password: password, confirmedPassword}));
+        break;
+      case "registered"   :
+        this.store.dispatch(switchScreen({screen: 'login'}));
+        break;
     }
-    }
-
-
+  }
 
 
   loginRegisterScreen(screen?: LoginScreen) {
 
-        if (screen) { // we set the screen or else  default to login register
-           this.store.dispatch(switchScreen({ screen }))
-        } else {
-            switch (this.STATE.activePane) {
-                case 'reset':
-                case 'password':
-                case 'register':
-                case 'code':
-                case 'done':
-                case 'registered' : this.store.dispatch(switchScreen({ screen: 'login' })); break;
-                case 'login': this.store.dispatch(switchScreen({screen:'register'})); break;
-            }
-        }
+    if (screen) { // we set the screen or else  default to login register
+      this.store.dispatch(switchScreen({screen}))
+    } else {
+      switch (this.STATE.activePane) {
+        case 'reset':
+        case 'password':
+        case 'register':
+        case 'code':
+        case 'done':
+        case 'registered' :
+          this.store.dispatch(switchScreen({screen: 'login'}));
+          break;
+        case 'login':
+          this.store.dispatch(switchScreen({screen: 'register'}));
+          break;
+      }
     }
+  }
 
 
   resetPasswordScreen() {
@@ -166,7 +174,7 @@ export class LoginComponent implements OnInit,OnDestroy {
 
          case 'reset':      this.store.dispatch(getResetCode({email     : this.STATE.resetEmail})); break;
          case 'code':       this.store.dispatch(validateResetCode({code : this.STATE.resetCode, email: this.STATE.resetEmail})); break;
-         case 'password':   this.store.dispatch(resetPassword({email: this.STATE.resetEmail,newPassword : this.STATE.resetPassword,confirmedPassword: this.STATE.confirmedResetPassword})); break;
+         case 'password':   this.store.dispatch(resetPassword( this.getResetPassword())); break;
          case 'done':       this.store.dispatch(switchScreen({screen    :'login'})); break;
      }
   }
@@ -202,8 +210,18 @@ export class LoginComponent implements OnInit,OnDestroy {
       case "logged-in":this.store.dispatch(switchScreen({screen: 'logout'}));break;
       default         :this.store.dispatch(switchScreen({screen: 'login'}))
     }
-
   };
+
+    // ------ HELPER ------ //
+
+  getResetPassword = () => ({
+    email: this.STATE.resetEmail,
+    password : this.STATE.resetPassword,
+    confirmedPassword: this.STATE.confirmedResetPassword});
+
+  logEvent($event: Boolean) {
+    console.log("populatedLOGIN::"+$event);
+  }
 }
 
 

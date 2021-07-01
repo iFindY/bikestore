@@ -1,12 +1,12 @@
 package de.arkadi.shop.controller.user;
 
-import static de.arkadi.shop.controller.response.model.Message.MessageBuilder.aMessage;
-import static de.arkadi.shop.controller.response.model.Type.*;
+import static de.arkadi.shop.controller.response.Message.MessageBuilder.aMessage;
+import static de.arkadi.shop.controller.response.Type.*;
 import static java.util.Map.of;
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.ResponseEntity.*;
 
-import de.arkadi.shop.controller.response.model.Message;
+import de.arkadi.shop.controller.response.Message;
 import de.arkadi.shop.model.UserRegistrationDTO;
 import de.arkadi.shop.repository.UserRepository;
 import de.arkadi.shop.security.event.verification.UserRegistrationEvent;

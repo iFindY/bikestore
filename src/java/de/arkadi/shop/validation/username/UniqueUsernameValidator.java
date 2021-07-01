@@ -1,4 +1,4 @@
-package de.arkadi.shop.validation;
+package de.arkadi.shop.validation.username;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

@@ -18,10 +18,14 @@ import javax.validation.Payload;
 @Constraint(validatedBy = {EqualPasswordValidator.class})
 public @interface EqualPassword {
 
-    String message() default "password not equal";
+    String field_1() default "password";
+    String field_2() default "confirmedPassword";
 
-    Class<?>[] groups() default {};
+    //String message() default "given fields's {field1} and {field2} do not match";
+    String message() default "given fields's do not match";
 
-    Class<? extends Payload>[] payload() default {};
+    Class<?>[] groups() default {}; // Add to rest api group
+
+    Class<? extends Payload>[] payload()  default {}; // default error type
 
 }

@@ -34,22 +34,22 @@
 
                     <!--password-->
                     <custom-input class="d-block"
-                                  controlType="password" [@registered]="{value: STATE.activePane, params: {top:300}}"
+                                  controlType="password"
                                   label="Password"
                                   icon="visibility"
                                   errorMsg="to simple"
                                   placeholder="Ex. Pa$$word!195"
-                                  [hintVisible]="STATE.activePane=='register'"
-                                  [errorVisible]="STATE.activePane==='register'"
+                                  [hintVisible]="STATE.activePane =='register'"
+                                  [errorVisible]="STATE.activePane === 'register'"
                                   [required]="true"
                                   [tabIndex]="STATE.login.index"
+                                  formControlName="password"
                                   (input)="onInput()"
-                                  formControlName="password">
+                                  [@registered]="{value: STATE.activePane, params: {top:300}}">
                     </custom-input>
 
                     <!--confirm password-->
-                    <custom-input [@registered]="{value: STATE.activePane, params: {top:300}}"
-                                  class="d-block"
+                    <custom-input class="d-block"
                                   controlType="password"
                                   label="Verify Password"
                                   icon="visibility"
@@ -59,8 +59,9 @@
                                   [errorVisible]="STATE.activePane==='register'"
                                   [required]="true"
                                   [tabIndex]="STATE.register.index"
+                                  formControlName="confirmPassword"
                                   (input)="onInput()"
-                                  formControlName="confirmPassword">
+                                  [@registered]="{value: STATE.activePane, params: {top:300}}">
                     </custom-input>
 
                     <div style="margin-top: 12px" [@registered]="{value: STATE.activePane, params: {top:120}}">
@@ -94,8 +95,9 @@
                     <loading-button
                             color="primary"
                             type="submit"
-                            [loading]="loading$ | async"
-                            [disabled]="STATE.loginForm.invalid || (loading$ | async)">
+                            [tabIndex]="STATE.login.index"
+                            [loading]="(loading$ | async).login "
+                            [disabled]="STATE.loginForm.invalid || (loading$ | async).login">
                         {{STATE.mainButton}}
                     </loading-button>
                 </div>
@@ -145,8 +147,12 @@
                     </div>
 
                     <!--verification code--> <!--remove cursor-->
-                    <div  style="margin-top: 15px" [@showPassword]="{value: STATE.activePane, params: {top: 300,done:300}}">
-                        <code-input [tabIndex]="STATE.code.index" formControlName="resetCode" (confirmed)="resetPasswordScreen()"></code-input>
+                    <div style="margin-top: 15px" [@showPassword]="{value: STATE.activePane, params: {top: 300, done:300}}">
+                        <code-input
+                            [tabIndex]="STATE.code.index"
+                            [formControlName]="'resetCode'"
+                            (populated)="logEvent($event)">
+                        </code-input>
                     </div>
 
 
@@ -188,10 +194,13 @@
                     <!--main action-->
                     <div style="margin: 20px 30px 15px 30px;">
                         <loading-button
-                                (submit)="resetPasswordScreen()"
-                                [tabIndex]="STATE.reset.index"
-                                [disabled]="STATE.resetForm.invalid">
-                            {{STATE.resetButton}}
+                            type="submit"
+                            color="primary"
+                            (submit)="resetPasswordScreen()"
+                            [tabIndex]="STATE.reset.index"
+                            [disabled]="STATE.resetForm.invalid || (loading$|async).reset"
+                            [loading]="(loading$|async).reset">
+                        {{STATE.resetButton}}
                         </loading-button>
                     </div>
 

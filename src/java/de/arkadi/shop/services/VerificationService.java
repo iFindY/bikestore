@@ -2,6 +2,7 @@ package de.arkadi.shop.services;
 
 import static de.arkadi.shop.entity.Verification.*;
 
+import de.arkadi.shop.controller.exception.ValidationException;
 import de.arkadi.shop.entity.User;
 import de.arkadi.shop.model.CodeValidationDTO;
 import de.arkadi.shop.repository.UserRepository;
@@ -29,12 +30,14 @@ public class VerificationService {
     public void verifyResetCode(CodeValidationDTO codeValidationDTO){
         Predicate<Verification> validCode = v -> v.getCode().equals(codeValidationDTO.getCode());
 
-       verificationRepository.findByEmail(codeValidationDTO.getEmail())
-           .filter(validCode)
-           .flatMap(userRepository::findUserByVerification)
-           .map(User::enable)
-           .map(User::getEmail)
-           .ifPresent(verificationRepository::deleteByEmail);
+        String email = verificationRepository.findByEmail(codeValidationDTO.getEmail())
+            .filter(validCode)
+            .flatMap(userRepository::findUserByVerification)
+            .map(User::enable)
+            .map(User::getEmail)
+            .orElseThrow(ValidationException::new);
+
+        verificationRepository.deleteByEmail(email);
     }
 
 

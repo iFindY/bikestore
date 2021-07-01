@@ -1,17 +1,16 @@
 package de.arkadi.shop.model;
 
 
-
-import java.util.Base64;
+import de.arkadi.shop.validation.common.Severity;
+import de.arkadi.shop.validation.password.PasswordPolicy;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import com.fasterxml.jackson.annotation.JsonSetter;
-import de.arkadi.shop.validation.PasswordPolicy;
-import de.arkadi.shop.validation.UniqueEmail;
+import de.arkadi.shop.validation.email.UniqueEmail;
 import de.arkadi.shop.validation.password.EqualPassword;
 
-@EqualPassword
+@EqualPassword(payload = Severity.Error.class)
 public class UserRegistrationDTO implements ValidPassword {
 
 
@@ -33,32 +32,19 @@ public class UserRegistrationDTO implements ValidPassword {
         this.email = email;
     }
 
-    @JsonSetter("password")
-    public void setPassword(String password) {
-        this.password = password;
-
-    }
-
-    @JsonSetter("confirmedPassword")
-    public void setConfirmedPassword(String confirmedPassword) {
-        this.confirmedPassword = confirmedPassword;
-    }
-
-    private String decode(String base64){
-        return new String (Base64.getDecoder().decode(base64.getBytes()));
-    }
 
     public String getEmail() {
         return email;
     }
 
-    public String getNewPassword() {
+    @Override
+    public String getPassword() {
         return password;
     }
 
+    @Override
     public String getConfirmedPassword() {
         return confirmedPassword;
     }
-
 }
 

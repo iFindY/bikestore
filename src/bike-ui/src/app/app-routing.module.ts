@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from './login/login.component';
-import {AppComponent} from "./app.component";
-import {UserInfo} from "./resolver/UserInfo";
 
 const routes: Routes = [
    // { path: '', component: AppComponent, resolve: {info : UserInfo}}, testing

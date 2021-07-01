@@ -1,4 +1,4 @@
-package de.arkadi.shop.controller.response.model;
+package de.arkadi.shop.controller.response;
 
 import java.util.Set;
 

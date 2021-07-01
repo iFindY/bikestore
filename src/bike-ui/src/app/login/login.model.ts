@@ -14,6 +14,8 @@ export type LoginScreen =
     'reset' | 'code' | 'password' | 'done';
 
 
+export type LoginWindow = 'login' | 'reset' | 'logout';
+
 
 export interface User {
   username: string;

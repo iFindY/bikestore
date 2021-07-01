@@ -1,5 +1,6 @@
-package de.arkadi.shop.validation;
+package de.arkadi.shop.validation.password;
 
+import de.arkadi.shop.validation.password.PasswordPolicy;
 import java.util.ArrayList;
 import java.util.List;
 

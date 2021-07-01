@@ -4,6 +4,7 @@ package de.arkadi.shop.controller.user;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.ResponseEntity.status;
 
+import de.arkadi.shop.controller.response.DefaultResponse;
 import de.arkadi.shop.model.CodeValidationDTO;
 import de.arkadi.shop.model.ResetPasswordDTO;
 import de.arkadi.shop.services.UserService;
@@ -49,7 +50,7 @@ public class RestPasswordController {
   }
 
   @PostMapping("/password")
-  public ResponseEntity<Void> resetPassword(@RequestBody @Valid ResetPasswordDTO reset) {
+  public ResponseEntity<DefaultResponse> resetPassword(@RequestBody @Valid ResetPasswordDTO reset) {
 
     userService.resetPassword(reset);
 

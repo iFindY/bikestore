@@ -1,4 +1,4 @@
-package de.arkadi.shop.validation;
+package de.arkadi.shop.validation.email;
 
 import javax.validation.ConstraintValidator;
 

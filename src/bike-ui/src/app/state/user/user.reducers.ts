@@ -10,7 +10,7 @@ export interface UserState {
     user: User
     settings: Settings
     screen: LoginScreen
-    loading:boolean
+    loading:{login:boolean,reset:boolean}
     message:string
 }
 
@@ -18,7 +18,7 @@ export const initialUserState: UserState = {
     user: undefined,
     settings:undefined,
     screen: 'login',
-    loading: false,
+    loading: {login:false,reset:false},
     message:undefined
 }
 

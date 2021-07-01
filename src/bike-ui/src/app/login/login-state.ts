@@ -1,4 +1,4 @@
-import {LoginScreen} from "./login.model";
+import {LoginScreen, LoginWindow} from "./login.model";
 import {AbstractControl, FormGroup} from "@angular/forms";
 import {MatDialogRef} from "@angular/material/dialog";
 import {LoginComponent} from "./login.component";
@@ -19,7 +19,7 @@ export class State {
 
   public logout    = {index: -1}
 
-
+  public activeWindow : LoginWindow = 'login';
   public activePane: LoginScreen = 'login';
 
   public loginForm: FormGroup;
@@ -122,7 +122,7 @@ export class State {
     switch (screen) {
       case 'login': {
         this.onLogin();
-
+        this.activeWindow="login"
         this.activePane='login';
         this.mainButton = 'Sign In'
         this.secondButton = 'Sign Up';
@@ -192,7 +192,6 @@ export class State {
       case 'code': {
         this.onCode();
         this.activePane = 'code';
-        this.resetButton = this.resetControls.resetCode.valid ? 'Confirm' : 'Resend Email';
         this.resetControls.resetCode.enable();
 
 
@@ -239,9 +238,9 @@ export class State {
     this.resetForm.markAsPristine();
   }
 
-  public loading(loading: boolean) {
+  public loading({login, reset}) {
 
-    if (loading) {
+    if (login || reset) {
 
       { // cache enabled controls
         const loginControls = Object
@@ -249,7 +248,7 @@ export class State {
         .filter(x => x.enabled);
 
         const resetControls = Object
-        .values(this.loginForm.controls)
+        .values(this.resetForm.controls)
         .filter(x => x.enabled);
 
         this.enabledControls.push(...loginControls, ...resetControls)

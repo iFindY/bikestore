@@ -1,11 +1,11 @@
 package de.arkadi.shop.controller.user;
 
-import static de.arkadi.shop.controller.response.model.Message.MessageBuilder.aMessage;
+import static de.arkadi.shop.controller.response.Message.MessageBuilder.aMessage;
 import static java.util.stream.Collectors.toSet;
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.ResponseEntity.*;
 
-import de.arkadi.shop.controller.response.model.Message;
+import de.arkadi.shop.controller.response.Message;
 import de.arkadi.shop.model.UserDTO;
 import de.arkadi.shop.security.handler.CustomAuthenticationSuccessHandler;
 import java.util.Set;

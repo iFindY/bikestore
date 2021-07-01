@@ -1,4 +1,4 @@
-package de.arkadi.shop.validation;
+package de.arkadi.shop.validation.password;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -13,7 +13,7 @@ import javax.validation.Payload;
 @Constraint(validatedBy = PasswordPolicyValidator.class)
 public @interface PasswordPolicy {
 
-    String message() default "Password is not valid";
+    String message() default "password is to simple";
 
     Class<?>[] groups() default {};
 
