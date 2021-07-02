@@ -88,7 +88,6 @@ export class UserEffects {
   get_reset$ = createEffect(() =>
       this.actions$.pipe(
           ofType(UserActions.getResetCode),
-         throttleTime(1000),
           concatMap(({email}) => {
             this.store$.dispatch(UserActions.loading({loading: {login: false, reset: true}}));
 
@@ -116,7 +115,8 @@ export class UserEffects {
                     UserActions.loading({loading: {login: false, reset: false}}))),
                 catchError(({error: {message}}) => of(
                     UserActions.setMessage({message}),
-                    UserActions.loading({loading: {login: false, reset: false}}))))}))
+                    UserActions.loading({loading: {login: false, reset: false}}))),
+                delay(1500))}))
   );
 
 
@@ -134,7 +134,8 @@ export class UserEffects {
                     UserActions.loading({loading: {login: false, reset: false}}))),
                 catchError(({error: {message}}) => of(
                     UserActions.setMessage({message}),
-                    UserActions.loading({loading: {login: false, reset: false}}))))}))
+                    UserActions.loading({loading: {login: false, reset: false}}))),
+                delay(1500))}))
   );
 
 

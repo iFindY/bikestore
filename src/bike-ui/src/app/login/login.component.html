@@ -150,8 +150,7 @@
                     <div style="margin-top: 15px" [@showPassword]="{value: STATE.activePane, params: {top: 300, done:300}}">
                         <code-input
                             [tabIndex]="STATE.code.index"
-                            [formControlName]="'resetCode'"
-                            (populated)="logEvent($event)">
+                            [formControlName]="'resetCode'">
                         </code-input>
                     </div>
 
@@ -198,7 +197,7 @@
                             color="primary"
                             (submit)="resetPasswordScreen()"
                             [tabIndex]="STATE.reset.index"
-                            [disabled]="STATE.resetForm.invalid || (loading$|async).reset"
+                            [disabled]="rpBtnValidation || (loading$|async).reset"
                             [loading]="(loading$|async).reset">
                         {{STATE.resetButton}}
                         </loading-button>

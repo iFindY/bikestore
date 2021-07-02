@@ -129,6 +129,7 @@ export class State {
         this.help = 'Dont have an account?';
 
         this.resetForm.reset();
+        this.resetForm.markAsUntouched();
         this.resetForm.disable();
 
         this.loginControls.email.enable();
@@ -175,14 +176,14 @@ export class State {
       }
       case 'reset': {
         this.onReset();
-        this.loginForm.disable();
         this.loginForm.reset();
+        this.loginForm.markAsUntouched();
+        this.loginForm.disable();
 
         this.activePane = 'reset';
         this.resetButton = 'Send Email';
 
         this.resetControls.resetEmail.enable();
-        this.resetControls.resetEmail.setErrors(null);
 
         this.resetControls.resetCode.disable();
         this.resetControls.resetPassword.disable();
