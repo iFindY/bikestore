@@ -6,6 +6,15 @@
 }
 :host{
     -webkit-appearance: none;
+
+    &:focus {
+        outline: transparent;
+    }
+
+    .button-container:focus {
+        outline: transparent;
+    }
+
 }
 
 button {
@@ -24,8 +33,4 @@ button {
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.hide-text{
-
 }

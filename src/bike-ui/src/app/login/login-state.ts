@@ -2,11 +2,13 @@ import {LoginScreen, LoginWindow} from "./login.model";
 import {AbstractControl, FormGroup} from "@angular/forms";
 import {MatDialogRef} from "@angular/material/dialog";
 import {LoginComponent} from "./login.component";
+import {Subject, Subscription} from "rxjs";
+import {OnDestroy} from "@angular/core";
 
 type Button = 'Sign In' | 'Sign Up'| 'Return';
 
 
-export class State {
+export class State  implements OnDestroy{
 
   public login     = {index: -1}
   public register  = {index: -1}
@@ -28,24 +30,32 @@ export class State {
 
   get loginControls() { return this.loginForm.controls; }
   get resetControls() { return this.resetForm.controls; }
+  get resetCodeControl() { return this.resetForm.controls.resetCode; }
   get resetPassword() {return this.resetControls.resetPassword.value}
   get confirmedResetPassword() {return this.resetControls.confirmResetPassword.value}
   get resetCode() {return Object.values(this.resetControls.resetCode.value).join('')}
   get resetEmail() {return this.resetControls.resetEmail.value}
 
+  public  resetBtn: string [] = ['Send Email', 'Resend Email', 'Confirm Code', 'Change Password', 'Return'];
+  public  loginBtn: Button [] = ['Sign In','Sign Up', 'Return'];
+
+
   public secondButton:   Button = 'Sign Up'
   public mainButton:     Button = 'Sign In';
   public resetButton:    string = 'Send Email';
   public help: string = 'Dont have an account?';
+  private subscription: Subscription = new Subscription();
 
   private dialogRef: MatDialogRef<LoginComponent>;
 
   constructor(loginForm: FormGroup,
               resetForm:FormGroup,
-              dialogRef: MatDialogRef<LoginComponent>) {
+              dialogRef: MatDialogRef<LoginComponent>){
     this.loginForm = loginForm;
     this.resetForm = resetForm;
     this.dialogRef = dialogRef;
+    this.subscription.add(this.resetCodeControl.statusChanges.subscribe(s=>this.onCodeInput(s)))
+
   }
 
   onLogin() {
@@ -72,7 +82,6 @@ export class State {
     this.code.index     = -1;
     this.password.index = -1;
   };
-
   onRegister() {
     this.login.index    =  0;
     this.logout.index   = -1;
@@ -81,7 +90,6 @@ export class State {
     this.code.index     = -1;
     this.password.index = -1;
   };
-
   onReset() {
     this.login.index    = -1;
     this.logout.index   = -1;
@@ -90,7 +98,6 @@ export class State {
     this.code.index     = -1;
     this.password.index = -1;
   };
-
   onCode() {
     this.login.index    = -1;
     this.logout.index   = -1;
@@ -99,7 +106,6 @@ export class State {
     this.code.index     =  0;
     this.password.index = -1;
   };
-
   onPassword() {
     this.login.index    = -1;
     this.logout.index   = -1;
@@ -118,13 +124,26 @@ export class State {
   };
 
 
+  onCodeInput(valid: string) {
+    if (this.activePane == 'code') {
+
+      valid == 'INVALID'?
+          this.resetButton = 'Resend Email':
+          this.resetButton = 'Confirm Code';
+
+    } else if (this.activePane == 'password') {
+      this.resetButton = 'Change Password';
+
+    }
+  }
+
   public switchScreen(screen: LoginScreen) {
     switch (screen) {
       case 'login': {
         this.onLogin();
         this.activeWindow="login"
         this.activePane='login';
-        this.mainButton = 'Sign In'
+        this.mainButton = this.loginBtn[0];
         this.secondButton = 'Sign Up';
         this.help = 'Dont have an account?';
 
@@ -181,7 +200,7 @@ export class State {
         this.loginForm.disable();
 
         this.activePane = 'reset';
-        this.resetButton = 'Send Email';
+        this.resetButton = this.resetBtn[0];
 
         this.resetControls.resetEmail.enable();
 
@@ -194,7 +213,7 @@ export class State {
         this.onCode();
         this.activePane = 'code';
         this.resetControls.resetCode.enable();
-
+        this.resetButton = this.resetBtn[1];
 
         this.resetControls.resetPassword.disable();
         this.resetControls.confirmResetPassword.disable();
@@ -203,13 +222,12 @@ export class State {
       case 'password': {
         this.onPassword();
         this.activePane = 'password';
-        this.resetButton = 'Change Password';
+        this.resetButton =  this.resetBtn[3];
+
+        this.resetForm.markAsUntouched();
 
         this.resetControls.resetPassword.enable();
         this.resetControls.confirmResetPassword.enable();
-
-        this.resetControls.resetPassword.setErrors(null);
-        this.resetControls.confirmResetPassword.setErrors(null);
 
         this.resetControls.resetEmail.disable();
         this.resetControls.resetCode.disable();
@@ -218,7 +236,7 @@ export class State {
       case 'done': {
         this.onDone();
         this.activePane = 'done';
-        this.resetButton = 'Return';
+        this.resetButton = this.resetBtn[4];
 
         this.resetControls.resetPassword.disable();
         this.resetControls.confirmResetPassword.disable();
@@ -236,7 +254,9 @@ export class State {
     }
 
     this.loginForm.markAsPristine();
+    this.loginForm.markAsUntouched();
     this.resetForm.markAsPristine();
+    this.resetForm.markAsUntouched();
   }
 
   public loading({login, reset}) {
@@ -266,6 +286,10 @@ export class State {
       this.enabledControls = [];
     }
 
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
 

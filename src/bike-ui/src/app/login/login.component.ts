@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, Validators} from '@angular/forms';
 import { Observable, Subscription} from 'rxjs';
 import { UserState} from '../state/user/user.reducers';
 import { select, Store } from '@ngrx/store';
@@ -29,7 +29,6 @@ import {
   register, resetPassword, setMessage,
   switchScreen, validateResetCode
 } from '../state/user/user.actions';
-import {UserActions} from "../state/action-types";
 
 
 
@@ -96,8 +95,8 @@ export class LoginComponent implements OnInit,OnDestroy {
 
         const reset = fb.group(
             {
-                resetEmail:             ["arkadi.daschkewitsch@gmail.com", [Validators.pattern(this.MAIL_PATTERN)]],
-                resetCode:              '',
+                resetEmail:             [null, [Validators.pattern(this.MAIL_PATTERN)]],
+                resetCode:              [],
                 resetPassword:          [null, [Validators.pattern(this.PASSWORD_PATTERN)]],
                 confirmResetPassword:   [null, [Validators.pattern(this.PASSWORD_PATTERN)]]
             },
@@ -170,13 +169,26 @@ export class LoginComponent implements OnInit,OnDestroy {
 
   resetPasswordScreen() {
 
-     switch (this.STATE.activePane) {
+    switch (this.STATE.activePane) {
 
-         case 'reset':      this.store.dispatch(getResetCode({email     : this.STATE.resetEmail})); break;
-         case 'code' :this.store.dispatch(validateResetCode({code : this.STATE.resetCode, email: this.STATE.resetEmail}));break;
-         case 'password':this.store.dispatch(resetPassword( this.getResetPassword()));break;
-         case 'done':       this.store.dispatch(switchScreen({screen    :'login'})); break;
-     }
+      case 'reset':
+        this.store.dispatch(getResetCode({email: this.STATE.resetEmail}));
+        break;
+
+      case 'code' :
+        this.STATE.resetControls.resetCode.valid ?
+            this.store.dispatch(validateResetCode({code: this.STATE.resetCode, email: this.STATE.resetEmail})) :
+            this.store.dispatch(getResetCode({email: this.STATE.resetEmail}));
+        break;
+
+      case 'password':
+        this.store.dispatch(resetPassword(this.getResetPassword()));
+        break;
+
+      case 'done':
+        this.store.dispatch(switchScreen({screen: 'login'}));
+        break;
+    }
   }
 
 
@@ -213,21 +225,6 @@ export class LoginComponent implements OnInit,OnDestroy {
   };
 
 
-  get rpBtnValidation(): boolean {
-
-    if (this.STATE.resetControls.resetCode.enabled && this.STATE.resetControls.resetCode.invalid) {
-      this.STATE.resetButton = 'Resend Email'
-      return false;
-    } else if (this.STATE.activePane=='reset' && this.STATE.resetControls.resetCode.valid) {
-      this.STATE.resetButton = 'Confirm Code';
-      return false;
-    } else if(this.STATE.activePane=='password' ){
-      this.STATE.resetButton = 'Change Password';
-      return this.STATE.resetForm.invalid;
-    }else {
-      return this.STATE.resetForm.invalid;
-    }
-  }
 
 
     // ------ HELPER ------ //
@@ -236,6 +233,14 @@ export class LoginComponent implements OnInit,OnDestroy {
     email: this.STATE.resetEmail,
     password : this.STATE.resetPassword,
     confirmedPassword: this.STATE.confirmedResetPassword});
+
+
+  get rpBtnValidation(): boolean {
+
+    return this.STATE.resetCodeControl.enabled ?
+        false :
+        this.STATE.resetCodeControl.invalid
+  }
 
 
 }
