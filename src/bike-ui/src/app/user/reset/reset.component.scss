@@ -1,0 +1,15 @@
+.small-button {
+  padding: 0;
+  line-height: 16px;
+  background-color: transparent;
+  transition: color 0.5s ease-in;
+
+  .mat-button-focus-overlay {
+    background-color: transparent;
+  }
+
+
+}
+:host {
+  width: 17.938rem
+}

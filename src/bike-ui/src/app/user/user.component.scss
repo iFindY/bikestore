@@ -1,0 +1,24 @@
+
+:host { /* this element as app-user */
+    display: block;
+    overflow: hidden; /* Hide everything that doesn't fit component, without scroll */
+
+}
+
+.panes {
+    height: 100%;
+    width: 300%;      /* Make the parent element to take up twice of the component's width */
+    /* display: flex;    Align all children in a row */
+    /*  div { flex: 1; }  Evenly divide width between children */
+}
+
+::ng-deep .user-modal-dialog .mat-dialog-container { /* define modal dialog size */
+    display: block;
+    border-radius: 30px;
+    width: 21rem;
+    min-height: 590px;
+    max-height: 590px;
+    overflow: hidden;
+}
+
+

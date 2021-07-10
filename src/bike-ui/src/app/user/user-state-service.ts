@@ -1,14 +1,14 @@
-import {LoginScreen, LoginWindow} from "./login.model";
+import {Button, LoginScreen, LoginWindow} from "./user.model";
 import {AbstractControl, FormGroup} from "@angular/forms";
 import {MatDialogRef} from "@angular/material/dialog";
-import {LoginComponent} from "./login.component";
+import {UserComponent} from "./user.component";
 import {Subject, Subscription} from "rxjs";
-import {OnDestroy} from "@angular/core";
-
-type Button = 'Sign In' | 'Sign Up'| 'Return';
+import {Injectable, OnDestroy} from "@angular/core";
 
 
-export class State  implements OnDestroy{
+
+@Injectable()
+export class StateService implements OnDestroy{
 
   public login     = {index: -1}
   public register  = {index: -1}
@@ -25,8 +25,18 @@ export class State  implements OnDestroy{
   public activePane: LoginScreen = 'login';
 
   public loginForm: FormGroup;
-  public resetForm: FormGroup;
+  public _resetForm: FormGroup;
   private  enabledControls: AbstractControl[] = [];
+
+   set resetForm(resetForm: FormGroup) {
+    this._resetForm = resetForm;
+    this.subscription.add(this.resetCodeControl.statusChanges.subscribe(s => this.onCodeInput(s)))
+  }
+
+  get resetForm(): FormGroup {
+    return this._resetForm
+  }
+
 
   get loginControls() { return this.loginForm.controls; }
   get resetControls() { return this.resetForm.controls; }
@@ -46,16 +56,8 @@ export class State  implements OnDestroy{
   public help: string = 'Dont have an account?';
   private subscription: Subscription = new Subscription();
 
-  private dialogRef: MatDialogRef<LoginComponent>;
 
-  constructor(loginForm: FormGroup,
-              resetForm:FormGroup,
-              dialogRef: MatDialogRef<LoginComponent>){
-    this.loginForm = loginForm;
-    this.resetForm = resetForm;
-    this.dialogRef = dialogRef;
-    this.subscription.add(this.resetCodeControl.statusChanges.subscribe(s=>this.onCodeInput(s)))
-
+  constructor(){
   }
 
   onLogin() {
@@ -181,7 +183,6 @@ export class State  implements OnDestroy{
         this.help = 'Already registered?';
 
         this.loginControls.confirmPassword.enable();
-        this.loginControls.confirmPassword.setErrors(null);
         break;
       }
       case 'registered': {

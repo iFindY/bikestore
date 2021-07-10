@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import { UserActions } from '../action-types';
-import { LoginScreen, Settings, User } from '../../login/login.model';
+import { LoginScreen, Settings, User } from '../../user/user.model';
 
 /**
  * reducer defines application state object.

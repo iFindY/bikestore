@@ -1,0 +1,76 @@
+/*width is set by user css which distribute all components equally */
+
+:host {
+  width: 17.938rem
+}
+
+#forgot-password {
+  font-size: 11px;
+}
+
+#register {
+  font-size: 14px;
+}
+
+
+#forgot-password, #register {
+  line-height: 12px;
+  transition: color 0.5s ease-in;
+
+  &:hover:enabled {
+    color: dodgerblue;
+    transition: color 0.5s ease;
+  }
+
+  ::ng-deep .mat-button-focus-overlay {
+    background-color: transparent;
+  }
+}
+
+.circle {
+  transition: opacity 0.5s ease-in-out;
+  width: 90px;
+  transform: translateY(35%);
+  margin-top: -25px;
+}
+
+.mat-dialog-content {
+  padding: 0 8px
+}
+
+.header-2 {
+  margin-bottom: 5rem
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.ml-pss-container {
+  height: 9.313rem;
+}
+
+
+.sign-in-up-container {
+  margin: 5px 30px 10px 30px;
+}
+
+.main-btn-container {
+  margin: 22px 30px 15px 30px;
+}
+
+.forgot-pss-btn-container {
+  text-align: right;
+  margin-right: 40px;
+  margin-top: -22px;
+
+  .mat-button{
+    height: 14px
+  }
+}
+
+.acc-created-container {
+  margin-top: 12px;
+  padding: 0 1rem;
+}
+

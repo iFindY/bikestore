@@ -1,5 +1,5 @@
 import {createAction, props} from '@ngrx/store';
-import { Settings, User} from '../../login/login.model';
+import { Settings, User} from '../../user/user.model';
 
 
 /**

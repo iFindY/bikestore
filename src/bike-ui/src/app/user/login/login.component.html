@@ -1,0 +1,113 @@
+<div id="login-dialog" class="overflow-hidden">
+  <h1 mat-dialog-title class="mb-2" [ngClass]="{'bold': state.activePane==='login'}" >Sign In</h1>
+  <h1 mat-dialog-title class="header-2" [ngClass]="{'bold': state.activePane==='register'|| state.activePane==='registered'}">Sign Up</h1>
+
+  <div class="collapse" [ngClass]="{ 'd-flex justify-content-center visible': state.activePane ==='logged-in'}">
+    <img class="w-50 h-50" alt="logo" src="../../../assets/images/check-circle.gif"/>
+  </div>
+
+  <div mat-dialog-content
+       class="text-center position-relative"
+       [ngStyle]="{'visibility': state.activePane ==='logged-in'? 'hidden':'visible'}">
+
+    <form [formGroup]="state.loginForm" (ngSubmit)="onLoginSubmit()" autocomplete="on" novalidate>
+
+      <div class="overflow-hidden ml-pss-container"  [@move]="state.activePane">
+        <!--email-->
+        <custom-input class="d-block"
+                      type="email"
+                      label="Email"
+                      icon="account_circle"
+                      [errorMsg]="message"
+                      placeholder="Ex. peter@gmail.com"
+                      [required]="true"
+                      [tabIndex]="state.login.index"
+                      formControlName="email"
+                      (input)="onInput()"
+                      [@registered]="{value: state.activePane, params: {top:300}}">
+        </custom-input>
+
+        <!--password-->
+        <custom-input class="d-block"
+                      controlType="password"
+                      label="Password"
+                      icon="visibility"
+                      errorMsg="to simple"
+                      placeholder="Ex. Pa$$word!195"
+                      [hintVisible]="state.activePane =='register'"
+                      [errorVisible]="state.activePane === 'register'"
+                      [required]="true"
+                      [tabIndex]="state.login.index"
+                      formControlName="password"
+                      (input)="onInput()"
+                      [@registered]="{value: state.activePane, params: {top:300}}">
+        </custom-input>
+
+        <!--confirm password-->
+        <custom-input class="d-block"
+                      controlType="password"
+                      label="Verify Password"
+                      icon="visibility"
+                      errorMsg="not matching"
+                      placeholder="matching"
+                      [hintVisible]="state.activePane==='register' && state.loginControls.confirmPassword.valid"
+                      [errorVisible]="state.activePane==='register'"
+                      [required]="true"
+                      [tabIndex]="state.register.index"
+                      formControlName="confirmPassword"
+                      (input)="onInput()"
+                      [@registered]="{value: state.activePane, params: {top:300}}">
+        </custom-input>
+
+        <div class="acc-created-container" [@registered]="{value: state.activePane, params: {top:120}}">
+          <h2 >Account Created!</h2>
+          <h4 >Please check your mailbox for an activation link.</h4>
+          <img class="circle" alt="logo" src="../../../assets/images/check-circle.gif"/>
+        </div>
+
+      </div>
+
+      <!--forgot password button -->
+      <div class="forgot-pss-btn-container">
+        <button mat-button [ngStyle]="{'visibility': resetButtonVisible ? 'visible':'collapse'}"
+                type="button"
+                id="forgot-password"
+                (click)="loginRegisterScreen('reset')"
+                tabIndex="-1"
+                [disableRipple]="true">
+          forgot password ?
+        </button>
+      </div>
+
+
+        <!--main action button-->
+        <loading-button
+            class="main-btn-container d-block"
+            color="primary"
+            type="submit"
+            [tabIndex]="state.login.index"
+            [loading]="(loading$ | async).login "
+            [disabled]="state.loginForm.invalid || (loading$ | async).login">
+          {{state.mainButton}}
+        </loading-button>
+
+
+      <div class="sign-in-up-container" [@moveText]="state.activePane">
+
+        <div>{{state.help}}</div>
+
+        <!--switch screen button -->
+        <button mat-button
+                class="p-1"
+                type="button"
+                id="register"
+                [disableRipple]="true"
+                (click)="loginRegisterScreen()"
+                tabindex="-1">
+          {{state.secondButton}}
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>

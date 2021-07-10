@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { filter, map, shareReplay, tap } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { User } from '../login/login.model';
+import { User } from '../user/user.model';
 
 export const ANONYMOUS_USER: User = {
   username: null,

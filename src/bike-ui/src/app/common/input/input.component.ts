@@ -83,7 +83,7 @@ export class InputComponent implements ControlValueAccessor, OnInit, OnDestroy {
     @Input() label: string;
     @Input() icon: string;
     @Input() controlType = 'text';
-
+    @Input() matAutocomplete = "auto"; // TODO implement autocomplete
     @Input() set errorState(err){
         this._cState.next(err);
         this.stateChanges.next();

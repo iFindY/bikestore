@@ -4,7 +4,7 @@ import {UserActions} from '../action-types';
 import {concatMap, shareReplay, catchError, delay, tap, throttleTime} from 'rxjs/operators';
 import {Router} from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { User } from '../../login/login.model';
+import { User } from '../../user/user.model';
 import { of } from 'rxjs';
 import { Store} from "@ngrx/store";
 import {UserState} from "./user.reducers";

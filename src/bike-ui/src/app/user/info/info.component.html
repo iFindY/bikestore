@@ -1,0 +1,17 @@
+<div class="d-flex flex-column" id="logout-dialog">
+
+  <h1 mat-dialog-title [@hide]="{value: state.activePane, params: {delay:900}}" class="bold mb-2 d-block">Welcome</h1>
+
+  <h1 mat-dialog-title class="bold d-block" style="min-height: 32px">{{user?.username?.substr(0, user.username.indexOf('.'))}}</h1>
+
+  <span [@hide]="state.activePane" class="material-icons d-block d-flex justify-content-center mt-5 mb-4" style="font-size: 12rem">account_circle</span>
+
+  <loading-button class="d-flex justify-content-center mt-auto"
+                  tabIndex="-1"
+                  [@hide]="{value: state.activePane, params: {delay:1000}}"
+                  (submit)="logOut()"
+                  [loading]="state.activePane!='logout'"
+                  [disabled]="state.activePane!='logout'">
+    Log Out
+  </loading-button>
+</div>

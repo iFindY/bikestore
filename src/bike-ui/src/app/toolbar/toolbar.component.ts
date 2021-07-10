@@ -1,7 +1,7 @@
 import {Component, OnDestroy} from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import {MatDialog} from '@angular/material/dialog';
-import { LoginComponent } from '../login/login.component';
+import { UserComponent } from '../user/user.component';
 import { Observable } from 'rxjs';
 import { select, Store } from '@ngrx/store';
 import { UserState } from '../state/user/user.reducers';
@@ -39,7 +39,7 @@ export class ToolbarComponent {
 
 
   showLoginDialog() {
-    this.dialog.open(LoginComponent,{ autoFocus: false });
+    this.dialog.open(UserComponent,{ autoFocus: false, panelClass: 'user-modal-dialog' });
   }
 
 
