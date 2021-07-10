@@ -3,12 +3,12 @@ import {FormBuilder, Validators} from "@angular/forms";
 import {select, Store} from "@ngrx/store";
 import {UserState} from "../../state/user/user.reducers";
 import {StateService} from "../user-state-service";
-import {LoginScreen, mustMatch} from "../user.model";
+import {UserScreen, mustMatch} from "../user.model";
 import {getResetCode, resetPassword, switchScreen, validateResetCode}
   from "../../state/user/user.actions";
 import {Observable} from "rxjs";
 import {getLoading} from "../../state/user/user.selectors";
-import {moveResetDigits, showPassword} from "../user-animations";
+import {moveResetDigits, showPassword} from "./reset.animations";
 
 @Component({
   selector: 'app-reset',
@@ -73,7 +73,7 @@ export class ResetComponent implements OnInit {
   }
 
 
-  loginRegisterScreen(screen?: LoginScreen) {
+  loginRegisterScreen(screen?: UserScreen) {
 
     if (screen) { // we set the screen or else  default to login register
       this.store.dispatch(switchScreen({screen}))

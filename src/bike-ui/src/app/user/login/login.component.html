@@ -1,4 +1,4 @@
-<div id="login-dialog" class="overflow-hidden">
+<div id="login-dialog" class="overflow-hidden" [@login-register]="state.activePane">
   <h1 mat-dialog-title class="mb-2" [ngClass]="{'bold': state.activePane==='login'}" >Sign In</h1>
   <h1 mat-dialog-title class="header-2" [ngClass]="{'bold': state.activePane==='register'|| state.activePane==='registered'}">Sign Up</h1>
 

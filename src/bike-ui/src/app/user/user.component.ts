@@ -6,10 +6,10 @@ import {select, Store} from '@ngrx/store';
 import {MatDialogRef} from '@angular/material/dialog';
 import {delay, filter, skip, tap} from 'rxjs/operators';
 import {StateService} from "./user-state-service";
-import {LoginScreen, User,} from './user.model';
+import {UserScreen, User,} from './user.model';
 import {getLoading, getScreen, getUser} from '../state/user/user.selectors';
 import {login, logout, switchScreen,} from '../state/user/user.actions';
-import {slide} from "./user-animations";
+import {slide} from "./user.animations";
 
 
 @Component({
@@ -24,7 +24,7 @@ export class UserComponent implements OnInit, OnDestroy {
   private openingClosing = ({login, reset}) => this.dialogRef.disableClose = login || reset;
 
   private loading$: Observable<{ login: boolean, reset: boolean }> = this.store.pipe(select(getLoading), tap(this.openingClosing));
-  private screen$: Observable<LoginScreen> = this.store.pipe(select(getScreen));
+  private screen$: Observable<UserScreen> = this.store.pipe(select(getScreen));
   private loggedIn$: Observable<User> = this.store.pipe(select(getUser), skip(1), filter(user => Boolean(user)));
 
   subscriptions: Subscription = new Subscription();

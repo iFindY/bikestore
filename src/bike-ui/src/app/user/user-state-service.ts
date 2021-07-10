@@ -1,4 +1,4 @@
-import {Button, LoginScreen, LoginWindow} from "./user.model";
+import {Button, UserScreen, LoginWindow} from "./user.model";
 import {AbstractControl, FormGroup} from "@angular/forms";
 import {MatDialogRef} from "@angular/material/dialog";
 import {UserComponent} from "./user.component";
@@ -22,7 +22,7 @@ export class StateService implements OnDestroy{
   public logout    = {index: -1}
 
   public activeWindow : LoginWindow = 'login';
-  public activePane: LoginScreen = 'login';
+  public activePane: UserScreen = 'login';
 
   public loginForm: FormGroup;
   public _resetForm: FormGroup;
@@ -139,7 +139,7 @@ export class StateService implements OnDestroy{
     }
   }
 
-  public switchScreen(screen: LoginScreen) {
+  public switchScreen(screen: UserScreen) {
     switch (screen) {
       case 'login': {
         this.onLogin();

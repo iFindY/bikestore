@@ -1,19 +1,19 @@
 import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {select, Store} from "@ngrx/store";
-import {LoginScreen, mustMatch} from "../user.model";
+import {mustMatch, UserScreen} from "../user.model";
 import {Observable, Subscription} from "rxjs";
 import {getLoading, getMessage} from "../../state/user/user.selectors";
 import {login, register, switchScreen} from "../../state/user/user.actions";
 import {StateService} from "../user-state-service";
 import {UserState} from "../../state/user/user.reducers";
-import {move, moveText, registered} from "./login.animations";
+import {move, moveText, registered,loginRegister} from "./login.animations";
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
-  animations: [move, moveText, registered]
+  animations: [move, moveText, registered, loginRegister]
 })
 export class LoginComponent implements OnInit, OnDestroy {
 
@@ -49,7 +49,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
 
-  loginRegisterScreen(screen?: LoginScreen) {
+  loginRegisterScreen(screen?: UserScreen) {
 
     if (screen) { // we set the screen or else  default to login register
       this.store.dispatch(switchScreen({screen}))
@@ -124,5 +124,10 @@ export class LoginComponent implements OnInit, OnDestroy {
   get resetButtonVisible ():boolean{
     return ['login','register'].includes(this.state.activePane);
   }
+
+
+
+
+
 
 }

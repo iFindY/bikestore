@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import { UserActions } from '../action-types';
-import { LoginScreen, Settings, User } from '../../user/user.model';
+import { UserScreen, Settings, User } from '../../user/user.model';
 
 /**
  * reducer defines application state object.
@@ -9,7 +9,7 @@ import { LoginScreen, Settings, User } from '../../user/user.model';
 export interface UserState {
     user: User
     settings: Settings
-    screen: LoginScreen
+    screen: UserScreen
     loading:{login:boolean,reset:boolean}
     message:string
 }

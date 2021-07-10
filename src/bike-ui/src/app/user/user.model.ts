@@ -1,5 +1,5 @@
 
-export type LoginScreen =
+export type UserScreen =
     'login' | 'logged-in' | 'logout' | 'register' | 'registered' |
     'reset' | 'code' | 'password' | 'done';
 
@@ -25,17 +25,15 @@ export interface Settings {
 
 // == == == == functions
 
-// custom validator to confirmed that two fields match
-import { FormGroup, ValidatorFn} from "@angular/forms";
-import {interval, of} from "rxjs";
 
+// custom validator to confirmed that two fields match
 export function mustMatch(controlName: string, matchingControlName: string) {
     return (formGroup: FormGroup) => {
 
         const control = formGroup.controls[controlName],
             matchingControl = formGroup.controls[matchingControlName];
 
-        // fierds must be enabled, skip validation
+        // fields must be enabled, skip validation
         if (control.disabled || matchingControl.disabled) return;
 
         // return if another validator has already found an error on the matchingControl
@@ -49,7 +47,15 @@ export function mustMatch(controlName: string, matchingControlName: string) {
 }
 
 
-export function conditionalValidator(activePane: LoginScreen, validators: ValidatorFn | ValidatorFn[]): ValidatorFn {
+
+
+
+// custom validator to confirmed that two fields match
+import {FormGroup, ValidatorFn} from "@angular/forms";
+
+
+// currently not used
+export function conditionalValidator(activePane: UserScreen, validators: ValidatorFn | ValidatorFn[]): ValidatorFn {
     return (control) => {
 
         if (activePane!=='register') return null;
@@ -63,8 +69,3 @@ export function conditionalValidator(activePane: LoginScreen, validators: Valida
 
     };
 }
-
-
- export const delayOnNull = val => (val == null) ? interval(1000) : of(val);
-
-
