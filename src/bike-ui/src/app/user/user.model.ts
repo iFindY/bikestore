@@ -37,11 +37,11 @@ export function mustMatch(controlName: string, matchingControlName: string) {
         if (control.disabled || matchingControl.disabled) return;
 
         // return if another validator has already found an error on the matchingControl
-        if (matchingControl.errors && !matchingControl.errors.mustMatch) return;
+        if (matchingControl.errors && !matchingControl.errors?.mustMatch) return;
 
         // set error on matchingControl if validation fails
         control.value !== matchingControl.value?
-            matchingControl.setErrors({ mustMatch: true }):
+            matchingControl.setErrors({ mustMatch: 'not matching' }):
             matchingControl.setErrors(null);
     }
 }

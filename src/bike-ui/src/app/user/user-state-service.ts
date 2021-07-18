@@ -1,17 +1,16 @@
 import {Button, UserScreen, LoginWindow} from "./user.model";
 import {AbstractControl, FormGroup} from "@angular/forms";
-import {MatDialogRef} from "@angular/material/dialog";
-import {UserComponent} from "./user.component";
-import {Subject, Subscription} from "rxjs";
+import {BehaviorSubject, Subscription} from "rxjs";
 import {Injectable, OnDestroy} from "@angular/core";
+import {AppValidators} from "../common/validation/validator";
 
 
 
 @Injectable()
 export class StateService implements OnDestroy{
 
-  public login     = {index: -1}
-  public register  = {index: -1}
+  public login      = {index: -1}
+  public register   = {index: -1}
   public registered = {index: -1}
 
   public reset     = {index: -1}
@@ -21,45 +20,47 @@ export class StateService implements OnDestroy{
 
   public logout    = {index: -1}
 
-  public activeWindow : LoginWindow = 'login';
-  public activePane: UserScreen = 'login';
+
+  public activeWindowSubject: BehaviorSubject<LoginWindow> = new BehaviorSubject<LoginWindow>('login');
+  public activePaneSubject: BehaviorSubject<UserScreen> = new BehaviorSubject<UserScreen>('login');
 
   public loginForm: FormGroup;
   public _resetForm: FormGroup;
   private  enabledControls: AbstractControl[] = [];
 
-   set resetForm(resetForm: FormGroup) {
+
+
+  set resetForm(resetForm: FormGroup) {
     this._resetForm = resetForm;
     this.subscription.add(this.resetCodeControl.statusChanges.subscribe(s => this.onCodeInput(s)))
   }
+  get loginControls() { return this.loginForm.controls; }
+  get loginPassword() { return this.loginForm.controls.password; }
+  get loginConfirmPassword() { return this.loginForm.controls.confirmPassword; }
+  get loginEmail() { return this.loginForm.controls.email; }
 
+  get resetControls() { return this.resetForm.controls; }
+  get resetCodeControl() { return this.resetForm.controls.resetCode; }
+  get resetPassword() {return this.resetControls.resetPassword}
+  get resetCode() {return Object.values(this.resetControls.resetCode.value).join('')}
+  get resetEmail() {return this.resetControls.resetEmail.value}
+  get confirmedResetPassword() {return this.resetControls.confirmResetPassword}
   get resetForm(): FormGroup {
     return this._resetForm
   }
 
-
-  get loginControls() { return this.loginForm.controls; }
-  get resetControls() { return this.resetForm.controls; }
-  get resetCodeControl() { return this.resetForm.controls.resetCode; }
-  get resetPassword() {return this.resetControls.resetPassword.value}
-  get confirmedResetPassword() {return this.resetControls.confirmResetPassword.value}
-  get resetCode() {return Object.values(this.resetControls.resetCode.value).join('')}
-  get resetEmail() {return this.resetControls.resetEmail.value}
-
   public  resetBtn: string [] = ['Send Email', 'Resend Email', 'Confirm Code', 'Change Password', 'Return'];
   public  loginBtn: Button [] = ['Sign In','Sign Up', 'Return'];
 
-
-  public secondButton:   Button = 'Sign Up'
-  public mainButton:     Button = 'Sign In';
-  public resetButton:    string = 'Send Email';
+  public mainButton:     Button = this.loginBtn[0];
+  public secondButton:   Button = this.loginBtn[1];
+  public resetButton:    string = this.resetBtn[0];
   public help: string = 'Dont have an account?';
   private subscription: Subscription = new Subscription();
 
+  constructor() {
 
-  constructor(){
   }
-
   onLogin() {
     this.login.index    =  0;
     this.logout.index   = -1;
@@ -78,7 +79,7 @@ export class StateService implements OnDestroy{
   };
   onLogout() {
     this.login.index    = -1;
-    this.logout.index   = -1;
+    this.logout.index   =  1;
     this.register.index = -1;
     this.reset.index    = -1;
     this.code.index     = -1;
@@ -127,13 +128,13 @@ export class StateService implements OnDestroy{
 
 
   onCodeInput(valid: string) {
-    if (this.activePane == 'code') {
+    if (this.activePaneSubject.value == 'code') {
 
       valid == 'INVALID'?
           this.resetButton = 'Resend Email':
           this.resetButton = 'Confirm Code';
 
-    } else if (this.activePane == 'password') {
+    } else if (this.activePaneSubject.value == 'password') {
       this.resetButton = 'Change Password';
 
     }
@@ -143,8 +144,8 @@ export class StateService implements OnDestroy{
     switch (screen) {
       case 'login': {
         this.onLogin();
-        this.activeWindow="login"
-        this.activePane='login';
+        this.activeWindowSubject.next('login')
+        this.activePaneSubject.next('login');
         this.mainButton = this.loginBtn[0];
         this.secondButton = 'Sign Up';
         this.help = 'Dont have an account?';
@@ -155,17 +156,18 @@ export class StateService implements OnDestroy{
 
         this.loginControls.email.enable();
         this.loginControls.password.enable();
+        this.loginControls.password.clearValidators();
+        this.loginControls.password.setValidators([AppValidators.required])
         this.loginControls.confirmPassword.disable();
-
-        this.loginControls.email.setErrors(null);
-        this.loginControls.password.setErrors(null);
-        this.loginControls.confirmPassword.setErrors(null);
+        this.loginForm.updateValueAndValidity();
+        this.resetForm.markAsPristine();
+        this.resetForm.markAsUntouched();
 
         break;
       }
       case 'logged-in': {
         this.onLongedIn();
-        this.activePane='logged-in';
+        this.activePaneSubject.next('logged-in');
 
         this.resetForm.reset();
         this.resetForm.disable();
@@ -176,18 +178,22 @@ export class StateService implements OnDestroy{
       }
       case 'register': {
         this.onRegister();
-        this.activePane='register';
+        this.activePaneSubject.next('register');
 
         this.mainButton = 'Sign Up'
         this.secondButton = 'Sign In';
         this.help = 'Already registered?';
 
+        this.loginControls.password.clearValidators();
+        this.loginControls.password.setValidators(AppValidators.validatePassword);
+        this.loginControls.password.updateValueAndValidity();
         this.loginControls.confirmPassword.enable();
+        this.loginForm.markAsUntouched();
         break;
       }
       case 'registered': {
         this.onDone();
-        this.activePane = 'registered';
+        this.activePaneSubject.next('registered');
         this.mainButton = 'Return'
 
         this.loginControls.password.disable();
@@ -195,12 +201,13 @@ export class StateService implements OnDestroy{
         break;
       }
       case 'reset': {
+        this.activeWindowSubject.next('reset')
         this.onReset();
         this.loginForm.reset();
         this.loginForm.markAsUntouched();
         this.loginForm.disable();
 
-        this.activePane = 'reset';
+        this.activePaneSubject.next('reset');
         this.resetButton = this.resetBtn[0];
 
         this.resetControls.resetEmail.enable();
@@ -208,11 +215,15 @@ export class StateService implements OnDestroy{
         this.resetControls.resetCode.disable();
         this.resetControls.resetPassword.disable();
         this.resetControls.confirmResetPassword.disable();
+
+        this.loginForm.markAsPristine();
+        this.loginForm.markAsUntouched();
+
         break;
       }
       case 'code': {
         this.onCode();
-        this.activePane = 'code';
+        this.activePaneSubject.next('code');
         this.resetControls.resetCode.enable();
         this.resetButton = this.resetBtn[1];
 
@@ -222,7 +233,7 @@ export class StateService implements OnDestroy{
       }
       case 'password': {
         this.onPassword();
-        this.activePane = 'password';
+        this.activePaneSubject.next('password');
         this.resetButton =  this.resetBtn[3];
 
         this.resetForm.markAsUntouched();
@@ -236,7 +247,7 @@ export class StateService implements OnDestroy{
       }
       case 'done': {
         this.onDone();
-        this.activePane = 'done';
+        this.activePaneSubject.next('done');
         this.resetButton = this.resetBtn[4];
 
         this.resetControls.resetPassword.disable();
@@ -245,8 +256,9 @@ export class StateService implements OnDestroy{
       }
       case 'logout':
       default: {
+        this.activeWindowSubject.next('logout');
         this.onLogout();
-        this.activePane = 'logout';
+        this.activePaneSubject.next('logout');
         this.resetButton = 'Return';
 
         this.loginControls.email.disable();
@@ -254,10 +266,6 @@ export class StateService implements OnDestroy{
       }
     }
 
-    this.loginForm.markAsPristine();
-    this.loginForm.markAsUntouched();
-    this.resetForm.markAsPristine();
-    this.resetForm.markAsUntouched();
   }
 
   public loading({login, reset}) {
@@ -292,7 +300,6 @@ export class StateService implements OnDestroy{
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
-
 
 }
 

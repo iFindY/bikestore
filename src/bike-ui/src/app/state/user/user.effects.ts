@@ -1,18 +1,17 @@
 import {Injectable} from '@angular/core';
 import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {UserActions} from '../action-types';
-import {concatMap, shareReplay, catchError, delay, tap, throttleTime} from 'rxjs/operators';
+import {concatMap, shareReplay, catchError, delay, tap, timeout, timeoutWith} from 'rxjs/operators';
 import {Router} from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { User } from '../../user/user.model';
-import { of } from 'rxjs';
+import {of, throwError} from 'rxjs';
 import { Store} from "@ngrx/store";
 import {UserState} from "./user.reducers";
 
 
 @Injectable()
 export class UserEffects {
-
 
     constructor(private actions$: Actions,
                 private router: Router,
@@ -37,13 +36,14 @@ export class UserEffects {
                 return this.http.post<User>('api/auth/login', null, { headers: headers })
                     .pipe(
                         shareReplay(),
+                        timeoutWith(5000, throwError({error: new Error("server time out")})),
                         concatMap(({ username, roles }) => of(
                             UserActions.loading({loading: {login: false, reset: false}}),
                             UserActions.loginSuccess({ user: { username, roles } }),
                             UserActions.switchScreen({ screen: 'logged-in' }))),
-                        catchError(({statusText}) => of(
+                        catchError(({error: {message}}) => of(
                             UserActions.loading({loading: {login: false, reset: false}}),
-                            UserActions.setMessage({message: statusText}))),
+                            UserActions.setMessage({message}))),
                         delay(1500))}))
     );
 

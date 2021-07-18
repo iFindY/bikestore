@@ -1,4 +1,10 @@
-import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
 import {FormBuilder} from "@angular/forms";
 import {select, Store} from "@ngrx/store";
 import {UserState} from "../../state/user/user.reducers";
@@ -14,6 +20,7 @@ import {hide} from "./info.animations";
   selector: 'app-info',
   templateUrl: './info.component.html',
   styleUrls: ['./info.component.scss'],
+  changeDetection:ChangeDetectionStrategy.Default,
   animations: [hide]
 })
 export class InfoComponent implements OnInit, OnDestroy {

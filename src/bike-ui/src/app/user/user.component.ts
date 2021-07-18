@@ -42,17 +42,13 @@ export class UserComponent implements OnInit, OnDestroy {
     .add(this.screen$.subscribe(screen => this.state.switchScreen(screen)))
     .add(this.loading$.subscribe(ldg => this.state.loading(ldg)))
     .add(this.loggedIn$.pipe(delay(2000)).subscribe(() => this.dialogRef.close()));
-
-    this.state.resetControls.resetCode.disable();
-    this.state.resetControls.resetPassword.disable();
-    this.state.resetControls.confirmResetPassword.disable();
   }
 
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe()
 
-    switch (this.state.activePane) {
+    switch (this.state.activePaneSubject.value) {
       case "logout"   :
         break;
       case "logged-in":

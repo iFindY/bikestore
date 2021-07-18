@@ -11,6 +11,7 @@ export const userStatus = createAction('[USER] status');
 
 export const loading = createAction('[USER] loading', props<{ loading: { login: boolean, reset: boolean } }>());
 export const setMessage = createAction('[USER] set message',props<{ message }>());
+export const clearMessage = createAction('[USER] clear message');
 
 
 export const login  = createAction('[USER] login', props<{ email, password }>());

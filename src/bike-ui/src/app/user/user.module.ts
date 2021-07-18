@@ -1,5 +1,5 @@
 import {StateService} from "./user-state-service";
-import {NgModule} from "@angular/core";
+import {ChangeDetectorRef, NgModule} from "@angular/core";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatIconModule} from "@angular/material/icon";

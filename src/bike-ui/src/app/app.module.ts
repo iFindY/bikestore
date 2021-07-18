@@ -16,6 +16,7 @@ import { environment } from '../environments/environment';
 import { metaReducers, reducers } from './state';
 
 import {UserModule} from "./user/user.module";
+import {MatButtonModule} from "@angular/material/button";
 
 
 
@@ -26,30 +27,31 @@ import {UserModule} from "./user/user.module";
         LogobarComponent,
         CurrentPathComponent,
     ],
-    imports: [
-        UserModule,
-        BrowserAnimationsModule,
-        BrowserModule,
-        // import app routing
-        AppRoutingModule,
-        // import ngrx stuff
-        EffectsModule.forRoot(),
-        StoreModule.forRoot(reducers, {
-            metaReducers,
-            runtimeChecks: {
-                strictStateImmutability: true,
-                strictActionImmutability: true,
-                strictActionSerializability: true,
-                strictStateSerializability: true
-            }
-        }),
-        // setup store for router state
-        StoreDevtoolsModule.instrument({maxAge: 25, logOnly: environment.production}),
-        StoreRouterConnectingModule.forRoot({
-            stateKey: 'router',
-            routerState: RouterState.Minimal
-        })
-    ],
+  imports: [
+    UserModule,
+    BrowserAnimationsModule,
+    BrowserModule,
+    // import app routing
+    AppRoutingModule,
+    // import ngrx stuff
+    EffectsModule.forRoot(),
+    StoreModule.forRoot(reducers, {
+      metaReducers,
+      runtimeChecks: {
+        strictStateImmutability: true,
+        strictActionImmutability: true,
+        strictActionSerializability: true,
+        strictStateSerializability: true
+      }
+    }),
+    // setup store for router state
+    StoreDevtoolsModule.instrument({maxAge: 25, logOnly: environment.production}),
+    StoreRouterConnectingModule.forRoot({
+      stateKey: 'router',
+      routerState: RouterState.Minimal
+    }),
+    MatButtonModule
+  ],
     providers: [],
     exports: [],
     bootstrap: [AppComponent]

@@ -36,6 +36,10 @@ export const userReducer = createReducer<UserState>(
     on(UserActions.setMessage, (state, {message}) => ({
         ...state, message
     })),
+    on(UserActions.clearMessage, (state) => ({
+        ...state,
+        message: null
+    })),
     on(UserActions.switchScreen, (state, {screen}) => ({
         ...state, screen
     })),
@@ -46,7 +50,7 @@ export const userReducer = createReducer<UserState>(
         ...state, user
     })),
     on(UserActions.logout, (state,) => ({
-        ...state, user: null, screen:'login'
+       ...initialUserState
     })),
     on(UserActions.setSettings, (state, { settings }) => ({
         ...state, settings

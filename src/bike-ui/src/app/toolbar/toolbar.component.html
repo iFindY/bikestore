@@ -1,5 +1,14 @@
 <!--mega menu here and button inside -->
-<button mat-button (click)="showLoginDialog()">{{user$|async}}</button>
+<div class="d-flex flex-column">
 
-<!--this is the black under line -->
-<div class="mr-0" style="height: 20px; background-color: rgb(48,49,50)"></div>
+  <button mat-button (click)="showLoginDialog()" class="align-self-end">
+    {{user$|async}}
+  </button>
+
+  <!--this is the black under line -->
+  <div class="mr-0" style="height: 20px; background-color: rgb(48,49,50)"></div>
+
+
+</div>
+
+

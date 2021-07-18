@@ -1,23 +1,21 @@
 import {
     ChangeDetectorRef,
     Component,
-    ElementRef,
+    ElementRef, EventEmitter,
     forwardRef,
     HostBinding,
     HostListener,
     Injector,
     Input, OnDestroy,
-    OnInit,
+    OnInit, Output,
 } from '@angular/core';
 import {
-    AbstractControl,
     ControlValueAccessor,
     FormControl,
     FormGroupDirective,
     NG_VALUE_ACCESSOR,
     NgControl,
-    NgForm, ValidationErrors,
-    Validator
+    NgForm
 } from '@angular/forms';
 import {BehaviorSubject, Subject, Subscription} from 'rxjs';
 import { FocusMonitor } from '@angular/cdk/a11y';
@@ -71,11 +69,9 @@ export class InputComponent implements ControlValueAccessor, OnInit, OnDestroy {
 
     autofilled?: boolean;
     control: NgControl;
-    stateChanges = new Subject<void>();
     focused: boolean;
     hover: boolean;
     errorMatcher: ErrorStateMatcher;
-    subscription: Subscription;
     @Input() tabIndex: number;
     @Input() hidden: boolean = true;
     @Input() hintVisible: boolean = true;
@@ -86,31 +82,28 @@ export class InputComponent implements ControlValueAccessor, OnInit, OnDestroy {
     @Input() matAutocomplete = "auto"; // TODO implement autocomplete
     @Input() set errorState(err){
         this._cState.next(err);
-        this.stateChanges.next();
     };
 
     @Input() set required(req) {
         this._required = coerceBooleanProperty(req);
-        this.stateChanges.next();
     }
 
     @Input() set placeholder(plh) {
         this._placeholder = plh;
-        this.stateChanges.next();
     }
     @Input() set errorMsg(plh) {
         this._errorMsg = plh;
-        this.stateChanges.next();
     }
     @Input() set disabled(value: boolean) {
         this._disabled = coerceBooleanProperty(value);
-        this.stateChanges.next();
     }
+
+    @Output() focus = new EventEmitter();
+
+
     set value(value: string | null) {
         this._value = value;
-        this.onTouched();
         this.onChange(value);
-        this.stateChanges.next(); // trigger onChange life cycle on the component
     }
 
     get value() {return this._value;}
@@ -126,17 +119,22 @@ export class InputComponent implements ControlValueAccessor, OnInit, OnDestroy {
     constructor(private injector: Injector, fm: FocusMonitor, elRef: ElementRef<HTMLElement>,private chRef:ChangeDetectorRef) {
 
         fm.monitor(elRef.nativeElement, true).subscribe(origin => {
-            this.focused = !!origin;
-            this.stateChanges.next();});
+            this.focused = Boolean(origin);
+            if (this.focused) this.focus.emit(true);
+        });
 
     }
 
     ngOnInit(): void {
         this.control = this.injector.get(NgControl, null);
         this.errorMatcher = new CustomFieldErrorMatcher(this.control);
-        this.subscription = this.stateChanges.asObservable().subscribe(() => this.chRef.detectChanges());
     }
 
+
+    // interesting but not working jet
+    host: {
+        '(blur)': 'onTouched()'
+    }
 
 
     //== == == == ControlValueAccessor interface
@@ -164,16 +162,16 @@ export class InputComponent implements ControlValueAccessor, OnInit, OnDestroy {
      *
      *  2. registerOnChange: takes a function that should be called with the value if the value changes in the form control element itself (view -> model)
      *
-     *  3. registerOnTouched:
+     *  3. registerOnTouched: class calls it when the control should be considered blurred or "touched". Interaction with the UI element e.g, blur
      */
-    onChange = (input: String) => {};
-    onTouched= () => {};
+    onChange: any = () => {};
+    onTouch: any = () => {}
 
     writeValue(value: any) {this.value = value;}
 
     registerOnChange(callbackFn: any): void {this.onChange = callbackFn;}
 
-    registerOnTouched(callbackFn) {this.onTouched = callbackFn;}
+    registerOnTouched(callbackFn: any): void {this.onTouch = callbackFn;}
 
     setDisabledState(isDisabled: boolean): void {this.disabled = isDisabled;}
 
@@ -191,12 +189,10 @@ export class InputComponent implements ControlValueAccessor, OnInit, OnDestroy {
 
     @HostListener('mouseenter') hoverOn() {
         this.hover = true;
-        this.stateChanges.next();
     }
 
     @HostListener('mouseleave') hoverOff() {
         this.hover = false;
-        this.stateChanges.next();
     }
 
 //== == == == helper
@@ -208,8 +204,7 @@ export class InputComponent implements ControlValueAccessor, OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.stateChanges.complete();
-        this.subscription.unsubscribe();
+
     }
 
     click(event) {
@@ -218,7 +213,6 @@ export class InputComponent implements ControlValueAccessor, OnInit, OnDestroy {
         } else {
             this.hidden = !this.hidden;
             this.controlType = this.hidden ? 'password' : 'text';
-            this.stateChanges.next();
         }
     }
 
@@ -226,8 +220,7 @@ export class InputComponent implements ControlValueAccessor, OnInit, OnDestroy {
 
 
 class CustomFieldErrorMatcher implements ErrorStateMatcher {
-    constructor(private control: NgControl) {
-    }
+    constructor(private control: NgControl) {}
 
     isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
         return this.control.touched && this.control?.invalid;

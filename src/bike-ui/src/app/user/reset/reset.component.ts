@@ -1,19 +1,21 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {FormBuilder, Validators} from "@angular/forms";
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {FormBuilder} from "@angular/forms";
 import {select, Store} from "@ngrx/store";
 import {UserState} from "../../state/user/user.reducers";
 import {StateService} from "../user-state-service";
 import {UserScreen, mustMatch} from "../user.model";
-import {getResetCode, resetPassword, switchScreen, validateResetCode}
+import {clearMessage, getResetCode, resetPassword, switchScreen, validateResetCode}
   from "../../state/user/user.actions";
 import {Observable} from "rxjs";
 import {getLoading} from "../../state/user/user.selectors";
 import {moveResetDigits, showPassword} from "./reset.animations";
+import {AppValidators} from "../../common/validation/validator";
 
 @Component({
   selector: 'app-reset',
   templateUrl: './reset.component.html',
   styleUrls: ['./reset.component.scss'],
+  changeDetection:ChangeDetectionStrategy.Default,
   animations: [showPassword, moveResetDigits]
 })
 export class ResetComponent implements OnInit {
@@ -33,10 +35,10 @@ export class ResetComponent implements OnInit {
 
     state.resetForm = fb.group(
         {
-          resetEmail: [null, [Validators.pattern(this.MAIL_PATTERN)]],
-          resetCode: [],
-          resetPassword: [null, [Validators.pattern(this.PASSWORD_PATTERN)]],
-          confirmResetPassword: [null, [Validators.pattern(this.PASSWORD_PATTERN)]]
+          resetEmail: [null, [AppValidators.email]],
+          resetCode: {value: null, disabled: true},
+          resetPassword: [null, [AppValidators.validatePassword]],
+          confirmResetPassword: [null, [AppValidators.validatePassword]]
         },
         {
           validator: mustMatch('resetPassword', 'confirmResetPassword') // Adding cross-validation
@@ -47,7 +49,7 @@ export class ResetComponent implements OnInit {
 
   resetPasswordScreen() {
 
-    switch (this.state.activePane) {
+    switch (this.state.activePaneSubject.value) {
 
       case 'reset':
         this.store.dispatch(getResetCode({email: this.state.resetEmail}));
@@ -78,7 +80,7 @@ export class ResetComponent implements OnInit {
     if (screen) { // we set the screen or else  default to login register
       this.store.dispatch(switchScreen({screen}))
     } else {
-      switch (this.state.activePane) {
+      switch (this.state.activePaneSubject.value) {
         case 'reset':
         case 'password':
         case 'register':
@@ -102,12 +104,34 @@ export class ResetComponent implements OnInit {
   }
 
 
+
+  get passwordError(){
+    return this.state.resetPassword?.errors?.validatePassword;
+  }
+  get confirmPasswordError(){
+
+    if (this.state.confirmedResetPassword?.errors?.validatePassword) {
+      return this.state.confirmedResetPassword?.errors.validatePassword;
+    } else if (this.state.confirmedResetPassword?.errors?.mustMatch) {
+      return this.state.confirmedResetPassword?.errors.mustMatch;
+    }
+  }
+
   getResetPassword = () => ({
     email: this.state.resetEmail,
-    password: this.state.resetPassword,
-    confirmedPassword: this.state.confirmedResetPassword
+    password: this.state.resetPassword.value,
+    confirmedPassword: this.state.confirmedResetPassword.value
   });
 
+
+
+  onFocus() {
+    if (this.state.resetForm.invalid) {
+      this.store.dispatch(clearMessage())
+      this.state.resetControls.resetPassword.updateValueAndValidity()
+      this.state.resetControls.confirmResetPassword.updateValueAndValidity()
+    }
+  }
 
   ngOnInit(): void {
   }
