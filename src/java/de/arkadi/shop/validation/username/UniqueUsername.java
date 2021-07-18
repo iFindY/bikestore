@@ -13,7 +13,7 @@ import javax.validation.Payload;
 @Constraint(validatedBy = UniqueUsernameValidator.class)
 public @interface UniqueUsername {
 
-    String message() default "Username already exists";
+    String message() default "username already exists";
 
     Class<?>[] groups() default {};
 

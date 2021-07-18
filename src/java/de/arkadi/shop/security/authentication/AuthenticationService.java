@@ -32,15 +32,15 @@ public class AuthenticationService {
     }
 
     public Boolean performAuthenticationChecks(String email) {
-        return loadUserByEmail(email).map(User::getEnabled).orElse(false);
+        return loadUserByEmail(email).map(User::isActivated).orElse(false);
     }
 
     public Integer decreaseRemainingLoginAttempts(String name) {
-        return loadUserByUsername(name).map(User::decreaseAttempts).orElse(0);
+        return loadUserByEmail(name).map(User::decreaseAttempts).orElse(-1);
     }
 
     public void lockUser(String name) {
-        loadUserByUsername(name).ifPresent(user -> user.setEnabled(false));
+        loadUserByEmail(name).ifPresent(user -> user.setEnabled(false));
     }
 
     public void resetRemainingLoginAttempts(String email) {

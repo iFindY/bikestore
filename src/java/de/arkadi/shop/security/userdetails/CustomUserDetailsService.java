@@ -44,10 +44,10 @@ public class CustomUserDetailsService implements UserDetailsService {
             return user;
 
         } catch (Exception e) {
-            logger.error("Username not found [" + email + "]!");
+            logger.error("username not found [" + email + "]");
 
-            UsernameNotFoundException ex =  new UsernameNotFoundException("Login denied.", e);
-            ex.addSuppressed(e);
+            UsernameNotFoundException ex =  new UsernameNotFoundException("login denied", e);
+           // ex.addSuppressed(e);
             throw ex;
         }
     }

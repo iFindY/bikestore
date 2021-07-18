@@ -3,13 +3,17 @@ package de.arkadi.shop.security;
 
 
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.SpringSecurityMessageSource;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -38,6 +42,7 @@ import org.springframework.stereotype.Service;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final AdditionalAuthenticationProvider authenticationProvider;
+
     private final String[] notSecured = {
         "/",
         "/api/user/register/verify/email",

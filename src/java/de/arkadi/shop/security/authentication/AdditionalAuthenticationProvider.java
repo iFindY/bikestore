@@ -5,6 +5,9 @@ import static java.util.Optional.ofNullable;
 import de.arkadi.shop.model.UserDTO;
 import de.arkadi.shop.security.details.AdditionalWebAuthenticationDetails;
 import de.arkadi.shop.security.userdetails.CustomUserDetailsService;
+import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
@@ -20,17 +23,22 @@ import org.springframework.stereotype.Component;
 public class AdditionalAuthenticationProvider extends DaoAuthenticationProvider {
     private final AuthenticationService authenticationService;
 
+
+
     public AdditionalAuthenticationProvider(AuthenticationService authenticationService,
         UserDetailsChecker userDetailsChecker,
-        CustomUserDetailsService customUserDetailsService) {
+        CustomUserDetailsService customUserDetailsService,
+        MessageSourceAccessor customMessages) {
 
         super();
+
         {
              // this.setPasswordEncoder(encoder); default is there
             this.setPreAuthenticationChecks(userDetailsChecker);
             this.setUserDetailsService(customUserDetailsService);
         }
         this.authenticationService = authenticationService;
+        this.messages = customMessages;
     }
 
     /**
@@ -51,7 +59,7 @@ public class AdditionalAuthenticationProvider extends DaoAuthenticationProvider 
              *  the {@link AbstractUserDetailsAuthenticationProvider#additionalAuthenticationChecks}
              *  is abstract and is used inside the {@link AbstractUserDetailsAuthenticationProvider#authenticate}
              *  that's why we have to give an implementation or use the given Dao version
-             */
+             **/
             super.additionalAuthenticationChecks(userDetails, authentication); // try authenticate
 
             {  // if you need to match extra field like pin do it here
@@ -72,7 +80,11 @@ public class AdditionalAuthenticationProvider extends DaoAuthenticationProvider 
 
             if (attemptsLeft == 0) {
                 this.authenticationService.lockUser(authentication.getName());
-                throw new LockedException("Account Locked after three false attempts");
+                throw new LockedException("account locked after three false attempts");
+            }else if(attemptsLeft>0){
+                throw new BadCredentialsException("invalid credentials");
+            } else if(attemptsLeft==-1){
+                throw new AuthenticationCredentialsNotFoundException("account not found");
             }
 
         }

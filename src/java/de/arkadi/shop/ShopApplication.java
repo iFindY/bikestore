@@ -1,11 +1,14 @@
 package de.arkadi.shop;
 
+import java.util.Properties;
 import javax.persistence.EntityManagerFactory;
 
 import org.hibernate.SessionFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.security.core.SpringSecurityMessageSource;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication()
@@ -14,6 +17,24 @@ public class ShopApplication implements WebMvcConfigurer {
     public static void main(String[] args) {
         SpringApplication.run(ShopApplication.class, args);
     }
+
+
+
+
+    @Bean
+    public MessageSourceAccessor createMessageSourceAccessor() {
+        return new MessageSourceAccessor(messageSource());
+    }
+
+
+    @Bean
+    public SpringSecurityMessageSource messageSource() {
+        SpringSecurityMessageSource messageSource = new SpringSecurityMessageSource();
+        messageSource.setBasenames("messages/security", "org/springframework/security/messages");
+        messageSource.setDefaultEncoding("UTF-8");
+        return messageSource;
+    }
+
 
 
     /**

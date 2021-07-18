@@ -9,7 +9,7 @@ import javax.validation.constraints.Email;
 @EqualPassword(payload = Severity.Error.class)
 public class ResetPasswordDTO implements ValidPassword {
 
-  @Email(message="Email is not valid")
+  @Email(message="email is not valid")
   String email;
 
   @PasswordPolicy

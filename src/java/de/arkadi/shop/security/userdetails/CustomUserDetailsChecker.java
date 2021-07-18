@@ -22,7 +22,9 @@ public class CustomUserDetailsChecker implements UserDetailsChecker {
 
         boolean enabled = this.authenticationService.performAuthenticationChecks(userDetails.getUsername());
 
-        if (!enabled) throw new DisabledException(userDetails.getUsername());
+        if (!enabled) {
+            throw new DisabledException("user is not enabled");
+        }
 
     }
 
