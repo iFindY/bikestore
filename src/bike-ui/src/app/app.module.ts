@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ToolbarComponent } from './toolbar/toolbar.component';
+import { LandingComponent } from './landing/landing.component';
 import { LogobarComponent } from './logobar/logobar.component';
 import { CurrentPathComponent } from './current-path/current-path.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -17,13 +17,14 @@ import { metaReducers, reducers } from './state';
 
 import {UserModule} from "./user/user.module";
 import {MatButtonModule} from "@angular/material/button";
+import {MatMenuModule} from "@angular/material/menu";
 
 
 
 @NgModule({
     declarations: [
         AppComponent,
-        ToolbarComponent,
+        LandingComponent,
         LogobarComponent,
         CurrentPathComponent,
     ],
@@ -50,7 +51,8 @@ import {MatButtonModule} from "@angular/material/button";
       stateKey: 'router',
       routerState: RouterState.Minimal
     }),
-    MatButtonModule
+    MatButtonModule,
+    MatMenuModule
   ],
     providers: [],
     exports: [],

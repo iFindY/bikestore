@@ -1,0 +1,54 @@
+<!--mega menu here and button inside -->
+
+<body class="d-flex flex-column" style="overflow: hidden">
+
+<header class="d-flex landing ">
+  <img style="object-fit: cover" class="w-100 h-100" src="assets/images/piano_1.jpg" alt="piano_1"/>
+</header>
+
+
+<article class="d-flex flex-column justify-content-center">
+
+  <section class="d-flex flex-row flex-wrap flex-wrap-reverse justify-content-center" style="margin-top: 8rem" >
+
+    <div class="d-flex align-items-center p-4" style="line-height: 30px; max-width: 700px;"
+         [ngClass]="{'text-right':['small','normal'].includes(windowSize)}">
+    <div class="pr-4">
+        <h1>Die Musik ist die Sprache der Leidenschaft</h1>
+      {{text_1}}
+      </div>
+    </div>
+
+    <div class=" d-flex align-items-center" style="width: 700px"
+         [ngClass]="{
+         'justify_right':windowSize==='small',
+         'justify_left':windowSize==='normal',
+         'justify_center':windowSize==='phone'}">
+    <img class="article_images" src="assets/images/guitar.jpg" alt="img">
+
+    </div>
+
+  </section>
+
+  <section class="d-flex flex-row flex-wrap justify-content-center"  style="margin-top: 12rem;margin-bottom: 8rem">
+
+    <div class="d-flex align-items-center"
+         [ngClass]="{
+         'justify_right':windowSize==='normal',
+         'justify_left':windowSize==='small',
+         'justify_center':windowSize==='phone'}"
+         style="width: 700px;">
+    <img class="article_images" src="assets/images/sing.jpg" alt="img">
+    </div>
+
+    <div class="text-left d-flex align-items-center p-4" style="line-height: 30px; max-width: 700px;">
+      <div class="pl-4">
+        <h1>Singen ist ein Abglanz der Seele</h1>
+        {{text_2}}
+      </div>
+    </div>
+  </section>
+</article>
+
+
+</body>

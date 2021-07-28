@@ -1,0 +1,39 @@
+.landing {
+  background-color: whitesmoke;
+  height: 80vh;
+  flex-grow: 0;
+}
+
+
+.justify_left {
+  justify-content: start;
+  padding-left: 3rem;
+}
+
+.justify_right {
+  justify-content: flex-end;
+  padding-right: 3rem;
+}
+
+.justify_center {
+  justify-content: center;
+}
+
+.article_images {
+  height: 250px;
+  width: 355px;
+  object-fit: cover;
+}
+
+
+
+/*
+
+*{ // shoe div border
+  outline:1px red solid;
+}
+*/
+/*
+
+position: sticky;
+top: 0;*/
