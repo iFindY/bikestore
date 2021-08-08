@@ -1,3 +1,34 @@
-<app-logobar></app-logobar>
-<app-landing></app-landing>
-<router-outlet></router-outlet>
+<mat-drawer-container hasBackdrop=true autosize=false >
+  <mat-drawer [autoFocus]=false #drawer mode="over"style="position: fixed; width: 13rem">
+
+    <div class="my-font mt-4 mb-3 d-flex justify-content-center align-items-center">Music Scool of Wandsbeck</div>
+
+    <mat-nav-list>
+        <mat-accordion displayMode="flat" togglePosition="after">
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Lessons
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <a mat-list-item href="http://localhost:4200" *ngFor="let lesson of lessons"> {{ lesson }} </a>
+          </mat-expansion-panel>
+        </mat-accordion>
+
+        <a  style="padding: 0 8px; margin-top: 1rem" mat-list-item href="http://localhost:4200" *ngFor="let link of events"> {{ link }} </a>
+
+        <hr/>
+
+        <a  style="padding: 0 8px; margin-top:1rem" mat-list-item href="http://localhost:4200" *ngFor="let contact of contacts"> {{ contact }} </a>
+      </mat-nav-list>
+
+  </mat-drawer>
+  <mat-drawer-content>
+    <app-logobar (sideMenu)="drawer.toggle()"></app-logobar>
+    <router-outlet></router-outlet>
+  </mat-drawer-content>
+</mat-drawer-container>
+
+
+
+

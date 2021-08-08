@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import {BreakpointObserver, Breakpoints, BreakpointState} from "@angular/cdk/layout";
 import {Observable, Subscription} from "rxjs";
@@ -8,7 +8,7 @@ import {Observable, Subscription} from "rxjs";
   templateUrl: './landing.component.html',
   styleUrls: ['./landing.component.scss']
 })
-export class LandingComponent  implements OnInit, OnDestroy{
+export class LandingComponent implements OnInit{
 
   text_1: string = "Wir unterscheiden nicht zwischen E und U. Ob Klassik oder Pop -" +
       "wir helfen Ihnen, Ihren individuellen Wünschen entsprechend, den Weg zu Ihrem " +
@@ -26,23 +26,18 @@ export class LandingComponent  implements OnInit, OnDestroy{
       "seiner Stilrichtung widmen";
 
 
-  windowSize: 'normal' | 'small' | 'phone'
-  widthObserver: Observable<BreakpointState>;
+  windowSize: 'normal' | 'small' | 'phone' = 'normal'
+  widthObserver: Observable<BreakpointState> = this.breakpointObserver.observe(['(min-width: 1414px)',  Breakpoints.XSmall]);
   subscriptions: Subscription;
-  smallWindow:boolean;
-
 
   constructor(public breakpointObserver: BreakpointObserver) {
-   this.widthObserver = breakpointObserver.observe(['(min-width: 1414px)',  Breakpoints.XSmall]);
-
   }
 
 
 
   ngOnInit(): void {
 
-    this.subscriptions = this.widthObserver
-    .subscribe((state: BreakpointState) => {
+    this.subscriptions = this.widthObserver.subscribe((state: BreakpointState) => {
       if (state.breakpoints[Breakpoints.XSmall]) {
         this.windowSize = 'phone';
       } else if (state.breakpoints['(min-width: 1414px)']) {
@@ -51,7 +46,9 @@ export class LandingComponent  implements OnInit, OnDestroy{
         this.windowSize = 'small';
       }
     });
+
   }
+
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();

@@ -1,0 +1,54 @@
+
+.mat-nav-list {
+
+
+  .mat-expansion-panel-header-title {
+    font-size: initial;
+  }
+
+  ::ng-deep .mat-list-item:hover {
+    background-color: transparent;
+    color: #888d88;
+    transition: color 0.2s ease-in;
+  }
+
+  .mat-expansion-panel {
+    box-shadow: none;
+
+    ::ng-deep .mat-expansion-panel-body {
+      padding: 0 0 16px !important;
+    }
+
+    ::ng-deep .mat-list-item {
+      padding-left: 22px;
+    }
+  }
+
+}
+
+
+
+
+
+
+.horizontal-line{
+  border-top: 5px solid #616861;
+  width: 21px;
+}
+
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #6c757d38;
+  margin: 10px 22px;
+  padding: 0;
+}
+
+ .my-font {
+  font-family: "Raleway",sans-serif;
+  font-style: italic;
+}
+
+
+

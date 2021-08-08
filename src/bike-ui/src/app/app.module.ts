@@ -18,6 +18,15 @@ import { metaReducers, reducers } from './state';
 import {UserModule} from "./user/user.module";
 import {MatButtonModule} from "@angular/material/button";
 import {MatMenuModule} from "@angular/material/menu";
+import {MatToolbarModule} from "@angular/material/toolbar";
+import {MatSidenavModule} from "@angular/material/sidenav";
+import {MatIconModule} from "@angular/material/icon";
+import {MatInputModule} from "@angular/material/input";
+import {MatListModule} from "@angular/material/list";
+import {MatTreeModule} from "@angular/material/tree";
+import {MatExpansionModule} from "@angular/material/expansion";
+import { TeamComponent } from './team/team.component';
+import {MatCardModule} from "@angular/material/card";
 
 
 
@@ -27,6 +36,7 @@ import {MatMenuModule} from "@angular/material/menu";
         LandingComponent,
         LogobarComponent,
         CurrentPathComponent,
+        TeamComponent,
     ],
   imports: [
     UserModule,
@@ -52,7 +62,15 @@ import {MatMenuModule} from "@angular/material/menu";
       routerState: RouterState.Minimal
     }),
     MatButtonModule,
-    MatMenuModule
+    MatMenuModule,
+    MatToolbarModule,
+    MatSidenavModule,
+    MatIconModule,
+    MatInputModule,
+    MatListModule,
+    MatTreeModule,
+    MatExpansionModule,
+    MatCardModule
   ],
     providers: [],
     exports: [],
