@@ -1,0 +1,56 @@
+
+<mat-card style="margin: 50px">
+
+  <img mat-card-image
+       [src]="'../../../assets/people/person_2/person_2.jpg'"
+       style="max-height: 340px; object-fit: cover"
+       alt="team member">
+
+  <mat-card-header (click)="toggle()">
+    <div mat-card-avatar class="avatar"></div>
+    <mat-icon style="cursor: pointer;font-size: 32px; margin-right:5px;margin-left: auto;">expand_more</mat-icon>
+
+    <mat-card-title style="cursor: default">Peter Hansom</mat-card-title>
+    <mat-card-subtitle style="cursor: default">Musiklehrer</mat-card-subtitle>
+  </mat-card-header>
+
+  <mat-card-content [@bodyExpansion]="state " class="expandable-content">
+    <div class="d-flex align-items-center">
+
+        <mat-icon class="d-block " style="
+         margin-right: 32px;
+         margin-bottom: 24px;
+         font-size: 32px;
+         color: gray;
+        ">phone
+        </mat-icon>
+      <div>
+        <mat-card-title style="cursor: default;font-weight: normal;font-size: 17px;">(040) 123423423423
+        </mat-card-title>
+        <mat-card-subtitle style="cursor: default">Phone Number</mat-card-subtitle>
+      </div>
+
+    </div>
+
+    <div class="d-flex align-items-center">
+      <mat-icon class="d-block" style="
+         margin-right: 32px;
+         margin-bottom: 24px;
+         font-size: 32px;
+         color: gray;
+       ">email
+      </mat-icon>
+
+    <div>
+      <mat-card-title style="cursor: default;font-weight: normal;font-size: 17px;">teacher@mail.de</mat-card-title>
+      <mat-card-subtitle style="cursor: default">Email Address</mat-card-subtitle>
+    </div>
+    </div>
+    <p >
+      {{'hallo ich schreibe wie toll ich bin hier rein.' +
+    ' Kommt in mein Musik Untericht.Habe ganz  viel geübt und brauche geld.'}}
+
+    </p>
+  </mat-card-content>
+
+</mat-card>

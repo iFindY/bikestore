@@ -1,5 +1,5 @@
 <mat-drawer-container hasBackdrop=true autosize=false >
-  <mat-drawer [autoFocus]=false #drawer mode="over"style="position: fixed; width: 13rem">
+  <mat-drawer [autoFocus]=false #drawer mode="over" style="position: fixed; width: 13rem">
 
     <div class="my-font mt-4 mb-3 d-flex justify-content-center align-items-center">Music Scool of Wandsbeck</div>
 
@@ -24,8 +24,8 @@
 
   </mat-drawer>
   <mat-drawer-content>
-    <app-logobar (sideMenu)="drawer.toggle()"></app-logobar>
     <router-outlet></router-outlet>
+    <app-logobar (sideMenu)="drawer.toggle()"></app-logobar>
   </mat-drawer-content>
 </mat-drawer-container>
 

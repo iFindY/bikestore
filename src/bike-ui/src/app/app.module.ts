@@ -27,6 +27,7 @@ import {MatTreeModule} from "@angular/material/tree";
 import {MatExpansionModule} from "@angular/material/expansion";
 import { TeamComponent } from './team/team.component';
 import {MatCardModule} from "@angular/material/card";
+import {CommonAppModule} from "./common/common-app.module";
 
 
 
@@ -70,7 +71,8 @@ import {MatCardModule} from "@angular/material/card";
     MatListModule,
     MatTreeModule,
     MatExpansionModule,
-    MatCardModule
+    MatCardModule,
+    CommonAppModule
   ],
     providers: [],
     exports: [],

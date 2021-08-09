@@ -10,17 +10,21 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {CommonModule} from "@angular/common";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import { CardComponent } from './card/card.component';
+import {MatCardModule} from "@angular/material/card";
 
 @NgModule({
   declarations: [
     CodeInputComponent,
     InputComponent,
-    LoadingButtonComponent
+    LoadingButtonComponent,
+    CardComponent
   ],
   exports: [
     InputComponent,
     CodeInputComponent,
-    LoadingButtonComponent
+    LoadingButtonComponent,
+    CardComponent
   ],
   imports: [
     MatFormFieldModule,
@@ -31,7 +35,8 @@ import {MatAutocompleteModule} from "@angular/material/autocomplete";
     MatProgressSpinnerModule,
     CommonModule,
     FormsModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatCardModule
   ]
 })
 export class CommonAppModule {

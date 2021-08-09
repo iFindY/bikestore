@@ -1,0 +1,15 @@
+.card {
+  max-width: 250px;
+  max-height: 200px;
+
+}
+
+
+.avatar {
+  background-image: url('src/assets/people/person_2/person_2.jpg');
+  background-size: cover;
+}
+
+.expandable-content {
+  overflow: hidden;
+}
