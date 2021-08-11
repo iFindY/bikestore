@@ -29,6 +29,8 @@ export class LandingComponent implements OnInit{
   windowSize: 'normal' | 'small' | 'phone' = 'normal'
   widthObserver: Observable<BreakpointState> = this.breakpointObserver.observe(['(min-width: 1414px)',  Breakpoints.XSmall]);
   subscriptions: Subscription;
+  mouseover2: boolean;
+  mouseover: boolean;
 
   constructor(public breakpointObserver: BreakpointObserver) {
   }

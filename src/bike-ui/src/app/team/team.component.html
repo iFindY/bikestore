@@ -1,14 +1,30 @@
-<body style="margin-top: 70px;" class=" bg">
-<article class="fixed-bg  d-flex justify-content-center  align-items-center flex-wrap">
+<body>
 
-  <app-card></app-card>
-  <app-card></app-card>
-  <app-card></app-card>
-  <app-card></app-card>
-  <app-card></app-card>
-  <app-card></app-card>
+<div class="d-flex justify-content-center pt-team">
+
+<mat-form-field  appearance="outline" style="width: 40%;min-width:350px!important; color: black">
+  <mat-label>Search</mat-label>
+  <input matInput type="text" [(ngModel)]="value">
+  <button *ngIf="value" matSuffix mat-icon-button aria-label="Clear"  disableRipple=true (click)="value=''">
+    <mat-icon style="margin-top: 0.9rem">close</mat-icon>
+  </button>
+  <button *ngIf="!value" matSuffix mat-icon-button aria-label="Search"  disableRipple=true>
+    <mat-icon style="margin-top: 0.9rem">search</mat-icon>
+  </button>
+</mat-form-field>
+
+</div>
+
+
+<article class="d-flex justify-content-around align-content-start flex-wrap" style="padding-bottom: 10rem">
+
+  <app-card personImage="/person_1/Marika_Lapauri-Burk.jpeg" name="Marika Lapauri Burk" mail="larissa.daschkewitsch@gmail.com" text="Hallo"></app-card>
+  <app-card personImage="/person_2/Larissa_Daschkewitsch.jpeg" name="Larissa Daschkewitsch" phone="(040) 39495968" mail="larissa.daschkewitsch@gmail.com" text="Hallo"></app-card>
+  <app-card personImage="/person_3/Marina_Savova.jpeg" name="Marina Savova" phone="(040) 63307136" mail="larissa.daschkewitsch@gmail.com" text="Hallo"></app-card>
+  <app-card personImage="/person_4/Christopher_Pluennecke.png" name="Christopher Pluennecke" phone="(040) 20405962" text="Hallo"></app-card>
+  <app-card personImage="/person_5/Katharina_Mai.jpeg" name="Katharina Mai" phone="(040) 10695842" mail="larissa.daschkewitsch@gmail.com" text="Hallo"></app-card>
+  <app-card personImage="/person_6/Leonid_Volskiy.jpeg" name="Leonid Volskiy" phone="(040) 22694442" web="www.volskiy.de" text="Hallo"></app-card>
 
 </article>
-
 
 </body>

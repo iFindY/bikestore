@@ -1,56 +1,55 @@
+<mat-card (mouseover)="mouseOver(true)"
+          (mouseleave)="mouseOver(false)"
+          [ngClass]="mouseover ? 'mat-elevation-z20 zoom':'mat-elevation-z2'" >
 
-<mat-card style="margin: 50px">
+  <img mat-card-image class="img" alt="team member"
+       [src]="personImg">
 
-  <img mat-card-image
-       [src]="'../../../assets/people/person_2/person_2.jpg'"
-       style="max-height: 340px; object-fit: cover"
-       alt="team member">
+  <mat-card-header >
 
-  <mat-card-header (click)="toggle()">
-    <div mat-card-avatar class="avatar"></div>
-    <mat-icon style="cursor: pointer;font-size: 32px; margin-right:5px;margin-left: auto;">expand_more</mat-icon>
-
-    <mat-card-title style="cursor: default">Peter Hansom</mat-card-title>
-    <mat-card-subtitle style="cursor: default">Musiklehrer</mat-card-subtitle>
+    <div mat-card-avatar class="avatar" [style]="avatar" (click)="toggle()"></div>
+    <mat-icon class="icon" [@rotate]="state" (click)="toggle()">expand_more</mat-icon>
+    <mat-card-title class="cur-default">{{name}}</mat-card-title>
+    <mat-card-subtitle class="cur-default no-select">Musiklehrer</mat-card-subtitle>
   </mat-card-header>
 
-  <mat-card-content [@bodyExpansion]="state " class="expandable-content">
-    <div class="d-flex align-items-center">
 
-        <mat-icon class="d-block " style="
-         margin-right: 32px;
-         margin-bottom: 24px;
-         font-size: 32px;
-         color: gray;
-        ">phone
-        </mat-icon>
+  <mat-card-content [@bodyExpansion]="state" class="expandable-content">
+    <section class="d-flex align-items-center" *ngIf="!!phone">
+      <mat-icon class="d-block g-icon">phone</mat-icon>
       <div>
-        <mat-card-title style="cursor: default;font-weight: normal;font-size: 17px;">(040) 123423423423
+        <mat-card-title class="m-c-title">
+          <a [href]="'tel:'+phone">{{phone}}</a>
         </mat-card-title>
-        <mat-card-subtitle style="cursor: default">Phone Number</mat-card-subtitle>
+        <mat-card-subtitle class="cur-default no-select">Phone Number</mat-card-subtitle>
       </div>
+    </section>
 
-    </div>
+    <section class="d-flex align-items-center" *ngIf="!!mail">
+      <mat-icon class="d-block g-icon">email</mat-icon>
+      <div>
+        <mat-card-title class="m-c-title"><a [href]="'mailto:'+mail">{{mail}}</a></mat-card-title>
+        <mat-card-subtitle class="cur-default no-select">Email Address</mat-card-subtitle>
+      </div>
+    </section>
 
-    <div class="d-flex align-items-center">
-      <mat-icon class="d-block" style="
-         margin-right: 32px;
-         margin-bottom: 24px;
-         font-size: 32px;
-         color: gray;
-       ">email
-      </mat-icon>
+    <section class="d-flex align-items-center" *ngIf="!!web">
+      <mat-icon class="d-block g-icon">language</mat-icon>
+      <div>
+        <mat-card-title class="m-c-title"><a  (click)="navigate($event)"  style="cursor: pointer">{{web}}</a></mat-card-title>
+        <mat-card-subtitle class="cur-default no-select">Web Page</mat-card-subtitle>
+      </div>
+    </section>
 
-    <div>
-      <mat-card-title style="cursor: default;font-weight: normal;font-size: 17px;">teacher@mail.de</mat-card-title>
-      <mat-card-subtitle style="cursor: default">Email Address</mat-card-subtitle>
-    </div>
-    </div>
-    <p >
-      {{'hallo ich schreibe wie toll ich bin hier rein.' +
-    ' Kommt in mein Musik Untericht.Habe ganz  viel geübt und brauche geld.'}}
+    <p>{{text}}</p>
+    <mat-divider></mat-divider>
 
-    </p>
+    <mat-card-subtitle class="cur-default pt-3" style="font-size: 18px">Instrumente</mat-card-subtitle>
+    <mat-chip-list aria-label="Instrumente">
+      <mat-chip>Klavier</mat-chip>
+      <mat-chip>Akordion</mat-chip>
+      <mat-chip>Geige</mat-chip>
+    </mat-chip-list>
   </mat-card-content>
 
 </mat-card>

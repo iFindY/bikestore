@@ -1,15 +1,64 @@
-.card {
-  max-width: 250px;
-  max-height: 200px;
-
+:host {
+  max-width: 350px;
+  width: 350px;
 }
 
 
+.zoom{
+    transform: scale(1.02);
+    transition: transform 600ms;
+}
+
 .avatar {
-  background-image: url('src/assets/people/person_2/person_2.jpg');
   background-size: cover;
 }
 
 .expandable-content {
   overflow: hidden;
+}
+
+.icon {
+  cursor: pointer;
+  font-size: 32px;
+  margin-right: 5px;
+  margin-left: auto;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.no-select{
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.img {
+  max-height: 400px;
+  user-select: none;
+  object-fit: cover;
+}
+
+.g-icon {
+  margin-right: 32px;
+  margin-bottom: 24px;
+  font-size: 32px;
+  cursor: default;
+  user-select: none;
+  -webkit-user-select: none;
+  color: gray;
+}
+
+.m-c-title {
+  cursor: default;
+  font-weight: normal;
+  font-size: 17px;
+}
+
+
+.cur-default {
+  cursor: default;
+}
+
+
+a {
+  color: black
 }

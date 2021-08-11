@@ -28,6 +28,9 @@ import {MatExpansionModule} from "@angular/material/expansion";
 import { TeamComponent } from './team/team.component';
 import {MatCardModule} from "@angular/material/card";
 import {CommonAppModule} from "./common/common-app.module";
+import {MatRippleModule} from "@angular/material/core";
+import {MatChipsModule} from "@angular/material/chips";
+import {FormsModule} from "@angular/forms";
 
 
 
@@ -72,7 +75,10 @@ import {CommonAppModule} from "./common/common-app.module";
     MatTreeModule,
     MatExpansionModule,
     MatCardModule,
-    CommonAppModule
+    CommonAppModule,
+    MatRippleModule,
+    MatChipsModule,
+    FormsModule
   ],
     providers: [],
     exports: [],

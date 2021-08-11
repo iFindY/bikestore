@@ -18,35 +18,57 @@ img {
   //font-family: "JetBrains Mono", sans-serif;
   font-size: 16px;
   font-weight: 400;
-
-
-
+  color: rgb(29,29,29);
   &:hover:enabled {
     span {
-      color: #818681;
       transition: color 0.5s ease;
     }
   }
 
 
-  :host ::ng-deep .mat-button-focus-overlay {
-    background-color: transparent;
-  }
-
-}
-
-#test {
   ::ng-deep .mat-button-focus-overlay {
     background-color: transparent;
   }
 
 }
 
-
-
-
 .vertical-line{
-  border-left: 1px solid #616861;
+  border-left: 1px solid black;
   height: 21px;
-  margin: 0 10px;
+  margin: 8px 10px;
 }
+
+.hover-underline-animation:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 12%;
+  width: 75%;
+  height: 0.1em;
+  border-radius: 5px;
+  background-color: black;
+  opacity: 0;
+  transition: opacity 600ms, transform 700ms;
+}
+
+.hover-underline-animation:hover:after {
+  opacity: 0.9;
+  transform: translate3d(0, 0.1em, 0);
+}
+
+
+.hover:hover button {
+  opacity: 0.5;
+  transition: opacity 200ms;
+}
+
+.hover:not(:hover) button {
+  opacity: 1;
+  transition: opacity 200ms;
+}
+
+
+.hover button:hover {
+  opacity: 1;
+}
+

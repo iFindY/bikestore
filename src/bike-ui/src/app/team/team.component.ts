@@ -8,6 +8,7 @@ import {bodyExpansion} from "../common/card/card.animations";
   styleUrls: ['./team.component.scss']})
 export class TeamComponent implements OnInit {
 
+  public value:string ='';
 
   constructor() {
   }

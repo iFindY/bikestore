@@ -21,6 +21,9 @@ export class LogobarComponent implements OnInit,OnDestroy{
 
   @Output() sideMenu: EventEmitter<boolean> = new EventEmitter<boolean>();
 
+  lessons: string[] = ['Guitar', 'Trumpet', 'Violin', 'Singing', 'Piano', 'Drum'];
+  mouseover: boolean;
+
   constructor(public dialog: MatDialog,
               private store$: Store<UserState>,
               public breakpointObserver: BreakpointObserver) {
@@ -38,6 +41,10 @@ export class LogobarComponent implements OnInit,OnDestroy{
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
+  }
+
+  mouseOver(b: boolean) {
+    this.mouseover= b;
   }
 
 }

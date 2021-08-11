@@ -12,6 +12,9 @@ import {CommonModule} from "@angular/common";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import { CardComponent } from './card/card.component';
 import {MatCardModule} from "@angular/material/card";
+import {MatDividerModule} from "@angular/material/divider";
+import {MatChipsModule} from "@angular/material/chips";
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -26,18 +29,21 @@ import {MatCardModule} from "@angular/material/card";
     LoadingButtonComponent,
     CardComponent
   ],
-  imports: [
-    MatFormFieldModule,
-    MatInputModule,
-    MatIconModule,
-    MatButtonModule,
-    ReactiveFormsModule,
-    MatProgressSpinnerModule,
-    CommonModule,
-    FormsModule,
-    MatAutocompleteModule,
-    MatCardModule
-  ]
+    imports: [
+        MatFormFieldModule,
+        MatInputModule,
+        MatIconModule,
+        MatButtonModule,
+        ReactiveFormsModule,
+        MatProgressSpinnerModule,
+        CommonModule,
+        FormsModule,
+        MatAutocompleteModule,
+        MatCardModule,
+        MatDividerModule,
+        MatChipsModule,
+        RouterModule
+    ]
 })
 export class CommonAppModule {
 }

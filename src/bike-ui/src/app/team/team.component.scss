@@ -1,10 +1,28 @@
 .fixed-bg {
-  background-image: url('src/assets/background/sigmund-rMW9us4NCzU-unsplash.jpg');
-  min-height: 100%;
-  background-repeat: no-repeat;
+  background-image: url('src/assets/background/kiwihug-zGZYQQVmXw0-unsplash.jpg');
+  background-repeat: repeat;
   background-attachment: fixed;
-  background-position: center;
   background-size: cover;
 
 }
+
+app-card {
+  margin-top: 4rem;
+  margin-left: 2rem;
+  margin-right: 2rem;
+}
+
+.pt-team{
+  padding-top: 7rem;
+}
+
+
+:host ::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+  color: black;
+}
+
+:host ::ng-deep .mat-form-field.mat-focused .mat-form-field-label {
+  color: black;
+}
+
 

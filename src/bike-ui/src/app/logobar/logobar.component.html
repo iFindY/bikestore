@@ -1,6 +1,6 @@
 <mat-toolbar class="d-flex justify-content-between logo-bar">
-  <div id="tool-bar-menu" class=" d-flex align-items-center">
-    <ng-container *ngIf="sideNav then phone else notPhone"></ng-container>
+  <div id="tool-bar-menu" class="d-flex align-items-center">
+    <ng-container  *ngIf="sideNav then phone else notPhone"></ng-container>
   </div>
 </mat-toolbar>
 
@@ -19,39 +19,45 @@
 <!--tablet pc screen-->
 <ng-template #notPhone>
 
-  <div class="logo">
-    <img width="30" alt="Logo" src="../../assets/logos/296775.svg"/>
+  <div>
+    <img class="logo-img" routerLink='/'
+         width="100"
+         alt="Logo"
+         style="filter: invert(1); cursor:pointer"
+         src="../../assets/logos/recital_2.png"/>
   </div>
-  <div id="offers" class="ml-4">
+
+  <div class="hover d-flex">
+  <div id="offers" class="ml-4" >
 
     <button mat-button [matMenuTriggerFor]="menu1">Lessons</button>
     <mat-menu #menu1="matMenu">
-      <button mat-menu-item>Item 1</button>
-      <button mat-menu-item>Item 2</button>
+      <button *ngFor="let lesson of lessons" mat-menu-item>{{lesson}}</button>
     </mat-menu>
 
-    <button mat-button [routerLink]="'team'">Team</button>
-    <button mat-button [routerLink]="'team'">Events</button>
-    <button mat-button [routerLink]="'team'">Blog</button>
+    <button mat-button disableRipple=true class="hover-underline-animation" [routerLink]="'team'" >Team</button>
+    <button mat-button disableRipple=true class="hover-underline-animation" [routerLink]="'team'">Events</button>
+    <button mat-button disableRipple=true class="hover-underline-animation" [routerLink]="'team'">Blog</button>
   </div>
 
   <span class="vertical-line"></span>
 
-  <div id="pricing" class="d-flex align-items-center">
-    <button mat-button [matMenuTriggerFor]="menu9">Pricing</button>
-    <mat-menu #menu9="matMenu" style="height:available">
+  <div id="price_contact" class="d-flex align-items-center">
+    <button mat-button class="hover-underline-animation"  disableRipple=true [matMenuTriggerFor]="menu9">Pricing</button>
+    <mat-menu #menu9="matMenu" >
       <button mat-menu-item>Item 1</button>
       <button mat-menu-item>Item 2</button>
     </mat-menu>
 
 
-    <button mat-button id="test" [matMenuTriggerFor]="menu8">Contact</button>
+    <button mat-button  class="hover-underline-animation" disableRipple=true [matMenuTriggerFor]="menu8">Contact</button>
     <mat-menu #menu8="matMenu">
       <button mat-menu-item>Item 1</button>
       <button mat-menu-item>Item 2</button>
     </mat-menu>
   </div>
 
+  </div>
 </ng-template >
 
 
