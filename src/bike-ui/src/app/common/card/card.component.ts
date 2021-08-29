@@ -10,6 +10,7 @@ import { bodyExpansion, rotate } from './card.animations';
 })
 export class CardComponent implements OnInit {
 
+    cpText: string = '';
     state = 'collapsed';
     mouseover: boolean;
     public image = '';
@@ -20,6 +21,7 @@ export class CardComponent implements OnInit {
     @Input() mail;
     @Input() web:string;
     @Input() text;
+    @Input() skills: string[];
 
     constructor() {
     }
@@ -45,5 +47,12 @@ export class CardComponent implements OnInit {
 
     navigate($event: MouseEvent) {
         window.open('https://' + this.web, '_blank');
+    }
+
+    // import window size service and let css and animation react for width, rotation and bodyExpansion
+    // font-size on body do work fine, but not n main
+
+    copy($event: MouseEvent) {
+        this.cpText = ($event.target as HTMLElement).innerText; // just for fun
     }
 }

@@ -1,0 +1,28 @@
+
+:host mat-card{
+  width: 300px;
+  border-radius: 20px
+}
+
+:host .img {
+  background-repeat: no-repeat;
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  background-size: 5rem;
+}
+
+:host .lessons {
+  width: 170px;
+  margin: 0
+}
+
+
+.grow {
+  transition: transform 600ms ease;
+  &:hover {
+    transform: scale(1.02);
+    transition: transform 600ms ease;
+  }
+}
+

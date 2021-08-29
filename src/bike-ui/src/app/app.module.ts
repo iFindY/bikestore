@@ -31,6 +31,8 @@ import {CommonAppModule} from "./common/common-app.module";
 import {MatRippleModule} from "@angular/material/core";
 import {MatChipsModule} from "@angular/material/chips";
 import {FormsModule} from "@angular/forms";
+import {PipeModule} from "./common/pipe/pipe.module";
+import {MatGridListModule} from "@angular/material/grid-list";
 
 
 
@@ -78,7 +80,9 @@ import {FormsModule} from "@angular/forms";
     CommonAppModule,
     MatRippleModule,
     MatChipsModule,
-    FormsModule
+    FormsModule,
+    PipeModule,
+    MatGridListModule
   ],
     providers: [],
     exports: [],

@@ -1,42 +1,58 @@
 .logo-bar {
-  background-color: whitesmoke ;
+  //background-color: whitesmoke;
+  background-color: #f0ede8;
   padding: 0 0.5rem;
   margin: 0;
   height: 4.5rem;
-  opacity: 0.97;
+   opacity: 0.98;
   position: fixed; // sticky only for parent element
-  top: 0
+  top: 0;
 }
 
-;
+.logo-img {
+    filter: invert(1);
+    cursor: pointer;
+    -webkit-box-shadow: none;
+    outline: none;
+    width:6.25rem;
+}
+
+mat-toolbar {
+    backdrop-filter: blur(5px);
+}
 
 img {
-  margin-left: 20px;
+    margin-left: 1.25rem;
 }
 
 :host::ng-deep button {
-  //font-family: "JetBrains Mono", sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  color: rgb(29,29,29);
-  &:hover:enabled {
-    span {
-      transition: color 0.5s ease;
+    //font-family: "JetBrains Mono", sans-serif;
+    font-size: 1rem;
+
+    padding: 0 1rem !important;
+    font-weight: 400;
+    color: #1d1d1d;
+
+    :hover:enabled span {
+        transition: color 0.5s ease;
+
     }
-  }
 
 
-  ::ng-deep .mat-button-focus-overlay {
-    background-color: transparent;
-  }
+    ::ng-deep .mat-button-focus-overlay {
+        background-color: transparent;
+    }
 
 }
 
-.vertical-line{
-  border-left: 1px solid black;
-  height: 21px;
-  margin: 8px 10px;
+.vertical-line {
+    border-left: 0.063rem solid black;
+    height: 1.313rem;
+    margin: 0.5rem 0.7rem;
 }
+
+// cool text selection yellow #bd7f32
+// cool tool bar background-color   #f0ede8
 
 .hover-underline-animation:after {
   content: '';
@@ -52,23 +68,37 @@ img {
 }
 
 .hover-underline-animation:hover:after {
-  opacity: 0.9;
-  transform: translate3d(0, 0.1em, 0);
+    opacity: 0.9;
+    transform: translate3d(0, 0.1em, 0);
 }
 
 
 .hover:hover button {
-  opacity: 0.5;
-  transition: opacity 200ms;
+    opacity: 0.5;
+    transition: opacity 200ms;
 }
 
 .hover:not(:hover) button {
-  opacity: 1;
-  transition: opacity 200ms;
+    opacity: 1;
+    transition: opacity 200ms;
 }
 
 
 .hover button:hover {
-  opacity: 1;
+    opacity: 1;
 }
+
+
+::ng-deep .mat-menu-panel {
+  margin-top: 25px;
+  border-radius: 20px !important;
+  max-width: 1000px !important;
+  height: max-content;
+  background-color: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(20px);
+  border: 1px solid gray;
+  background-clip: padding-box;
+  box-shadow: 10px 10px 10px rgba(45,55,68,0.3);
+}
+
 

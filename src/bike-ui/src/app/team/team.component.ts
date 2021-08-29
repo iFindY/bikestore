@@ -1,19 +1,29 @@
-import {Component, OnInit} from '@angular/core';
-import {animate, state, style, transition, trigger} from "@angular/animations";
-import {bodyExpansion} from "../common/card/card.animations";
+import {Component, OnDestroy} from '@angular/core';
+import {LayoutService} from "../services/layout.service";
+import {Subscription} from "rxjs";
+import {Sizes} from "../services/models/layout.model";
 
 @Component({
   selector: 'app-team',
   templateUrl: './team.component.html',
-  styleUrls: ['./team.component.scss']})
-export class TeamComponent implements OnInit {
+  styleUrls: ['./team.component.scss']
+})
+export class TeamComponent implements OnDestroy {
 
-  public value:string ='';
 
-  constructor() {
+  windowSize: Sizes = 'XLarge';
+  subscriptions: Subscription;
+  public value: string = '';
+
+  constructor(public screenSizeService: LayoutService) {
+    this.subscriptions = this.screenSizeService.getWindowSize()
+    .subscribe(size => this.windowSize = size);
+
   }
 
-  ngOnInit(): void {
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe()
   }
+
 
 }

@@ -5,10 +5,12 @@
   flex-grow: 0;
 }
 
-
+.l-height{
+  line-height: 1.875rem;
+}
 .justify_left {
   justify-content: start;
-  padding-left: 3rem;
+  padding-left: 1.6rem;
 }
 
 .justify_right {
@@ -34,7 +36,10 @@
 
 }
 
+
 /*
 *{ // shoe div border
   outline:1px red solid;
-}*/
+}
+
+*/

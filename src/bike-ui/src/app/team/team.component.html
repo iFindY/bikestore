@@ -1,30 +1,34 @@
 <body>
 
-<div class="d-flex justify-content-center pt-team">
+    <main class="zoom">
 
-<mat-form-field  appearance="outline" style="width: 40%;min-width:350px!important; color: black">
-  <mat-label>Search</mat-label>
-  <input matInput type="text" [(ngModel)]="value">
-  <button *ngIf="value" matSuffix mat-icon-button aria-label="Clear"  disableRipple=true (click)="value=''">
-    <mat-icon style="margin-top: 0.9rem">close</mat-icon>
-  </button>
-  <button *ngIf="!value" matSuffix mat-icon-button aria-label="Search"  disableRipple=true>
-    <mat-icon style="margin-top: 0.9rem">search</mat-icon>
-  </button>
-</mat-form-field>
+        <div class="d-flex justify-content-center pt-team">
 
-</div>
+            <mat-form-field appearance="outline" >
+                <mat-label>Search</mat-label>
+                <input matInput type="text" [(ngModel)]="value">
+                <button *ngIf="value" matSuffix mat-icon-button aria-label="Clear" disableRipple=true (click)="value=''">
+                    <mat-icon >close</mat-icon>
+                </button>
+                <button *ngIf="!value" matSuffix mat-icon-button aria-label="Search" disableRipple=true>
+                    <mat-icon >search</mat-icon>
+                </button>
+            </mat-form-field>
+
+        </div>
 
 
-<article class="d-flex justify-content-around align-content-start flex-wrap" style="padding-bottom: 10rem">
+        <article class="d-flex justify-content-around align-content-start flex-wrap" >
 
-  <app-card personImage="/person_1/Marika_Lapauri-Burk.jpeg" name="Marika Lapauri Burk" mail="larissa.daschkewitsch@gmail.com" text="Hallo"></app-card>
-  <app-card personImage="/person_2/Larissa_Daschkewitsch.jpeg" name="Larissa Daschkewitsch" phone="(040) 39495968" mail="larissa.daschkewitsch@gmail.com" text="Hallo"></app-card>
-  <app-card personImage="/person_3/Marina_Savova.jpeg" name="Marina Savova" phone="(040) 63307136" mail="larissa.daschkewitsch@gmail.com" text="Hallo"></app-card>
-  <app-card personImage="/person_4/Christopher_Pluennecke.png" name="Christopher Pluennecke" phone="(040) 20405962" text="Hallo"></app-card>
-  <app-card personImage="/person_5/Katharina_Mai.jpeg" name="Katharina Mai" phone="(040) 10695842" mail="larissa.daschkewitsch@gmail.com" text="Hallo"></app-card>
-  <app-card personImage="/person_6/Leonid_Volskiy.jpeg" name="Leonid Volskiy" phone="(040) 22694442" web="www.volskiy.de" text="Hallo"></app-card>
+            <app-card [skills]="['Klavier','Akordion','Geige']" personImage="/person_1/Ana-Gagulidze.jpg" name="Marika Lapauri Burk" mail="larissa.daschkewitsch@gmail.com" text="Hallo"></app-card>
+            <app-card [skills]="['Cello','Oboe','Trompete']" personImage="/person_2/Foto_Marcelo.jpg" name="Larissa Daschkewitsch" phone="(040) 39495968" mail="larissa.daschkewitsch@gmail.com" text="Hallo"></app-card>
+            <app-card [skills]="['Geige','Schlagzeig']" personImage="/person_3/Maiko-Mine.jpg" name="Marina Savova" phone="(040) 63307136" mail="larissa.daschkewitsch@gmail.com" text="Hallo"></app-card>
+            <app-card [skills]="['Gesang','Stimmbildung','Tuba']" personImage="/person_4/Samuel_26.jpg" name="Christopher Pluennecke" phone="(040) 20405962" text="Hallo"></app-card>
+            <app-card [skills]="['Saxophone','Kinderchor']" personImage="/person_5/Kirill-suvorov-2.png" name="Katharina Mai" phone="(040) 10695842" mail="larissa.daschkewitsch@gmail.com" text="Hallo"></app-card>
+            <app-card [skills]="['Flöte']" personImage="/person_6/Yunona-Tokar.jpg" name="Leonid Volskiy" phone="(040) 22694442" web="www.volskiy.de" text="Hallo"></app-card>
 
-</article>
+        </article>
+
+    </main>
 
 </body>

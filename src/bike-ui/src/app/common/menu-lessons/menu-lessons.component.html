@@ -1,0 +1,10 @@
+<button mat-button disableRipple [matMenuTriggerFor]="menu1"  class="hover-underline-animation">Lessons</button>
+<mat-menu #menu1="matMenu" id="lessons" >
+
+  <mat-grid-list cols="3" [rowHeight]="'8.125rem'" style="width:990px" (click)="$event.stopPropagation();">
+    <mat-grid-tile *ngFor="let lesson of lessons" (click)="click(lesson)">
+      <app-m-card [content]="lesson"></app-m-card>
+    </mat-grid-tile>
+  </mat-grid-list>
+
+</mat-menu>

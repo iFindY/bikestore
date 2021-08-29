@@ -1,15 +1,17 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import { animate, state, style, transition, trigger } from '@angular/animations';
-import {BreakpointObserver, Breakpoints, BreakpointState} from "@angular/cdk/layout";
-import {Observable, Subscription} from "rxjs";
+import {Component, OnDestroy} from '@angular/core';
+
+import { Subscription} from "rxjs";
+import {LayoutService} from "../services/layout.service";
+import {Sizes} from "../services/models/layout.model";
 
 @Component({
   selector: 'app-landing',
   templateUrl: './landing.component.html',
   styleUrls: ['./landing.component.scss']
 })
-export class LandingComponent implements OnInit{
+export class LandingComponent implements OnDestroy {
 
+  title_1:string ="Die Musik ist die Sprache der Leidenschaft"
   text_1: string = "Wir unterscheiden nicht zwischen E und U. Ob Klassik oder Pop -" +
       "wir helfen Ihnen, Ihren individuellen Wünschen entsprechend, den Weg zu Ihrem " +
       "persönlichen Erfolgserlebnis zu finden. Da das Miteinander beim Musizieren " +
@@ -26,31 +28,16 @@ export class LandingComponent implements OnInit{
       "seiner Stilrichtung widmen";
 
 
-  windowSize: 'normal' | 'small' | 'phone' = 'normal'
-  widthObserver: Observable<BreakpointState> = this.breakpointObserver.observe(['(min-width: 1414px)',  Breakpoints.XSmall]);
+  windowSize: Sizes = 'XLarge'
   subscriptions: Subscription;
   mouseover2: boolean;
   mouseover: boolean;
 
-  constructor(public breakpointObserver: BreakpointObserver) {
-  }
-
-
-
-  ngOnInit(): void {
-
-    this.subscriptions = this.widthObserver.subscribe((state: BreakpointState) => {
-      if (state.breakpoints[Breakpoints.XSmall]) {
-        this.windowSize = 'phone';
-      } else if (state.breakpoints['(min-width: 1414px)']) {
-        this.windowSize = 'normal';
-      } else {
-        this.windowSize = 'small';
-      }
-    });
+  constructor(public screenSizeService: LayoutService) {
+    this.subscriptions = this.screenSizeService.getWindowSize()
+    .subscribe(size => this.windowSize = size);
 
   }
-
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();

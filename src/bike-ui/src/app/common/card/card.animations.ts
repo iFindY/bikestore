@@ -10,8 +10,8 @@ export const bodyExpansion = trigger('bodyExpansion', [
 
 
 export const rotate = trigger('rotate', [
-  state('collapsed, void', style({transform: 'rotate(0deg)', 'transform-origin': '70% 70%'})),
-  state('expanded', style({transform: 'rotate(180deg)', 'transform-origin': '70% 70%'})),
+  state('collapsed, void', style({transform: 'rotate(0deg)'})),
+  state('expanded', style({transform: 'rotate(180deg)'})),
 
   transition('expanded <=> collapsed, void => collapsed',
       animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),

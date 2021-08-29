@@ -1,12 +1,16 @@
 :host {
-  max-width: 350px;
-  width: 350px;
+  max-width: 21.875em;
+  width: 21em;
+  min-height: 31.25em;
 }
 
 
-.zoom{
+.grow {
+  transition: transform 600ms ease;
+  &:hover {
     transform: scale(1.02);
-    transition: transform 600ms;
+    transition: transform 600ms ease;
+  }
 }
 
 .avatar {
@@ -17,48 +21,83 @@
   overflow: hidden;
 }
 
-.icon {
-  cursor: pointer;
-  font-size: 32px;
-  margin-right: 5px;
+.icon-container {
+  padding-right: 0.1em;
   margin-left: auto;
   user-select: none;
   -webkit-user-select: none;
+
 }
 
+.check-icon{
+  width: 1em; //  if px messes up on resizing and rotating
+  height: 1em;
+  font-size: 2em;
+  cursor: pointer;
+  margin-top: 0;
+  margin-bottom: auto;
+}
 .no-select{
   user-select: none;
   -webkit-user-select: none;
 }
 
 .img {
-  max-height: 400px;
+  height: 25em;
   user-select: none;
   object-fit: cover;
+
 }
 
 .g-icon {
-  margin-right: 32px;
-  margin-bottom: 24px;
-  font-size: 32px;
+  margin-right: 1em;
+  margin-bottom: 0.8em;
+  font-size: 2em;
   cursor: default;
   user-select: none;
   -webkit-user-select: none;
   color: gray;
 }
 
-.m-c-title {
-  cursor: default;
-  font-weight: normal;
-  font-size: 17px;
-}
 
+mat-card {
+  border-radius: 2em;
 
-.cur-default {
-  cursor: default;
-}
+  ::selection {
+    background: yellow;
+  }
 
+  a {
+    color: black
+  }
 
-a {
-  color: black
+  mat-card-content{
+    font-size: 1em;
+  }
+
+  mat-card-title{
+    font-size: 1em;
+    cursor: default;
+    word-break: break-all;
+    font-weight: normal;
+    &#name{
+      font-weight: 500;
+      font-size: 1em;
+    }
+  }
+
+  mat-card-subtitle {
+    cursor: default;
+    font-size: 1em;
+
+    &#phone, &#mail {
+      font-size: 0.8em;
+    }
+
+  }
+
+  mat-chip {
+    font-size: 0.8em;
+    min-height: 2.5em;
+  }
 }

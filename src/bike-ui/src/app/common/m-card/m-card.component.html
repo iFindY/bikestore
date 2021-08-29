@@ -1,0 +1,16 @@
+
+
+<mat-card class="ml-3 mr-3 grow"
+          [ngClass]="this.mouseover ? 'mat-elevation-z5':''"
+          (mouseover)="mouseOver(true)"
+          (mouseout)="mouseOver(false)">
+  <div class="d-flex justify-content-between align-items-center">
+    <div class="d-flex flex-column justify-content-between">
+      <h3>{{content.title}}</h3>
+      <h5 class="lessons" >{{content.lessons | splitspace}} </h5>
+    </div>
+    <div class="img" [ngStyle]="image">
+    </div>
+
+  </div>
+</mat-card>

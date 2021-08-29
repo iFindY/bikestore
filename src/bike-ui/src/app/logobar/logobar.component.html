@@ -1,43 +1,36 @@
-<mat-toolbar class="d-flex justify-content-between logo-bar">
+
+
+
+<mat-toolbar class="d-flex justify-content-between logo-bar mat-elevation-z5 ">
   <div id="tool-bar-menu" class="d-flex align-items-center">
     <ng-container  *ngIf="sideNav then phone else notPhone"></ng-container>
   </div>
 </mat-toolbar>
 
 
-
 <!--phone screen-->
 <ng-template #phone>
   <button mat-mini-fab style="background-color: #474747"  aria-label="Menu" (click)="sideMenu.emit(true)">
-    <mat-icon>menu</mat-icon>
+    <mat-icon ></mat-icon>
   </button>
   <mat-label class="pl-3">Menu</mat-label>
 </ng-template >
 
 
-
 <!--tablet pc screen-->
 <ng-template #notPhone>
 
-  <div>
-    <img class="logo-img" routerLink='/'
-         width="100"
-         alt="Logo"
-         style="filter: invert(1); cursor:pointer"
-         src="../../assets/logos/recital_2.png"/>
-  </div>
+  <img class="logo-img d-block" alt="Logo" src="../../assets/logos/recital_2.png" routerLink='/'/>
 
-  <div class="hover d-flex">
-  <div id="offers" class="ml-4" >
 
-    <button mat-button [matMenuTriggerFor]="menu1">Lessons</button>
-    <mat-menu #menu1="matMenu">
-      <button *ngFor="let lesson of lessons" mat-menu-item>{{lesson}}</button>
-    </mat-menu>
+  <div class="hover d-flex align-items-center">
+    
+  <div id="offers" class="d-flex align-items-center ml-4" >
+    <app-menu-lessons></app-menu-lessons>
 
-    <button mat-button disableRipple=true class="hover-underline-animation" [routerLink]="'team'" >Team</button>
-    <button mat-button disableRipple=true class="hover-underline-animation" [routerLink]="'team'">Events</button>
-    <button mat-button disableRipple=true class="hover-underline-animation" [routerLink]="'team'">Blog</button>
+    <button mat-button disableRipple class="hover-underline-animation" [routerLink]="'team'" >Team</button>
+    <button mat-button disableRipple class="hover-underline-animation" [routerLink]="'team'">Events</button>
+    <button mat-button disableRipple class="hover-underline-animation" [routerLink]="'team'">Blog</button>
   </div>
 
   <span class="vertical-line"></span>

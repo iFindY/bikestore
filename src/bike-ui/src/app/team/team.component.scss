@@ -6,10 +6,43 @@
 
 }
 
+body{
+  background-image:
+          url('src/assets/logos/1314942.svg'),
+          url('src/assets/logos/296775.svg'),
+          url('src/assets/logos/1314938.svg'),
+          url('src/assets/logos/154328.svg'),
+          url('src/assets/logos/1528583248.svg'),
+          url('src/assets/logos/1425782.svg'),
+          url('src/assets/logos/1314944.svg'),
+          url('src/assets/logos/1314939.svg');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: 100px 100px;
+  background-position: 95% 95%, 10% 15%, center, 20% 100%, 90% 10%, 70% 90%, 40% 88%, 0 85%;
+}
+
+// gray background images
+body:before{
+  content: " ";
+  background: inherit;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  box-shadow: inset 0 0 0 3000px rgba(255,255,255,0.8);
+
+}
+
 app-card {
-  margin-top: 4rem;
-  margin-left: 2rem;
-  margin-right: 2rem;
+  margin-top: 4em;
+  margin-left: 2em;
+  margin-right: 2em;
+}
+
+article{
+  padding-bottom: 10rem
 }
 
 .pt-team{
@@ -25,4 +58,13 @@ app-card {
   color: black;
 }
 
+mat-form-field {
+  mat-icon {
+    margin-top: 0.9rem;
+  }
+
+  width: 40%;
+  min-width: 350px !important;
+  color: black
+}
 

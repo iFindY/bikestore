@@ -1,55 +1,57 @@
-<mat-card (mouseover)="mouseOver(true)"
+<mat-card class="grow" (mouseover)="mouseOver(true)"
           (mouseleave)="mouseOver(false)"
-          [ngClass]="mouseover ? 'mat-elevation-z20 zoom':'mat-elevation-z2'" >
+          [ngClass]="mouseover ? 'mat-elevation-z20':'mat-elevation-z2'" >
 
-  <img mat-card-image class="img" alt="team member"
-       [src]="personImg">
+  <img mat-card-image class="img" alt="team member" [src]="personImg" (click)="toggle()">
 
-  <mat-card-header >
+  <mat-card-header>
 
     <div mat-card-avatar class="avatar" [style]="avatar" (click)="toggle()"></div>
-    <mat-icon class="icon" [@rotate]="state" (click)="toggle()">expand_more</mat-icon>
-    <mat-card-title class="cur-default">{{name}}</mat-card-title>
-    <mat-card-subtitle class="cur-default no-select">Musiklehrer</mat-card-subtitle>
+    <div class="icon-container" >
+      <mat-icon class="check-icon d-flex align-content-center justify-content-center" [@rotate]="state" (click)="toggle()">expand_more</mat-icon> <!--set rotation param on font size--></div>
+    <mat-card-title id="name"  [cdkCopyToClipboard]="cpText" (click)="copy($event)">{{name}}</mat-card-title>
+    <mat-card-subtitle class=" no-select ">Musiklehrer</mat-card-subtitle>
+
   </mat-card-header>
 
 
   <mat-card-content [@bodyExpansion]="state" class="expandable-content">
+
     <section class="d-flex align-items-center" *ngIf="!!phone">
       <mat-icon class="d-block g-icon">phone</mat-icon>
       <div>
-        <mat-card-title class="m-c-title">
-          <a [href]="'tel:'+phone">{{phone}}</a>
-        </mat-card-title>
-        <mat-card-subtitle class="cur-default no-select">Phone Number</mat-card-subtitle>
+        <mat-card-title> <a [href]="'tel:'+phone">{{phone}}</a> </mat-card-title>
+        <mat-card-subtitle id="phone" class="no-select">Phone Number</mat-card-subtitle>
       </div>
     </section>
 
     <section class="d-flex align-items-center" *ngIf="!!mail">
       <mat-icon class="d-block g-icon">email</mat-icon>
       <div>
-        <mat-card-title class="m-c-title"><a [href]="'mailto:'+mail">{{mail}}</a></mat-card-title>
-        <mat-card-subtitle class="cur-default no-select">Email Address</mat-card-subtitle>
+        <mat-card-title> <a [href]="'mailto:'+mail">{{mail}}</a> </mat-card-title>
+        <mat-card-subtitle id="mail" class="no-select">Email Address</mat-card-subtitle>
       </div>
     </section>
 
     <section class="d-flex align-items-center" *ngIf="!!web">
       <mat-icon class="d-block g-icon">language</mat-icon>
       <div>
-        <mat-card-title class="m-c-title"><a  (click)="navigate($event)"  style="cursor: pointer">{{web}}</a></mat-card-title>
-        <mat-card-subtitle class="cur-default no-select">Web Page</mat-card-subtitle>
+        <mat-card-title ><a  (click)="navigate($event)"  style="cursor: pointer">{{web}}</a></mat-card-title>
+        <mat-card-subtitle class="no-select">Web Page</mat-card-subtitle>
       </div>
     </section>
 
-    <p>{{text}}</p>
-    <mat-divider></mat-divider>
+    <section>
+      <p>{{text}}</p>
+      <mat-divider></mat-divider>
 
-    <mat-card-subtitle class="cur-default pt-3" style="font-size: 18px">Instrumente</mat-card-subtitle>
-    <mat-chip-list aria-label="Instrumente">
-      <mat-chip>Klavier</mat-chip>
-      <mat-chip>Akordion</mat-chip>
-      <mat-chip>Geige</mat-chip>
-    </mat-chip-list>
+      <mat-card-subtitle class=" pt-3">Instrumente</mat-card-subtitle>
+      <mat-chip-list aria-label="Instrumente">
+        <mat-chip *ngFor="let skill of skills">{{skill}}</mat-chip>
+      </mat-chip-list>
+
+    </section>
+
   </mat-card-content>
 
 </mat-card>
